@@ -1,6 +1,0 @@
-name: Action Github
-run-name: ${{ github.actor }} vient de push
-on: [push]
-jobs:
-  Install:
-    runs-on: ubuntu-latest
