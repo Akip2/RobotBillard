@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Live stock price ticker</title>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    
+    <script>
+      $(function () {
+        var socket = io();
+
+        $('#curseur').on('input', function() { // evenement oninput https://stackoverflow.com/questions/18544890/onchange-event-on-input-type-range-is-not-triggering-in-firefox-while-dragging
+          console.log($('#curseur').val());
+          socket.emit('curseur', $('#curseur').val());
+        });
+
+        socket.on('okcurseur', function(val) {
+          console.log('curseur in = '+val);
+          $('#curseur').val(val);
+        });
+
+        $('#allumer').on('click', function() {
+          socket.emit('bouton', 1);
+        });
+        $('#eteindre').on('click', function() {
+          socket.emit('bouton', 0);
+        });
+      });
+    </script>
+
+  </head>
+  <body>
+    <input type="range" id="curseur" orient="vertical">
+    <button id="allumer">Allumer LED</button>
+    <button id="eteindre">Eteindre LED</button>
+  </body>
+</html>
