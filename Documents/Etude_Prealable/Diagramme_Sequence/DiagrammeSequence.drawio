@@ -137,10 +137,10 @@
           <mxGeometry x="140" y="120" width="10" height="320" as="geometry" />
         </mxCell>
         <mxCell id="8aM13DMysCz5ihoPxmBP-2" value="&lt;b&gt;&lt;font style=&quot;font-size: 13px;&quot;&gt;Dictionnaire&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="770" y="48" width="100" height="30" as="geometry" />
+          <mxGeometry x="730" y="156" width="100" height="30" as="geometry" />
         </mxCell>
         <mxCell id="8aM13DMysCz5ihoPxmBP-3" value="&lt;b&gt;rechercher_boule_optimale() :&amp;nbsp;&lt;/b&gt;&lt;div&gt;Recherche de la boule la plus facile à mettre en trou.&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="770" y="85" width="300" height="40" as="geometry" />
+          <mxGeometry x="730" y="200" width="300" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
