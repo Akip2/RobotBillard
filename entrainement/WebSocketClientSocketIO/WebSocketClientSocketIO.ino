@@ -28,10 +28,16 @@ Adafruit_DCMotor *moteurDroite = AFMS.getMotor(2);
 int ETAT_LED = 1;
 int LAST_ETAT_LED = 0;
 
+char* ADRESSE_SERVEUR = "192.168.43.26";
+int PORT_SERVEUR = 8001;
+
+char* NOM_RESEAU = "AndroidAP6E68";
+char* MDP_RESEAU = "yyny1513";
+
 /*
     C'est ici que l'on gère ce qu'il se passe lorsqu'un évènement est reçu
 */
-void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) {
+void socketIOEvent(socketIOmessageType_t type, uint8_t *payload, size_t length) {
   DynamicJsonDocument doc(1024);
   String payload_str;
   String nom_event;
@@ -50,7 +56,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
       USE_SERIAL.printf("[IOc] get event: %s\n", payload);
 
       // On récupère l'évènement
-      payload_str = String((char*)payload);
+      payload_str = String((char *)payload);
       deserializeJson(doc, payload_str);
 
       nom_event = String(doc[0]);
@@ -66,10 +72,10 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
       }
 
       if (nom_event == "okcurseur") {
-        uint8_t val_event = (uint8_t) String(doc[1]).toInt();
+        uint8_t val_event = (uint8_t)String(doc[1]).toInt();
 
         USE_SERIAL.print("TEST 1\n");
-        
+
         USE_SERIAL.printf("[IOc] get event: %d\n", val_event);
 
         if (val_event > 50) {
@@ -94,8 +100,8 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
 
           moteurGauche->setSpeed(val_event);
           moteurDroite->setSpeed(val_event);
-        } else { // 0 en gros
-        USE_SERIAL.printf("TEST 0\n");
+        } else {  // 0 en gros
+          USE_SERIAL.printf("TEST 0\n");
           moteurGauche->setSpeed(0);
           moteurDroite->setSpeed(0);
           moteurGauche->run(RELEASE);
@@ -146,7 +152,7 @@ void setup() {
   }
 
   // Le réseau auquel on se connecte et son mot de passe
-  WiFiMulti.addAP("AndroidAP6E68", "yyny1513");
+  WiFiMulti.addAP(NOM_RESEAU, MDP_RESEAU);
 
   //WiFi.disconnect();
   while (WiFiMulti.run() != WL_CONNECTED) {
@@ -157,7 +163,7 @@ void setup() {
   USE_SERIAL.printf("[SETUP] WiFi Connected %s\n", ip.c_str());
 
   // server address, port and URL
-  socketIO.begin("192.168.43.26", 8001, "/socket.io/?EIO=4");
+  socketIO.begin(ADRESSE_SERVEUR, PORT_SERVEUR, "/socket.io/?EIO=4");
 
   // event handler
   socketIO.onEvent(socketIOEvent);
