@@ -8,10 +8,6 @@ const Engine = Matter.Engine,
     Mouse=Matter.Mouse,
     MouseConstraint=Matter.MouseConstraint;
 
-const width=720;
-const height=350;
-
-
 const COLLISION_FILTERS=Object.freeze({
     BALL: 0x0001,
     HOLE: 0x0002,
@@ -27,7 +23,5 @@ export{
     Body,
     Mouse,
     MouseConstraint,
-    width,
-    height,
     COLLISION_FILTERS,
 }

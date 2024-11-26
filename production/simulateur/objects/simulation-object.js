@@ -1,4 +1,4 @@
-import { width, height, Body, Composite } from "../global.js";
+import { Body, Composite } from "../global.js";
 
 class SimulationObject{
     constructor(body,w, h, x=0, y=0){
