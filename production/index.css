@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+NZ:wght@100..400&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
+    margin:0;
+    padding:0;
+    font-family: 'Rubik', sans-serif;
+}
+
+html {
+    height: 100%;
+
+}
+
+body {
+    min-height: 100%;
+}
+
+button:hover{
+    cursor: pointer;
+}
+
+select:hover{
+    cursor: pointer;
+}
+
+#titre {
+    text-align: center;
+    font-size: 3em;
+    padding-bottom: 3rem;
+    padding-top: 1rem;
+}
+
+main {
+    display: flex;
+    justify-content: space-evenly;
+
+    /*border: 1px solid red;*/
+}
+
+.partie {
+    /*border: 1px solid blue;*/
+}
+
+
+/* PARTIE GAUCHE : VUES et CANVAS */
+
+
+#partie-gauche {
+    display: flex;
+    flex-direction: column;
+}
+
+#liste-boutons {
+    display: flex;
+    gap: 0; /* les boutons sont collés les uns aux autrse */
+    padding-bottom: 2rem;
+}
+
+/* premier bouton (on lui applique un style aux angles du coté gauche) */
+#liste-boutons>*:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+/* dernier bouton (on lui applique un style aux angles du coté gauche) */
+#liste-boutons>*:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.btns-vue {
+    all: unset;
+    padding: 1rem;
+    background-color: lightgray;
+
+    transition: all ease 0.2s;
+}
+
+.btns-vue:hover {
+    background-color: darkgray;
+}
+
+
+
+canvas {
+    background-color: yellow
+}
+
+
+/* PARTIE DROITE : GO et SCENARIOS */
+
+
+#partie-droite {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#div-scenarios {
+    margin-top: 3rem; /* espacement avec le bouton GO */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#btn-go {
+    /* taille */
+    border-radius: 100%;
+    width: 10rem;
+    height: 10rem;
+    margin: 1rem;
+
+    /* texte */
+    font-size: 3rem;
+    font-weight: bold;
+
+    /* style */
+    border: none;
+    box-shadow: 10px 10px 10px 1px grey;
+
+    transition: all ease 0.2s;
+}
+
+#btn-go:hover {
+    margin: 0.5rem;
+
+    width: 11rem;
+    height: 11rem;
+    translate: -5px -5px;
+    box-shadow: 20px 20px 10px 1px grey;
+}
+
+#btn-go:active {
+    margin: 1rem;
+
+    width: 10rem;
+    height: 10rem;
+    translate: 10px 10px;
+    box-shadow: 3px 3px 5px 1px grey;
+}
+
+#text-scenarios {
+    font-size: 1.5rem;
+    padding: 1rem;
+}
+
+#select-scenarios {
+
+    padding: 0.5rem;
+
+    /* style */
+    border: none;
+    border-radius: 5px;
+    background-color: #F0F0F0;
+    box-shadow: 3px 3px 5px 1px #a8a8a8;
+    font-size: 1rem;
+
+    transition: all ease 0.2s;
+}
+
+#select-scenarios:hover {
+    background: lightgrey;
+}
+
+.option-scenarios {
+    background-color: #F0F0F0;
+
+    transition: all ease 0.2s;
+}
+
+.option-scenarios:hover {
+    background-color: lightgrey;
+}
+
+
+/* FOOTER */
+
+
+footer {
+    /* position block */
+    display: flex;
+    position: fixed;
+    bottom: 0;
+
+    /* position texte */
+    align-items: center;
+    justify-content: center;
+
+    /* taille */
+    width: 100%;
+    height: 3rem;
+
+    /* style */
+    background: #F0F0F0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}

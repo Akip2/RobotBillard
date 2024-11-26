@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="index.css"/>
+    <title>Robot Billard</title>
+</head>
+<body>
+    <h1 id="titre">Robot Billard joueur de Football</h1>
+
+    <main>
+        <div class="partie" id="partie-gauche">
+            <div id="liste-boutons">
+                <button class="btns-vue">Caméra</button>
+                <button class="btns-vue">Simulateur</button>
+                <button class="btns-vue">Manuel</button>
+            </div>
+            <div id="canvas-container">
+                <canvas height="400" width="700">...</canvas>
+            </div>
+        </div>
+
+        <div class="partie" id="partie-droite">
+            <button id="btn-go">GO</button>
+            <div id="div-scenarios">
+                <p id="text-scenarios">Scénarios :</p>
+                <select name="scenarios" id="select-scenarios">
+                    <option value="default" class="option-scenarios">Choissez un scénario</option>
+                    <option value="Billard" class="option-scenarios">Billard</option>
+                    <option value="Autre" class="option-scenarios">Autre</option>
+                </select>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>Projet réalisé par
+            <a href="https://github.com/Akip2" target="_blank">Antoine FONTANEZ</a>,
+            <a href="https://github.com/Corentin-Froger" target="_blank">Corentin FROGER</a> et
+            <a href="https://github.com/Ratz123323" target="_blank">Nathan PIERROT</a>
+        </p>
+    </footer>
+</body>
+</html>
