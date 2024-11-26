@@ -3,10 +3,12 @@ const Engine = Matter.Engine,
     Runner = Matter.Runner,
     Bodies = Matter.Bodies,
     Composite = Matter.Composite,
+    World=Matter.World,
     Body=Matter.Body;
 
 const width=720;
 const height=350;
+
 
 const COLLISION_FILTERS=Object.freeze({
     BALL: 0x0001,
