@@ -4,7 +4,9 @@ const Engine = Matter.Engine,
     Bodies = Matter.Bodies,
     Composite = Matter.Composite,
     World=Matter.World,
-    Body=Matter.Body;
+    Body=Matter.Body,
+    Mouse=Matter.Mouse,
+    MouseConstraint=Matter.MouseConstraint;
 
 const width=720;
 const height=350;
@@ -23,6 +25,8 @@ export{
     World,
     Composite,
     Body,
+    Mouse,
+    MouseConstraint,
     width,
     height,
     COLLISION_FILTERS,

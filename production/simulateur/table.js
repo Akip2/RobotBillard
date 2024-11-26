@@ -1,4 +1,4 @@
-import { Engine, Render,Runner, width, height} from "./global.js";
+import {Engine, Render, Runner,Body ,Mouse, MouseConstraint, width, height, Composite} from "./global.js";
 
 let engine, runner, render;
 
@@ -27,10 +27,31 @@ class Table{
           }
         });
 
+        const mouse = Mouse.create(render.canvas); // Création de la souris sur le canvas
+        const mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 1,
+                render: {
+                    visible: false
+                }
+            }
+        });
+
+        Composite.add(engine.world, mouseConstraint);
+        render.mouse = mouse;
+
         this.addObjectsToEnv();
 
         Render.run(render);
         Runner.run(runner, engine);
+
+        Matter.Events.on(mouseConstraint, "enddrag", (event) => {
+            const body = event.body;
+            if (body) {
+                Body.setVelocity(body, { x: 0, y: 0});
+            }
+        });
     }
 
     addObjectsToEnv(){
