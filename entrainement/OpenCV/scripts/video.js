@@ -28,7 +28,7 @@ function main() {
             // Detect circles in the frame using Hough Transform
             let circles = new cv.Mat();
             cv.HoughCircles(gray , circles, cv.HOUGH_GRADIENT,
-                2, 10, 100, 30, 10, 15);
+                2, 10, 100, 30, 3, 12);
 
             // Draw detected circles
             for (let i = 0; i < circles.cols; ++i) {
@@ -48,7 +48,6 @@ function main() {
 
             // Clean up memory
             gray.delete();
-            // blurred.delete();
             circles.delete();
 
             // Schedule the next frame

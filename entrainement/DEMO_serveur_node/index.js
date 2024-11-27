@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
-//io = require('socket.io').listen(server, {
+
 var io = require('socket.io').listen(server, {
     //path: '/test',
     //serveClient: false,
