@@ -1,43 +1,73 @@
-let processor = {
-    timerCallback: function() {
-        if (this.video.paused || this.video.ended) {
-            return;
+function main() {
+    document.getElementById("status").innerHTML = "OpenCV.js is ready.";
+
+    let video = document.getElementById('videoInput');
+    let cap = new cv.VideoCapture(video);
+
+    // Prepare frame
+    let frame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+
+    // Set the FPS for processing
+    const FPS = 60;
+
+    function processVideo() {
+        try {
+            let begin = Date.now();
+
+            // Capture a frame from the video
+            cap.read(frame);
+
+            // Convert the frame to grayscale as HoughCircles works on grayscale images
+            let gray = new cv.Mat();
+            cv.cvtColor(frame, gray, cv.COLOR_RGBA2GRAY);
+
+            // Use GaussianBlur to reduce noise and improve circle detection
+            // let blurred = new cv.Mat();
+            // cv.GaussianBlur(gray, blurred, new cv.Size(9, 9), 2, 2);
+
+            // Detect circles in the frame using Hough Transform
+            let circles = new cv.Mat();
+            cv.HoughCircles(gray , circles, cv.HOUGH_GRADIENT,
+                2, 10, 100, 30, 3, 12);
+
+            // Draw detected circles
+            for (let i = 0; i < circles.cols; ++i) {
+                let circle = circles.data32F.slice(i * 3, (i + 1) * 3); // circle is [x, y, radius]
+                let center = new cv.Point(circle[0], circle[1]);
+                let radius = circle[2];
+
+                // Draw the circle's center
+                cv.circle(frame, center, 3, [0, 255, 0, 255], -1);
+
+                // Draw the circle's outline
+                cv.circle(frame, center, radius, [255, 0, 0, 255], 3);
+            }
+
+            // Show the frame with detected circles
+            cv.imshow('canvasOutputVideo', frame);
+
+            // Clean up memory
+            gray.delete();
+            circles.delete();
+
+            // Schedule the next frame
+            let delay = 1000 / FPS - (Date.now() - begin);
+            setTimeout(processVideo, delay);
+        } catch (err) {
+            console.log(err);
         }
-        this.computeFrame();
-        let self = this;
-        setTimeout(function () {
-            self.timerCallback();
-        }, 0);
-    },
-
-    doLoad: function() {
-        this.video = document.getElementById("video");
-        this.c1 = document.getElementById("c1");
-        this.ctx1 = this.c1.getContext("2d");
-        let self = this;
-        this.video.addEventListener("play", function() {
-            self.width = self.video.videoWidth / 2;
-            self.height = self.video.videoHeight / 2;
-            self.timerCallback();
-        }, false);
-    },
-
-    computeFrame: function() {
-        this.ctx1.drawImage(this.video, 0, 0, this.width, this.height);
-        let frame = this.ctx1.getImageData(0, 0, this.width, this.height);
-        let l = frame.data.length / 4;
-
-        for (let i = 0; i < l; i++) {
-            let r = frame.data[i * 4 + 0];
-            let g = frame.data[i * 4 + 1];
-            let b = frame.data[i * 4 + 2];
-            if (g > 100 && r > 100 && b < 43)
-                frame.data[i * 4 + 3] = 0;
-        }
-        return;
     }
-};
 
-document.addEventListener("DOMContentLoaded", () => {
-    processor.doLoad();
-});
+    // Start the processing loop
+    setTimeout(processVideo, 0);
+}
+
+const Module = {
+    onRuntimeInitialized() {
+        main();
+    }
+}
+
+// export default {
+//     main: main
+// }
