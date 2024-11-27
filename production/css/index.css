@@ -46,7 +46,6 @@ main {
 
 
 #partie-gauche {
-    display: flex;
     flex-direction: column;
 }
 
@@ -80,18 +79,16 @@ main {
     background-color: darkgray;
 }
 
-
-
 canvas {
     background-color: yellow
 }
 
 
-/* PARTIE DROITE : GO et SCENARIOS */
+/* PARTIE DROITE (CAMERA) : GO et SCENARIOS */
 
 
-#partie-droite {
-    display: flex;
+#partie-droite-camera {
+    /*display: flex;*/
     flex-direction: column;
     align-items: center;
 }
@@ -173,6 +170,119 @@ canvas {
 }
 
 
+/* PARTIE DROITE (MANUEL) : FLECHES DE CONTROLE */
+
+
+#partie-droite-manuel {
+    justify-content: center;
+    align-items: center;
+}
+
+#grid-boutons-manuel {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 30% 30% 30%;
+}
+
+#btn-avancer {
+    grid-column: 2 / 2;
+    grid-row: 1 / 1;
+}
+
+#btn-tourner-a-gauche {
+    grid-column: 1 / 1;
+    grid-row: 2 / 2;
+}
+
+#btn-tourner-a-droite {
+    grid-column: 3 / 3;
+    grid-row: 2 / 2;
+}
+
+#btn-reculer {
+    grid-column: 2 / 2;
+    grid-row: 3 / 3;
+}
+
+.fleche {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#btn-tourner-a-gauche:hover {
+    animation: 1s linear tournerAGauche;
+}
+
+#btn-tourner-a-droite:hover {
+    animation: 1s linear tournerADroite;
+}
+
+#btn-avancer:hover {
+    animation: 0.5s linear avancer;
+}
+
+#btn-reculer:hover {
+    animation: 0.5s linear reculer;
+}
+
+#btn-tourner-a-gauche:active {
+    animation: 1s linear infinite tournerAGauche;
+}
+
+.fleche:active svg path {
+    fill: green;
+}
+
+
+#btn-tourner-a-droite:active {
+    animation: 1s linear infinite tournerADroite;
+}
+
+#btn-avancer:active {
+    animation: 0.5s linear infinite avancer;
+}
+
+#btn-reculer:active {
+    animation: 0.5s linear infinite reculer;
+}
+
+@keyframes tournerAGauche {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes tournerADroite {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes avancer {
+    100% {
+        transform: translate(0, -20px);
+        opacity: 0;
+    }
+}
+
+
+@keyframes reculer {
+    100% {
+        transform: translate(0, 20px);
+        opacity: 0;
+    }
+}
+
+
 /* FOOTER */
 
 
@@ -193,4 +303,12 @@ footer {
     /* style */
     background: #F0F0F0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.displayNone{
+    display: none;
+}
+
+.displayFlex{
+    display: flex;
 }
