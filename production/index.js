@@ -16,8 +16,8 @@ const speed=130;
 
 function createOrder(left, right, duration=1){
     let order= {
-        left: speed,
-        right: speed,
+        left: left,
+        right: right,
         time: Date.now(),
         duration: duration
     }
