@@ -76,17 +76,11 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
       nom_event = String(doc[0]);
 
       if (nom_event == "motor") {
-        // uint8_t left = (uint8_t)doc[1];
-        // uint8_t right = (uint8_t)doc[2];
-        // uint8_t durationLeft = (uint8_t)doc[3];
-        // uint8_t durationRight = (uint8_t)doc[4];
-        // uint8_t time = (uint8_t)doc[5];
-
-        int left = doc[1][0];
-        int right = doc[1][1];
-        int durationLeft = doc[1][2];
-        int durationRight = doc[1][3];
-        int time = doc[1][4];
+        int left = doc[1]["left"];
+        int right = doc[1]["right"];
+        int durationLeft = doc[1]["durationLeft"];
+        int durationRight = doc[1]["durationRight"];
+        int time = doc[1]["time"];
 
         USE_SERIAL.printf("%d\n", left);
         USE_SERIAL.printf("%d\n", right);
@@ -175,7 +169,7 @@ void setup() {
 
   // Moteurs
   if (!AFMS.begin()) {  // create with the default frequency 1.6KHz
-                        // if (!AFMS.begin(1000)) {  // OR with a different frequency, say 1KHz
+    // if (!AFMS.begin(1000)) {  // OR with a different frequency, say 1KHz
     Serial.println("Could not find Motor Shield. Check wiring.");
     while (1)
       ;
@@ -247,7 +241,7 @@ void loop() {
 
     // create JSON message for Socket.IO (event)
     DynamicJsonDocument doc(1024);
-    
+
     JsonArray array = doc.to<JsonArray>();
 
     // add event name
