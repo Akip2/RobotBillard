@@ -1,5 +1,5 @@
 const ballSize=10;
-const ballColors=["blue", "yellow", "red", "purple", "orange", "pink", "black"];
+const ballColors=["blue", "yellow", "red", "purple", "orange", "pink", "black", "white"];
 
 const holeSize=ballSize*1.5;
 

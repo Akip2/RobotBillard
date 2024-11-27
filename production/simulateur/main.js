@@ -3,6 +3,8 @@ import Ball from "./objects/ball.js";
 import Table from "./table.js";
 import {width, height, ballSize, ballColors, holeSize} from "./params.js";
 
+const canvasContainer=document.getElementById("canvas-container");
+
 let balls=[];
 ballColors.forEach(color=>{
     let ball=new Ball(ballSize, color, (Math.random()*(width-holeSize*2))+holeSize, Math.random()*(height-holeSize*2)+holeSize);
