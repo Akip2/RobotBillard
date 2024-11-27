@@ -1,12 +1,46 @@
+const socket = io(); //Connexion au serveur
+
 let listeVues = document.querySelector("#liste-boutons");
 
 let vueCamera = document.querySelector("#partie-droite-camera");
 // let vueSimulateur = document.querySelector("#partie-droite-simulateur");
 let vueManuel = document.querySelector("#partie-droite-manuel");
 
+const btnForward=document.getElementById("btn-avancer");
+const btnBackward=document.getElementById("btn-reculer");
+const btnLeftTurn=document.getElementById("btn-tourner-a-gauche");
+const btnRightTurn=document.getElementById("btn-tourner-a-droite");
+
+const speed=130;
 // let vueActive = vueCamera;
 
+function createOrder(left, right, duration=1){
+    let order= {
+        left: speed,
+        right: speed,
+        time: Date.now(),
+        duration: duration
+    }
+
+    return order;
+}
+
 window.addEventListener("load", () => {
+    btnForward.addEventListener("click", () => {
+        socket.emit('motor', createOrder(speed, speed));
+    });
+
+    btnBackward.addEventListener("click", () => {
+        socket.emit('motor', createOrder(-speed, -speed));
+    });
+
+    btnRightTurn.addEventListener("click", () => {
+        socket.emit('motor', createOrder(speed, 0));
+    });
+
+    btnLeftTurn.addEventListener("click", () => {
+        socket.emit('motor', createOrder(0, speed));
+    });
 
     listeVues.addEventListener("click", (event) => {
         switch (event.target.id){
