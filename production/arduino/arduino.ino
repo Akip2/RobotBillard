@@ -17,7 +17,7 @@
 #define USE_SERIAL Serial
 
 // === MODIFIER EN FONCTION DU RESEAU =========================================
-char* ADRESSE_SERVEUR = "192.168.43.26";
+char* ADRESSE_SERVEUR = "192.168.43.156";
 int PORT_SERVEUR = 8001;
 char* URL = "/socket.io/?EIO=4";
 
@@ -32,12 +32,14 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Moteurs
 Adafruit_DCMotor* moteurGauche = AFMS.getMotor(1);
-Adafruit_DCMotor* moteurDroite = AFMS.getMotor(2);
+Adafruit_DCMotor* moteurDroit = AFMS.getMotor(2);
 
 int sensMoteurGauche = 0;
 int sensMoteurDroit = 0;
 int vitesseMoteurGauche = 0;
 int vitesseMoteurDroit = 0;
+int dureeMoteurGauche = 0;
+int dureeMoteurDroit = 0;
 
 bool changeMotors = false;
 
@@ -50,7 +52,7 @@ int lastEtatLED = 0;
   En quelque sorte le contrôleur
 */
 void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) {
-  JsonDocument doc;
+  DynamicJsonDocument doc(1024);
   String payload_str;
   String nom_event;
 
@@ -73,34 +75,43 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
 
       nom_event = String(doc[0]);
 
-      if (nom_event == "bouton") {
-        String val_event = String(doc[1]);
+      if (nom_event == "motor") {
+        int left = doc[1]["left"];
+        int right = doc[1]["right"];
+        int durationLeft = doc[1]["durationLeft"];
+        int durationRight = doc[1]["durationRight"];
+        int time = doc[1]["time"];
 
-        if (val_event == "0") etatLED = 0;
-        else etatLED = 1;
-      }
+        USE_SERIAL.printf("%d\n", left);
+        USE_SERIAL.printf("%d\n", right);
+        USE_SERIAL.printf("%d\n", durationLeft);
+        USE_SERIAL.printf("%d\n", durationRight);
+        USE_SERIAL.printf("%d\n", time);
 
-      if (nom_event == "okcurseur") {
-        uint8_t val_event = (uint8_t)String(doc[1]).toInt();
-
-        USE_SERIAL.printf("[IOc] get event: %d\n", val_event);
-
-        if (val_event > 50) {
-          sensMoteurDroit = FORWARD;
+        if (left > 0) {
           sensMoteurGauche = FORWARD;
-
-          vitesseMoteurGauche = val_event;
-          vitesseMoteurDroit = val_event;
-        } else if (val_event < 50) {
-          sensMoteurDroit = BACKWARD;
+          vitesseMoteurGauche = left;
+          dureeMoteurGauche = durationLeft;
+        } else if (left < 0) {
           sensMoteurGauche = BACKWARD;
-
-          vitesseMoteurGauche = val_event;
-          vitesseMoteurDroit = val_event;
+          vitesseMoteurGauche = abs(left);
+          dureeMoteurGauche = durationLeft;
         } else {  // 0 en gros
           vitesseMoteurGauche = 0;
+        }
+
+        if (right > 0) {
+          sensMoteurDroit = FORWARD;
+          vitesseMoteurDroit = right;
+          dureeMoteurDroit = durationRight;
+        } else if (right < 0) {
+          sensMoteurDroit = BACKWARD;
+          vitesseMoteurDroit = abs(right);
+          dureeMoteurDroit = durationRight;
+        } else {  // 0 en gros
           vitesseMoteurDroit = 0;
         }
+
         changeMotors = true;
       }
       break;
@@ -155,6 +166,21 @@ void setup() {
 
   socketIO.begin(ADRESSE_SERVEUR, PORT_SERVEUR, URL);
   socketIO.onEvent(socketIOEvent);
+
+  // Moteurs
+  if (!AFMS.begin()) {  // create with the default frequency 1.6KHz
+    // if (!AFMS.begin(1000)) {  // OR with a different frequency, say 1KHz
+    Serial.println("Could not find Motor Shield. Check wiring.");
+    while (1)
+      ;
+  }
+  Serial.println("Motor Shield found.");
+
+  // Set the speed to start, from 0 (off) to 255 (max speed)
+  moteurGauche->setSpeed(150);
+  moteurGauche->run(FORWARD);
+  // turn on motor
+  moteurGauche->run(RELEASE);
 }
 
 // ############################################################################
@@ -178,13 +204,33 @@ void loop() {
   // Changement des moteurs ici
   if (changeMotors) {
     moteurGauche->run(sensMoteurGauche);
-    moteurDroite->run(sensMoteurDroit);
+    moteurDroit->run(sensMoteurDroit);
 
     moteurGauche->setSpeed(vitesseMoteurGauche);
-    moteurDroite->setSpeed(vitesseMoteurDroit);
+    moteurDroit->setSpeed(vitesseMoteurDroit);
+
+    delay(dureeMoteurDroit);
+
+    moteurGauche->run(RELEASE);
+    moteurDroit->run(RELEASE);
+
+    delay(dureeMoteurDroit);
+
+    // moteurGauche->run(FORWARD);
+
+    // int i;
+    // for (i=0; i<255; i++) {
+    //   moteurGauche->setSpeed(i);
+    //   delay(dureeMoteurDroit);
+    // }
+    // for (i=255; i!=0; i--) {
+    //   moteurGauche->setSpeed(i);
+    //   delay(dureeMoteurDroit);
+    // }
 
     // moteurGauche->run(RELEASE);
-    // moteurDroite->run(RELEASE);
+    // delay(dureeMoteurDroit);
+
     changeMotors = false;
   }
 
@@ -194,7 +240,7 @@ void loop() {
     messageTimestamp = now;
 
     // create JSON message for Socket.IO (event)
-    JsonDocument doc;
+    DynamicJsonDocument doc(1024);
 
     JsonArray array = doc.to<JsonArray>();
 
