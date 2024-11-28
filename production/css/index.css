@@ -80,7 +80,10 @@ main {
 }
 
 canvas {
-    background-color: yellow
+    background-image: url('../img/img.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 
