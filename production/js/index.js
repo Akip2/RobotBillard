@@ -6,6 +6,10 @@ let vueCamera = document.querySelector("#partie-droite-camera");
 let vueSimulateur = document.querySelector("#partie-droite-simulateur");
 let vueManuel = document.querySelector("#partie-droite-manuel");
 
+let divCanvas = document.querySelector("#canvas-container");
+let canvas = document.querySelector("#canvasOutputVideo");
+
+
 const btnForward=document.getElementById("btn-avancer");
 const btnBackward=document.getElementById("btn-reculer");
 const btnLeftTurn=document.getElementById("btn-tourner-a-gauche");
@@ -44,12 +48,23 @@ window.addEventListener("load", () => {
     listeVues.addEventListener("click", (event) => {
         switch (event.target.id){
             case "camera":
+                if (vueActive === vueSimulateur){
+                    updateVueActive(vueCamera);
+                    divCanvas.appendChild(canvas);
+                }
                 updateVueActive(vueCamera);
                 break;
             case "simulateur":
-                updateVueActive(vueSimulateur);
+                if (vueActive !== vueSimulateur){
+                    updateVueActive(vueSimulateur);
+                    divCanvas.removeChild(canvas);
+                }
                 break;
             case "manuel":
+                if (vueActive === vueSimulateur){
+                    updateVueActive(vueManuel);
+                    divCanvas.appendChild(canvas);
+                }
                 updateVueActive(vueManuel);
                 break;
             default:
