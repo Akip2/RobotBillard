@@ -44,10 +44,7 @@ window.addEventListener("load", () => {
     listeVues.addEventListener("click", (event) => {
         switch (event.target.id){
             case "camera":
-                console.log("camera");
-                console.log(vueCamera.classList);
                 if(vueCamera.classList.contains("displayNone")) {
-                    console.log("displayNone = oui");
                     vueCamera.classList.remove("displayNone");
                     vueCamera.classList.add("displayFlex");
 
@@ -77,10 +74,7 @@ window.addEventListener("load", () => {
             //     }
             //     break;
             case "manuel":
-                console.log("manuel");
                 if(vueManuel.classList.contains("displayNone")) {
-                    console.log("displayNone = oui");
-
                     vueManuel.classList.remove("displayNone");
                     vueManuel.classList.add("displayFlex");
 

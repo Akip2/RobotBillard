@@ -1,9 +1,10 @@
-var path=require("path");
-var express = require('express');
-var app = express();
-var server = require('http').createServer(app);
+const path=require("path");
+const express = require('express');
+const app = express();
+const server = require('http').createServer(app);
 //io = require('socket.io').listen(server, {
-var io = require('socket.io').listen(server, {
+
+const io = require('socket.io').listen(server, {
     //path: '/test',
     //serveClient: false,
     // below are engine.IO options
@@ -28,7 +29,7 @@ io.sockets.on('connection', function (socket) {
         socket.broadcast.emit('motor', val);
     });
 
-    socket.on('disconnect', function(socket) {
+    socket.on('disconnect', function() {
         console.log('Socket disconnected');
     });
 });
