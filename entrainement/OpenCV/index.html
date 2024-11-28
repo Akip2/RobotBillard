@@ -1,31 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="utf-8">
-    <title>Hello OpenCV.js</title>
-</head>
-<body>
-    <h2>Hello OpenCV.js</h2>
-    <p id="status">OpenCV.js is loading...</p>
-    <div>
-        <div class="inputoutput">
-<!--            <img id="imageSrc" alt="No Image" src="img/boules.jpg"/>-->
-
-            <video autoplay loop muted id="videoInput" width="854" height="580" src=""></video>
-<!--            <video muted id="videoInput" width="854" height="480" src=""></video>-->
-        </div>
-        <div class="inputoutput">
-            <!--<canvas id="canvasOutput" ></canvas>
-            <div class="caption">canvasOutput</div>-->
-
-            <div class="caption">canvasOutputVideo</div>
-            <canvas id="canvasOutputVideo" ></canvas>
-        </div>
-    </div>
-</body>
-<script async src="lib/openCV.js" type="text/javascript"></script>
-<!--<script src="scripts/image.js" type="text/javascript"></script>-->
-<script src="scripts/video.js" type="text/javascript"></script>
-<script src="scripts/camera.js" type="text/javascript"></script>
-<!--<script src="scripts/index.js" type="module"></script>-->
+    <head>
+        <meta charset="utf-8">
+        <title>Hello OpenCV.js</title>
+    </head>
+    <body>
+        <h2>Hello OpenCV.js</h2>
+        <canvas id="canvasOutputVideo"></canvas>
+    </body>
+    <script async src="lib/openCV.js" type="text/javascript"></script>
+    <script src="scripts/video.js" type="text/javascript"></script>
 </html>

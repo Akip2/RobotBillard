@@ -1,32 +1,56 @@
-function main() {
-    document.getElementById("status").innerHTML = "OpenCV.js is ready.";
+document.addEventListener("DOMContentLoaded", () => {
+    const canvas = document.getElementById("canvasOutputVideo");
+    const ctx = canvas.getContext("2d");
 
-    let video = document.getElementById('videoInput');
-    let cap = new cv.VideoCapture(video);
+    // Accéder à la caméra
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                // Créer une vidéo virtuelle pour récupérer les frames du flux caméra
+                const video = document.createElement("video");
+                video.srcObject = stream;
+                video.play();
 
-    // Prepare frame
-    let frame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+                // Une fois que la vidéo est prête, on commence le traitement
+                video.addEventListener("loadeddata", () => {
+                    // Configurer le canvas avec les dimensions de la vidéo
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
 
-    // Set the FPS for processing
+                    // Lancer la boucle de traitement vidéo
+                    processVideo(video, canvas, ctx);
+                });
+            })
+            .catch((error) => {
+                console.error("Erreur d'accès à la caméra :", error);
+            });
+    } else {
+        console.error("getUserMedia n'est pas supporté par ce navigateur.");
+    }
+});
+
+function processVideo(video, canvas, ctx) {
     const FPS = 30;
+    const frame = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
 
-    function processVideo() {
+    function processFrame() {
         try {
-            let begin = Date.now(); // date de début de l'analyse d'une frame
+            let begin = Date.now();
 
-            // On récupère une frame de la vidéo
-            cap.read(frame);
+            // Capturer la frame depuis la vidéo dans un canvas temporaire
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-            // On applique un flou sur le frame
-            let blurred = new cv.Mat();
-            // cv.GaussianBlur(frame, blurred, new cv.Size(9, 9), 5, 5);
-            cv.medianBlur(frame, blurred, 7);
+            // Convertir le frame en une matrice OpenCV
+            frame.data.set(imageData.data);
 
-            // On applique un niveau de gris au frame
+            // transformation de l'image
             let gray = new cv.Mat();
-            cv.cvtColor(blurred, gray, cv.COLOR_RGBA2GRAY);
+            let blurred = new cv.Mat();
+            cv.medianBlur(frame, blurred, 7); // flou
+            cv.cvtColor(blurred, gray, cv.COLOR_RGBA2GRAY); // niveau de gris
 
-            // On détecte des cercles avec la méthode HoughCircles
+            // Détection des cercles
             let circles = new cv.Mat();
             cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT,
                 2,      // résolution 1 = résolution par défaut, 2 = résolution divisée par 2
@@ -37,41 +61,31 @@ function main() {
                 18      // diamètre maximum des boules
             );
 
-            // On dessine chaque cercle
+            // Dessiner les cercles détectés
             for (let i = 0; i < circles.cols; ++i) {
-                let circle = circles.data32F.slice(i * 3, (i + 1) * 3); // circle is [x, y, radius]
+                let circle = circles.data32F.slice(i * 3, (i + 1) * 3);
                 let center = new cv.Point(circle[0], circle[1]);
                 let radius = circle[2];
-
-                // On dessine le centre du cerle
-                cv.circle(frame, center, 3, [0, 255, 0, 255], -1);
-
-                // On dessine le contour du cercle
                 cv.circle(frame, center, radius, [255, 0, 0, 255], 3);
+                cv.circle(frame, center, 3, [0, 255, 0, 255], -1);
             }
 
-            // Show the frame with detected circles
-            cv.imshow('canvasOutputVideo', frame);
+            // Afficher le résultat final dans le canvas
+            cv.imshow(canvas, frame);
 
-            // Clean up memory
+            // Nettoyer la mémoire
             gray.delete();
             blurred.delete();
             circles.delete();
 
-            // Schedule the next frame
+            // Planifier la prochaine frame
             let delay = 1000 / FPS - (Date.now() - begin);
-            setTimeout(processVideo, delay);
+            setTimeout(processFrame, delay);
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
 
-    // Start the processing loop
-    setTimeout(processVideo, 0);
-}
-
-const Module = {
-    onRuntimeInitialized() {
-        main();
-    }
+    // Lancer la boucle de traitement
+    processFrame();
 }
