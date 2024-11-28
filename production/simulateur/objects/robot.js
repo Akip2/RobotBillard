@@ -14,6 +14,7 @@ class Robot extends SimulationObject{
         const wheel2=new Wheel(wheelRadius, width/2, (height/2)-wheelRadius);
 
         const body=Body.create({
+            frictionAir: 0.5,
             parts: [wheel1.body, wheel2.body, core],
         });
 

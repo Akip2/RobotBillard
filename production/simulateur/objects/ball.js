@@ -4,6 +4,7 @@ import SimulationObject from "./simulation-object.js";
 class Ball extends SimulationObject{
     constructor(radius, color, x=0, y=0){
         const body=Bodies.circle(0, 0, radius, {
+            restitution:0.75,
             collisionFilter: {
                 category: COLLISION_FILTERS.BALL,
             },
