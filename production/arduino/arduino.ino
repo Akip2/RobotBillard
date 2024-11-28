@@ -17,12 +17,12 @@
 #define USE_SERIAL Serial
 
 // === MODIFIER EN FONCTION DU RESEAU =========================================
-char* ADRESSE_SERVEUR = "192.168.43.156";
+char* ADRESSE_SERVEUR = "192.168.137.1";
 int PORT_SERVEUR = 8001;
 char* URL = "/socket.io/?EIO=4";
 
-char* NOM_RESEAU = "AndroidAP6E68";
-char* MDP_RESEAU = "yyny1513";
+char* NOM_RESEAU = "TP-LINK_7A134E";
+char* MDP_RESEAU = "C27A134E";
 // ============================================================================
 
 ESP8266WiFiMulti WiFiMulti;
@@ -38,14 +38,9 @@ int sensMoteurGauche = 0;
 int sensMoteurDroit = 0;
 int vitesseMoteurGauche = 0;
 int vitesseMoteurDroit = 0;
-int dureeMoteurGauche = 0;
-int dureeMoteurDroit = 0;
+int dureeMoteurs = 0;
 
 bool changeMotors = false;
-
-// LED (test)
-int etatLED = 1;
-int lastEtatLED = 0;
 
 /*
   C'est ici que l'on gère ce qu'il se passe lorsqu'un évènement est reçu
@@ -78,39 +73,37 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
       if (nom_event == "motor") {
         int left = doc[1]["left"];
         int right = doc[1]["right"];
-        int durationLeft = doc[1]["durationLeft"];
-        int durationRight = doc[1]["durationRight"];
+        int duration = doc[1]["duration"];
         int time = doc[1]["time"];
 
         USE_SERIAL.printf("%d\n", left);
         USE_SERIAL.printf("%d\n", right);
-        USE_SERIAL.printf("%d\n", durationLeft);
-        USE_SERIAL.printf("%d\n", durationRight);
+        USE_SERIAL.printf("%d\n", duration);
         USE_SERIAL.printf("%d\n", time);
 
         if (left > 0) {
           sensMoteurGauche = FORWARD;
           vitesseMoteurGauche = left;
-          dureeMoteurGauche = durationLeft;
         } else if (left < 0) {
           sensMoteurGauche = BACKWARD;
           vitesseMoteurGauche = abs(left);
-          dureeMoteurGauche = durationLeft;
         } else {  // 0 en gros
+          sensMoteurGauche = RELEASE;
           vitesseMoteurGauche = 0;
         }
 
         if (right > 0) {
           sensMoteurDroit = FORWARD;
           vitesseMoteurDroit = right;
-          dureeMoteurDroit = durationRight;
         } else if (right < 0) {
           sensMoteurDroit = BACKWARD;
           vitesseMoteurDroit = abs(right);
-          dureeMoteurDroit = durationRight;
         } else {  // 0 en gros
+          sensMoteurDroit = RELEASE;
           vitesseMoteurDroit = 0;
         }
+        
+        dureeMoteurs = duration;
 
         changeMotors = true;
       }
@@ -192,15 +185,6 @@ unsigned long messageTimestamp = 0;
 void loop() {
   socketIO.loop();
 
-  // Le changement de LED se fait ici
-  if (etatLED == 1 && lastEtatLED == 0) {
-    digitalWrite(LED_BUILTIN, LOW);
-    lastEtatLED = etatLED;
-  } else if (etatLED == 0 && lastEtatLED == 1) {
-    digitalWrite(LED_BUILTIN, HIGH);
-    lastEtatLED = etatLED;
-  }
-
   // Changement des moteurs ici
   if (changeMotors) {
     moteurGauche->run(sensMoteurGauche);
@@ -209,12 +193,10 @@ void loop() {
     moteurGauche->setSpeed(vitesseMoteurGauche);
     moteurDroit->setSpeed(vitesseMoteurDroit);
 
-    delay(dureeMoteurDroit);
+    delay(dureeMoteurs);
 
     moteurGauche->run(RELEASE);
     moteurDroit->run(RELEASE);
-
-    delay(dureeMoteurDroit);
 
     // moteurGauche->run(FORWARD);
 

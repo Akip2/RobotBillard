@@ -15,34 +15,54 @@ const btnBackward=document.getElementById("btn-reculer");
 const btnLeftTurn=document.getElementById("btn-tourner-a-gauche");
 const btnRightTurn=document.getElementById("btn-tourner-a-droite");
 
-const speed=130;
+const curseurMoteurGauche = document.getElementById("curseurMoteurGauche");
+const curseurMoteurDroit = document.getElementById("curseurMoteurDroit");
+const inputDuration = document.getElementById("inputDuration");
+
+let speedGauche = 130;
+let speedDroit = 130;
+
+let duration = 1000;
+
 let vueActive = getVueActive();
 
-function createOrder(left, right, durationLeft=1000, durationRight=1000) {
+function createOrder(left, right, duration) {
     return {
         left: left,
         right: right,
-        durationLeft: durationLeft,
-        durationRight: durationRight,
-        time: Date.now(),
+        duration: duration,
+        time: Date.now()
     };
 }
 
 window.addEventListener("load", () => {
+    inputDuration.addEventListener("input", () => {
+        duration = inputDuration.value;
+        console.log(duration);
+    });
+
+    curseurMoteurGauche.addEventListener("input", () => {
+        speedGauche = curseurMoteurGauche.value;
+    });
+
+    curseurMoteurDroit.addEventListener("input", () => {
+        speedDroit = curseurMoteurDroit.value;
+    });
+
     btnForward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speed, speed));
+        socket.emit('motor', createOrder(speedGauche, speedDroit, duration));
     });
 
     btnBackward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speed, -speed));
+        socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration));
     });
 
     btnRightTurn.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speed, speed));
+        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration));
     });
 
     btnLeftTurn.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speed, -speed));
+        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration));
     });
 
     listeVues.addEventListener("click", (event) => {
