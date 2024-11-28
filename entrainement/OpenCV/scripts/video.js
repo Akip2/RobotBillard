@@ -31,7 +31,7 @@ function main() {
             cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT,
                 2,      // résolution 1 = résolution par défaut, 2 = résolution divisée par 2
                 20,     // distance entre les cercles
-                100,    //
+                100,    // plus c'est bas plus il trouve de cerles
                 30,     //
                 10,     // diamètre minimum des boules
                 18      // diamètre maximum des boules

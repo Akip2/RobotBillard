@@ -3,7 +3,7 @@ const socket = io(); //Connexion au serveur
 let listeVues = document.querySelector("#liste-boutons");
 
 let vueCamera = document.querySelector("#partie-droite-camera");
-// let vueSimulateur = document.querySelector("#partie-droite-simulateur");
+let vueSimulateur = document.querySelector("#partie-droite-simulateur");
 let vueManuel = document.querySelector("#partie-droite-manuel");
 
 const btnForward=document.getElementById("btn-avancer");
@@ -12,7 +12,7 @@ const btnLeftTurn=document.getElementById("btn-tourner-a-gauche");
 const btnRightTurn=document.getElementById("btn-tourner-a-droite");
 
 const speed=130;
-// let vueActive = vueCamera;
+let vueActive = getVueActive();
 
 function createOrder(left, right, durationLeft=1000, durationRight=1000) {
     return {
@@ -44,53 +44,43 @@ window.addEventListener("load", () => {
     listeVues.addEventListener("click", (event) => {
         switch (event.target.id){
             case "camera":
-                if(vueCamera.classList.contains("displayNone")) {
-                    vueCamera.classList.remove("displayNone");
-                    vueCamera.classList.add("displayFlex");
-
-                    // if(vueSimulateur.classList.contains("displayFlex")) {
-                    //     vueSimulateur.classList.remove("displayFlex");
-                    //     vueSimulateur.classList.add("displayNone");
-                    // }
-                    if(vueManuel.classList.contains("displayFlex")) {
-                        vueManuel.classList.remove("displayFlex");
-                        vueManuel.classList.add("displayNone");
-                    }
-                }
+                updateVueActive(vueCamera);
                 break;
-            // case "simulateur":
-            //     if(vueSimulateur.classList.contains("displayNone")) {
-            //         vueSimulateur.classList.remove("displayNone");
-            //         vueSimulateur.classList.add("displayFlex");
-            //
-            //         if(vueCamera.classList.contains("displayFlex")) {
-            //             vueCamera.classList.remove("displayFlex");
-            //             vueCamera.classList.add("displayNone");
-            //         }
-            //         if(vueManuel.classList.contains("displayFlex")) {
-            //             vueManuel.classList.remove("displayFlex");
-            //             vueManuel.classList.add("displayNone");
-            //         }
-            //     }
-            //     break;
+            case "simulateur":
+                updateVueActive(vueSimulateur);
+                break;
             case "manuel":
-                if(vueManuel.classList.contains("displayNone")) {
-                    vueManuel.classList.remove("displayNone");
-                    vueManuel.classList.add("displayFlex");
-
-                    if(vueCamera.classList.contains("displayFlex")) {
-                        vueCamera.classList.remove("displayFlex");
-                        vueCamera.classList.add("displayNone");
-                    }
-                    // if(vueSimulateur.classList.contains("displayFlex")) {
-                    //     vueSimulateur.classList.remove("displayFlex");
-                    //     vueSimulateur.classList.add("displayNone");
-                    // }
-                }
+                updateVueActive(vueManuel);
                 break;
             default:
                 console.log("Erreur : vue inconnue");
         }
     });
 })
+
+function getVueActive() {
+    if(vueCamera.classList.contains("displayFlex")) {
+        return vueCamera;
+    }else if(vueSimulateur.classList.contains("displayFlex")){
+        return vueSimulateur;
+    }else{
+        return vueManuel;
+    }
+}
+
+function updateVueActive(nouvelleVueActive) {
+    // on vérifie tout d'abord si la vue active change
+    if(nouvelleVueActive.id !== vueActive.id){
+        // on retire la classe de la vue active de l'affichage
+        vueActive.classList.remove("displayFlex");
+        vueActive.classList.add("displayNone");
+
+        // on ajoute la classe de la nouvelle vue active sur la page
+        nouvelleVueActive.classList.remove("displayNone");
+        nouvelleVueActive.classList.add("displayFlex");
+
+        // on met à jour la vue active
+        vueActive = nouvelleVueActive;
+    }
+}
 
