@@ -2,6 +2,7 @@ import Robot from "./objects/robot.js";
 import Ball from "./objects/ball.js";
 import Table from "./table.js";
 import {width, height, ballSize, ballColors, holeSize} from "./params.js";
+import VueSimulateur from "./vue-simulateur.js";
 
 const canvasContainer=document.getElementById("canvas-container");
 
@@ -13,5 +14,6 @@ ballColors.forEach(color=>{
 
 let robot=new Robot(30, 35, 6.5, width/2+15, height/2+17);
 
-let table=new Table([robot], balls);
-table.setup();
+let vue=new VueSimulateur(canvasContainer);
+let table=new Table([robot], balls, vue);
+table.notifyView();
