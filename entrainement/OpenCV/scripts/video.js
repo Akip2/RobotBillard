@@ -8,38 +8,45 @@ function main() {
     let frame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
 
     // Set the FPS for processing
-    const FPS = 60;
+    const FPS = 30;
 
     function processVideo() {
         try {
-            let begin = Date.now();
+            let begin = Date.now(); // date de début de l'analyse d'une frame
 
-            // Capture a frame from the video
+            // On récupère une frame de la vidéo
             cap.read(frame);
 
-            // Convert the frame to grayscale as HoughCircles works on grayscale images
+            // On applique un flou sur le frame
+            let blurred = new cv.Mat();
+            // cv.GaussianBlur(frame, blurred, new cv.Size(9, 9), 5, 5);
+            cv.medianBlur(frame, blurred, 7);
+
+            // On applique un niveau de gris au frame
             let gray = new cv.Mat();
-            cv.cvtColor(frame, gray, cv.COLOR_RGBA2GRAY);
+            cv.cvtColor(blurred, gray, cv.COLOR_RGBA2GRAY);
 
-            // Use GaussianBlur to reduce noise and improve circle detection
-            // let blurred = new cv.Mat();
-            // cv.GaussianBlur(gray, blurred, new cv.Size(9, 9), 2, 2);
-
-            // Detect circles in the frame using Hough Transform
+            // On détecte des cercles avec la méthode HoughCircles
             let circles = new cv.Mat();
-            cv.HoughCircles(gray , circles, cv.HOUGH_GRADIENT,
-                2, 10, 100, 30, 3, 12);
+            cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT,
+                2,      // résolution 1 = résolution par défaut, 2 = résolution divisée par 2
+                20,     // distance entre les cercles
+                100,    //
+                30,     //
+                10,     // diamètre minimum des boules
+                18      // diamètre maximum des boules
+            );
 
-            // Draw detected circles
+            // On dessine chaque cercle
             for (let i = 0; i < circles.cols; ++i) {
                 let circle = circles.data32F.slice(i * 3, (i + 1) * 3); // circle is [x, y, radius]
                 let center = new cv.Point(circle[0], circle[1]);
                 let radius = circle[2];
 
-                // Draw the circle's center
+                // On dessine le centre du cerle
                 cv.circle(frame, center, 3, [0, 255, 0, 255], -1);
 
-                // Draw the circle's outline
+                // On dessine le contour du cercle
                 cv.circle(frame, center, radius, [255, 0, 0, 255], 3);
             }
 
@@ -48,6 +55,7 @@ function main() {
 
             // Clean up memory
             gray.delete();
+            blurred.delete();
             circles.delete();
 
             // Schedule the next frame
@@ -67,7 +75,3 @@ const Module = {
         main();
     }
 }
-
-// export default {
-//     main: main
-// }
