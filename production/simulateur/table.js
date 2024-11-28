@@ -1,9 +1,6 @@
-import {Engine, Render, Runner,Body ,Mouse, MouseConstraint, Composite} from "./global.js";
 import Wall from "./objects/wall.js";
 import {width, height, holeSize} from "./params.js";
 import Hole from "./objects/hole.js";
-
-let engine, runner, render;
 
 class Table{
     constructor(robots, balls, vue){
@@ -26,6 +23,17 @@ class Table{
             new Hole(holeSize, width-holeSize/2, height-holeSize/2),
             new Hole(holeSize, width/2, height-holeSize/2)
         ];
+    }
+
+    removeBall(ball){
+        let index=this.balls.indexOf(ball);
+        this.balls.splice(index,1);
+
+        this.notifyView();
+    }
+
+    getBalls(){
+        return this.balls;
     }
 
     notifyView(){
