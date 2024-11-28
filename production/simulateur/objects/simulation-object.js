@@ -28,6 +28,10 @@ class SimulationObject{
     addToEnv(world){
         Composite.add(world, this.body);
     }
+
+    destroy(world){
+        Composite.remove(world, this.body);
+    }
 }
 
 export default SimulationObject;
