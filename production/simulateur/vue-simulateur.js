@@ -75,13 +75,13 @@ class VueSimulateur {
             robot.addToEnv(this.engine.world);
         });
 
-        table.holes.forEach(hole => {
-            hole.addToEnv(this.engine.world);
-        });
-
         table.walls.forEach(wall => {
             wall.addToEnv(this.engine.world);
         })
+
+        table.holes.forEach(hole => {
+            hole.addToEnv(this.engine.world);
+        });
     }
 
     update(table){
@@ -96,10 +96,7 @@ class VueSimulateur {
             }
         });
 
-        this.addObjects(walls);
-        this.addObjects(holes);
-        this.addObjects(balls);
-        this.addObjects(robots);
+        this.addObjects(walls+holes+balls+robots);
     }
 
     addObjects(objArray){
@@ -110,5 +107,4 @@ class VueSimulateur {
         })
     }
 }
-
 export default VueSimulateur;

@@ -15,12 +15,45 @@ import Ball from "../objects/ball.js";
 
 class RandomConfig extends Table{
     constructor(vue){
-        const robots=[new Robot(robotWidth, robotHeight, wheelSize, (Math.random()*(width-wallSize*2)-robotWidth*2)+robotWidth, (Math.random()*height-wallSize*2-robotHeight*2)+robotHeight)];
+        let randomWidth=Math.random()*width;
+        let randomHeight=Math.random()*height;
+        const robots=[new Robot(
+            robotWidth, robotHeight, wheelSize,
+
+            //Verifie que l'abscisse du robot n'est pas dans un mur ou en dehors de l'écran
+            randomWidth<(robotWidth/2)+wallSize
+                ? (robotWidth/2+wallSize)
+                : randomWidth>(width-robotWidth/2-wallSize)
+                    ? width-robotWidth/2-wallSize
+                    : randomWidth,
+
+            //Verifie que l'ordonnée du robot n'est pas dans un mur ou en dehors de l'écran
+            randomHeight<(robotHeight/2)+wallSize
+                ? (robotHeight/2+wallSize)
+                : randomHeight>(height-robotHeight/2-wallSize)
+                    ? height-robotHeight/2-wallSize
+                    : randomHeight
+        )];
 
         const balls=[];
         ballColors.forEach(color=>{
-            let ball=new Ball(ballSize, color, (Math.random()*(width-holeSize*2))+holeSize, Math.random()*(height-holeSize*2)+holeSize);
-            balls.push(ball);
+            let ballFull=new Ball(
+                ballSize,
+                color,
+                false,
+                (Math.random()*(width-holeSize*2))+holeSize,
+                Math.random()*(height-holeSize*2)+holeSize
+            );
+
+            let ballCircled=new Ball(
+                ballSize,
+                color,
+                true,
+                (Math.random()*(width-holeSize*2))+holeSize,
+                Math.random()*(height-holeSize*2)+holeSize
+            );
+
+            balls.push(ballFull, ballCircled);
         });
 
         super(robots, balls, vue);

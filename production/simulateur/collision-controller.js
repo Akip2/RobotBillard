@@ -16,8 +16,8 @@ class CollisionController{
                 const balls=table.getBalls();
 
                 balls.forEach(ball => {
-                    if (bodyA === ball.body || bodyB === ball.body) {
-                        const otherBody = (bodyA === ball.body) ? bodyB : bodyA;
+                    if (ball.body.parts.includes(bodyA) || ball.body.parts.includes(bodyB)) {
+                        const otherBody = ball.body.parts.includes(bodyA) ? bodyB : bodyA;
 
                         if (otherBody.collisionFilter.category === COLLISION_FILTERS.HOLE) { //ball collides with hole
                             console.log("ball touch hole");
