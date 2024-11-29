@@ -1,6 +1,7 @@
 import VueSimulateur from "../simulateur/vue-simulateur.js";
 import RandomConfig from "../simulateur/configurations/random-config.js";
 import CollisionController from "../simulateur/collision-controller.js";
+import BillardConfig from "../simulateur/configurations/billard-config.js";
 
 const socket = io(); //Connexion au serveur
 
@@ -91,7 +92,8 @@ window.addEventListener("load", () => {
                     vue.setup();
                     vue.run();
 
-                    let table=new RandomConfig(vue);
+                    // let table=new RandomConfig(vue);
+                    let table = new BillardConfig(vue);
                     let colController=new CollisionController(table);
                     colController.createEvent(vue.engine);
                     table.notifyView();

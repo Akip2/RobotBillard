@@ -14,7 +14,7 @@ const io = require('socket.io').listen(server, {
 });
 
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/index_prototype.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 server.listen(8001);

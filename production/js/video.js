@@ -26,10 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             })
             .catch((error) => {
-                console.error("Erreur d'accès à la caméra :", error);
+                console.log("Erreur d'accès à la caméra :", error);
             });
     } else {
-        console.error("getUserMedia n'est pas supporté par ce navigateur.");
+        console.log("getUserMedia n'est pas supporté par ce navigateur.");
     }
 });
 
