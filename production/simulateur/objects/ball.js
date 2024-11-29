@@ -5,8 +5,8 @@ class Ball extends SimulationObject{
     constructor(radius, color, x=0, y=0, circled=false){
         let body;
         const core=Bodies.circle(0, 0, radius, {
-            restitution:0.55,
-            frictionAir: 0.015,
+            restitution:0.5,
+            frictionAir: 0.025,
             collisionFilter: {
                 category: COLLISION_FILTERS.BALL,
             },
