@@ -44,6 +44,9 @@ main {
 
 /* PARTIE GAUCHE : VUES et CANVAS */
 
+#canvas-container{
+    height: fit-content;
+}
 
 #partie-gauche {
     flex-direction: column;
