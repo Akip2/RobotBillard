@@ -37,8 +37,23 @@ class RandomConfig extends Table{
 
         const balls=[];
         ballColors.forEach(color=>{
-            let ball=new Ball(ballSize, color, (Math.random()*(width-holeSize*2))+holeSize, Math.random()*(height-holeSize*2)+holeSize);
-            balls.push(ball);
+            let ballFull=new Ball(
+                ballSize,
+                color,
+                false,
+                (Math.random()*(width-holeSize*2))+holeSize,
+                Math.random()*(height-holeSize*2)+holeSize
+            );
+
+            let ballCircled=new Ball(
+                ballSize,
+                color,
+                true,
+                (Math.random()*(width-holeSize*2))+holeSize,
+                Math.random()*(height-holeSize*2)+holeSize
+            );
+
+            balls.push(ballFull, ballCircled);
         });
 
         super(robots, balls, vue);
