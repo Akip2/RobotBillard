@@ -2,13 +2,13 @@ import Table from "../table.js";
 import Robot from "../objects/robot.js";
 import {
     ballColors,
-    ballSize,
+    ballRadius,
     height,
-    holeSize,
+    holeRadius,
     robotHeight,
     robotWidth,
     wallSize,
-    wheelSize,
+    wheelRadius,
     width
 } from "../params.js";
 import Ball from "../objects/ball.js";
@@ -18,7 +18,7 @@ class RandomConfig extends Table{
         let randomWidth=Math.random()*width;
         let randomHeight=Math.random()*height;
         const robots=[new Robot(
-            robotWidth, robotHeight, wheelSize,
+            robotWidth, robotHeight, wheelRadius,
 
             //Verifie que l'abscisse du robot n'est pas dans un mur ou en dehors de l'écran
             randomWidth<(robotWidth/2)+wallSize
@@ -38,19 +38,18 @@ class RandomConfig extends Table{
         const balls=[];
         ballColors.forEach(color=>{
             let ballFull=new Ball(
-                ballSize,
+                ballRadius,
                 color,
-                false,
-                (Math.random()*(width-holeSize*2))+holeSize,
-                Math.random()*(height-holeSize*2)+holeSize
+                (Math.random()*(width-holeRadius*2))+holeRadius,
+                Math.random()*(height-holeRadius*2)+holeRadius
             );
 
             let ballCircled=new Ball(
-                ballSize,
+                ballRadius,
                 color,
-                true,
-                (Math.random()*(width-holeSize*2))+holeSize,
-                Math.random()*(height-holeSize*2)+holeSize
+                (Math.random()*(width-holeRadius*2))+holeRadius,
+                Math.random()*(height-holeRadius*2)+holeRadius,
+                true
             );
 
             balls.push(ballFull, ballCircled);
