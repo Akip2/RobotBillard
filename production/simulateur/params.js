@@ -3,7 +3,7 @@ const height=300;
 
 const wallSize=20;
 
-const ballSize=10;
+const ballRadius=10;
 const ballColors=[
     "#FFD700", // jaune
     "#0000FF", // bleu
@@ -16,20 +16,20 @@ const ballColors=[
     "#FFFFFF"  // blanc
 ];
 
-const holeSize=ballSize*1.5;
+const holeRadius=ballRadius*1.5;
 
 const robotWidth=30;
 const robotHeight=30;
-const wheelSize=6.5;
+const wheelRadius=6.5;
 
 export{
-    ballSize,
+    ballRadius,
     ballColors,
-    holeSize,
+    holeRadius,
     wallSize,
     width,
     height,
     robotWidth,
     robotHeight,
-    wheelSize
+    wheelRadius
 }

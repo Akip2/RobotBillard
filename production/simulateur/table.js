@@ -1,5 +1,5 @@
 import Wall from "./objects/wall.js";
-import {width, height, holeSize, wallSize} from "./params.js";
+import {width, height, holeRadius, wallSize} from "./params.js";
 import Hole from "./objects/hole.js";
 import wall from "./objects/wall.js";
 
@@ -17,12 +17,12 @@ class Table{
         ];
 
         this.holes=[
-            new Hole(holeSize, holeSize/2+wallSize/2, height-holeSize/2-wallSize/2),
-            new Hole(holeSize, holeSize/2+wallSize/2, holeSize/2+wallSize/2),
-            new Hole(holeSize, width/2+wallSize/2, holeSize/2),
-            new Hole(holeSize, width-holeSize/2-wallSize/2, holeSize/2+wallSize/2),
-            new Hole(holeSize, width-holeSize/2-wallSize/2, height-holeSize/2-wallSize/2),
-            new Hole(holeSize, width/2+wallSize/2, height-holeSize/2)
+            new Hole(holeRadius, holeRadius/2+wallSize/2, height-holeRadius/2-wallSize/2),
+            new Hole(holeRadius, holeRadius/2+wallSize/2, holeRadius/2+wallSize/2),
+            new Hole(holeRadius, width/2+wallSize/2, holeRadius/2),
+            new Hole(holeRadius, width-holeRadius/2-wallSize/2, holeRadius/2+wallSize/2),
+            new Hole(holeRadius, width-holeRadius/2-wallSize/2, height-holeRadius/2-wallSize/2),
+            new Hole(holeRadius, width/2+wallSize/2, height-holeRadius/2)
         ];
     }
 

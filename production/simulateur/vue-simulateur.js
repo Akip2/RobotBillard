@@ -96,7 +96,10 @@ class VueSimulateur {
             }
         });
 
-        this.addObjects(walls+holes+balls+robots);
+        this.addObjects(walls);
+        this.addObjects(holes);
+        this.addObjects(robots);
+        this.addObjects(balls);
     }
 
     addObjects(objArray){
