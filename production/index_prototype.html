@@ -11,6 +11,9 @@
     <h1 id="titre">Robot Billard joueur de Football</h1>
 
     <main>
+
+        <!-- Partie Gauche contenant le canvas ainsi que les boutons permettant de changer de vue -->
+
         <div class="partie displayFlex" id="partie-gauche">
             <div id="liste-boutons">
                 <button class="btns-vue" id="camera">Caméra</button>
@@ -21,6 +24,11 @@
                 <canvas id="canvasOutputVideo"></canvas>
             </div>
         </div>
+
+
+        <!-- Partie Droite contant les vues (une seule à la fois) -->
+
+        <!-- Vue Caméra : un bouton GO permettant de lancer un scénario, lui même choisi juste en dessous grâce à une liste déroulante -->
 
         <div class="partie displayFlex" id="partie-droite-camera">
             <button id="btn-go">GO</button>
@@ -34,13 +42,22 @@
             </div>
         </div>
 
-        <div class="partie displayNone" id="partie-droite-simulateur">
 
+        <!-- Vue Simulateur : contient ??? pour l'instant rien -->
+
+        <div class="partie displayNone" id="partie-droite-simulateur">
+            <!-- <input type="number" id="inputDuration" min="10" max="10000">-->
         </div>
+
+
+        <!-- Vue contrôles manuels : contient différents contrôles permettant de faire bouger le robot à distance :
+            - des flèches de direction,
+            - des curseurs de puissance des moteurs et
+            - un temps d'éxecution -->
 
         <div class="partie displayNone" id="partie-droite-manuel">
 
-            <input type="range" id="curseurMoteurGauche" orient="vertical" min="0" max="255">
+            <input type="range" class="curseurMoteur" id="curseurMoteurGauche" min="0" max="255" list="palliers">
 
             <div id="grid-boutons-manuel">
                 <button class="fleche" id="btn-avancer">
@@ -55,14 +72,21 @@
                 <button class="fleche" id="btn-reculer">
                     <svg width="96" height="96" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-626 -341)"><path d="M670.981 348.05 670.981 422.809 662.081 413.914C660.921 412.754 659.041 412.754 657.881 413.914 656.721 415.074 656.721 416.954 657.881 418.114L671.881 432.1C672.986 433.26 674.821 433.305 675.981 432.2 676.015 432.168 676.049 432.134 676.081 432.1L690.071 418.112C691.231 417.007 691.276 415.172 690.171 414.012 690.138 413.978 690.105 413.945 690.071 413.912 688.966 412.752 687.131 412.707 685.971 413.812 685.937 413.844 685.904 413.878 685.871 413.912L676.976 422.807 676.976 348.05C676.976 346.393 675.633 345.05 673.976 345.05 672.319 345.05 670.976 346.393 670.976 348.05Z"/></g></svg>
                 </button>
+
+                <input type="number" id="inputDuration" min="100" max="10000" step="100" value="1000">
             </div>
 
-            <input type="range" id="curseurMoteurDroit" orient="vertical" min="0" max="255">
+            <input type="range" class="curseurMoteur" id="curseurMoteurDroit" min="0" max="255" list="palliers">
+
+            <datalist id="palliers">
+                <option value="0"></option>
+                <option value="64"></option>
+                <option value="128"></option>
+                <option value="192"></option>
+                <option value="255"></option>
+            </datalist>
 
         </div>
-
-        <input type="number" id="inputDuration" min="10" max="10000">
-
     </main>
 
     <footer>

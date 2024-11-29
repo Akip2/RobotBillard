@@ -37,7 +37,9 @@ function createOrder(left, right, duration) {
 
 window.addEventListener("load", () => {
     inputDuration.addEventListener("input", () => {
-        duration = inputDuration.value;
+        let durationAvantVerif = inputDuration.value;
+        // on vérifie si le temps est bien compris entre 100 et 10 000 ms
+        duration = durationAvantVerif<100 ? 100 : durationAvantVerif>10000 ? 10000 : durationAvantVerif;
         console.log(duration);
     });
 
@@ -65,34 +67,37 @@ window.addEventListener("load", () => {
         socket.emit('motor', createOrder(speedGauche, -speedDroit, duration));
     });
 
+    // changement de la vue courante
     listeVues.addEventListener("click", (event) => {
         switch (event.target.id){
-            case "camera":
+            case "camera": // bouton caméra cliqué -> on affiche la vue Caméra
                 if (vueActive === vueSimulateur){
                     updateVueActive(vueCamera);
                     divCanvas.appendChild(canvas);
                 }
                 updateVueActive(vueCamera);
                 break;
-            case "simulateur":
+            case "simulateur": // bouton simulateur cliqué -> on affiche la vue Simulateur
                 if (vueActive !== vueSimulateur){
                     updateVueActive(vueSimulateur);
                     divCanvas.removeChild(canvas);
                 }
                 break;
-            case "manuel":
+            case "manuel": // bouton manuel cliqué -> on affiche la vue Manuel
                 if (vueActive === vueSimulateur){
                     updateVueActive(vueManuel);
                     divCanvas.appendChild(canvas);
                 }
                 updateVueActive(vueManuel);
                 break;
-            default:
+            default: // dans le cas où on appuie sur un bouton qui n'a pas de vue, on affiche une erreur
                 console.log("Erreur : vue inconnue");
         }
     });
 })
 
+// fonction qui permet de récupérer la vue courante en vérifiant quelle vue est affichée
+// (contient la classe "displayFlex" et non pas "displayNone")
 function getVueActive() {
     if(vueCamera.classList.contains("displayFlex")) {
         return vueCamera;
@@ -103,6 +108,8 @@ function getVueActive() {
     }
 }
 
+// fonction qui permet de changer la vue active en remplaçant la classe "displayFlex" de la vue active par "displayNone"
+// et remplaçant la classe "displayNone" de la nouvelle vue active par "displayFlex"
 function updateVueActive(nouvelleVueActive) {
     // on vérifie tout d'abord si la vue active change
     if(nouvelleVueActive.id !== vueActive.id){
