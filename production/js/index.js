@@ -8,6 +8,8 @@ const socket = io(); //Connexion au serveur
 const listeVues = document.querySelector("#liste-boutons");
 
 const vueCamera = document.querySelector("#partie-droite-camera");
+// const vueControles = document.querySelector("#partie-droite-controles");
+
 const vueSimulateur = document.querySelector("#partie-droite-simulateur");
 const vueManuel = document.querySelector("#partie-droite-manuel");
 

@@ -107,7 +107,18 @@ canvas {
 }
 
 #btn-recharger {
+    background-color: lightgray;
+    border: none;
+    padding: 0.5em;
+    margin: 0.8em;
+    justify-content: center;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    width: 7rem;
+}
 
+#btn-recharger:hover {
+    background-color: darkgray;
 }
 
 
