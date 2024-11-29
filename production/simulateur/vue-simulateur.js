@@ -94,9 +94,9 @@ class VueSimulateur {
             }
         });
 
-        this.addObjects(balls);
-        this.addObjects(holes);
         this.addObjects(walls);
+        this.addObjects(holes);
+        this.addObjects(balls);
         this.addObjects(robots);
     }
 

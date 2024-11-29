@@ -11,7 +11,7 @@ class Hole extends SimulationObject{
             },
 
             render: {
-                fillStyle: "blue",
+                fillStyle: "black",
                 strokeStyle: '#0a0a0a',
                 lineWidth: 5,
             }
