@@ -55,6 +55,21 @@ class RandomConfig extends Table{
             balls.push(ballFull, ballCircled);
         });
 
+        let ballWhite=new Ball(
+            ballRadius,
+            "white",
+            (Math.random()*(width-holeRadius*2))+holeRadius,
+            Math.random()*(height-holeRadius*2)+holeRadius
+        );
+        let ballBlack=new Ball(
+            ballRadius,
+            "black",
+            (Math.random()*(width-holeRadius*2))+holeRadius,
+            Math.random()*(height-holeRadius*2)+holeRadius
+        );
+
+        balls.push(ballWhite, ballBlack);
+
         super(robots, balls, vue);
     }
 }

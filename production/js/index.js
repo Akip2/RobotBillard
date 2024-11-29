@@ -98,8 +98,8 @@ window.addEventListener("load", () => {
                     vue.setup();
                     vue.run();
 
-                    let table=new RandomConfig(vue);
-                    //let table = new BillardConfig(vue);
+                    //let table=new RandomConfig(vue);
+                    let table = new BillardConfig(vue);
                     let colController=new CollisionController(table);
                     colController.createEvent(vue.engine);
                     table.notifyView();

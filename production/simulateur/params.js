@@ -12,8 +12,6 @@ const ballColors=[
     "#FFA500", // orange
     "#008000", // vert
     "#8B0000", // marron/bordeaux
-    "#000000", // noir
-    "#FFFFFF"  // blanc
 ];
 
 const holeRadius=ballRadius*1.5;
