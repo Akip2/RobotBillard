@@ -1,22 +1,8 @@
-import Robot from "./objects/robot.js";
-import Ball from "./objects/ball.js";
-import Table from "./table.js";
-import {width, height, ballSize, ballColors, holeSize, robotWidth, robotHeight, wheelSize} from "./params.js";
 import VueSimulateur from "./vue-simulateur.js";
 import CollisionController from "./collision-controller.js";
 import RandomConfig from "./configurations/random-config.js";
 
 const canvasContainer=document.getElementById("canvas-container");
-
-/*
-let balls=[];
-ballColors.forEach(color=>{
-    let ball=new Ball(ballSize, color, (Math.random()*(width-holeSize*2))+holeSize, Math.random()*(height-holeSize*2)+holeSize);
-    balls.push(ball);
-});
-
-let robot=new Robot(robotWidth,robotHeight, wheelSize, width/2+15, height/2+17);
-*/
 
 let vue=new VueSimulateur(canvasContainer);
 vue.setup();
