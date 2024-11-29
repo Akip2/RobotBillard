@@ -4,15 +4,14 @@ import CollisionController from "../simulateur/collision-controller.js";
 
 const socket = io(); //Connexion au serveur
 
-let listeVues = document.querySelector("#liste-boutons");
+const listeVues = document.querySelector("#liste-boutons");
 
-let vueCamera = document.querySelector("#partie-droite-camera");
-let vueSimulateur = document.querySelector("#partie-droite-simulateur");
-let vueManuel = document.querySelector("#partie-droite-manuel");
+const vueCamera = document.querySelector("#partie-droite-camera");
+const vueSimulateur = document.querySelector("#partie-droite-simulateur");
+const vueManuel = document.querySelector("#partie-droite-manuel");
 
-let divCanvas = document.querySelector("#canvas-container");
-let canvas = document.querySelector("#canvasOutputVideo");
-
+const canvasContainer = document.querySelector("#canvas-container");
+const canvas = document.querySelector("#canvasOutputVideo");
 
 const btnForward=document.getElementById("btn-avancer");
 const btnBackward=document.getElementById("btn-reculer");
@@ -77,16 +76,17 @@ window.addEventListener("load", () => {
             case "camera": // bouton caméra cliqué -> on affiche la vue Caméra
                 if (vueActive === vueSimulateur){
                     updateVueActive(vueCamera);
-                    divCanvas.appendChild(canvas);
+                    let canvasSimulateur = document.querySelector("#canvas-simulateur");
+                    canvasContainer.removeChild(canvasSimulateur); // on supprime le canvas du simulateur
+                    canvasContainer.appendChild(canvas);
                 }
                 updateVueActive(vueCamera);
                 break;
             case "simulateur": // bouton simulateur cliqué -> on affiche la vue Simulateur
                 if (vueActive !== vueSimulateur){
                     updateVueActive(vueSimulateur);
-                    divCanvas.removeChild(canvas);
+                    canvasContainer.removeChild(canvas);
 
-                    const canvasContainer=document.getElementById("canvas-container");
                     let vue=new VueSimulateur(canvasContainer);
                     vue.setup();
                     vue.run();
@@ -100,7 +100,9 @@ window.addEventListener("load", () => {
             case "manuel": // bouton manuel cliqué -> on affiche la vue Manuel
                 if (vueActive === vueSimulateur){
                     updateVueActive(vueManuel);
-                    divCanvas.appendChild(canvas);
+                    let canvasSimulateur = document.querySelector("#canvas-simulateur");
+                    canvasContainer.removeChild(canvasSimulateur); // on supprime le canvas du simulateur
+                    canvasContainer.appendChild(canvas);
                 }
                 updateVueActive(vueManuel);
                 break;
