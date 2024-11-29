@@ -9,17 +9,22 @@
     <script src="https://cdn.jsdelivr.net/npm/matter-js@0.17.1/build/matter.min.js"></script>
 </head>
 <body>
-    <h1 id="titre">Robot Billard joueur de Football</h1>
+
+<!--    <div id="conteneur-boutons">-->
+        <div id="liste-boutons">
+            <button class="btns-vue" id="camera">Caméra</button>
+            <button class="btns-vue" id="simulateur">Simulateur</button>
+            <button class="btns-vue" id="manuel">Manuel</button>
+        </div>
+<!--    </div>-->
+
+    <h4 id="titre">Robot Billard joueur de Football</h4>
 
     <main>
         <!-- Partie Gauche contenant le canvas ainsi que les boutons permettant de changer de vue -->
 
+
         <div class="partie displayFlex" id="partie-gauche">
-            <div id="liste-boutons">
-                <button class="btns-vue" id="camera">Caméra</button>
-                <button class="btns-vue" id="simulateur">Simulateur</button>
-                <button class="btns-vue" id="manuel">Manuel</button>
-            </div>
             <div id="canvas-container">
                 <canvas id="canvasOutputVideo"></canvas>
             </div>
@@ -28,7 +33,7 @@
 
         <!-- Partie Droite contant les vues (une seule à la fois) -->
 
-        <!-- Vue Caméra : un bouton GO permettant de lancer un scénario, lui même choisi juste en dessous grâce à une liste déroulante -->
+        <!-- Vue Caméra : un bouton GO permettant de lancer un scénario, lui-même choisi juste en dessous grâce à une liste déroulante -->
 
         <div class="partie displayFlex" id="partie-droite-camera">
             <button id="btn-go">GO</button>

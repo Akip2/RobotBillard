@@ -19,7 +19,7 @@ class VueSimulateur {
                 width: width,
                 height: height,
                 wireframes: false,
-                background: "green"
+                background: "grey" // le gris de notre table
             }
         });
 

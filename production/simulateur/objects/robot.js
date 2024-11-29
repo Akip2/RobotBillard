@@ -6,7 +6,7 @@ class Robot extends SimulationObject{
     constructor(width, height, wheelRadius, x=0, y=0){
         const core=Bodies.rectangle(0, 0, width, height, {
             render: {
-              fillStyle : "gray"
+              fillStyle : "#B6423F" // couleur réelle de notre robot
             }
         });
 
