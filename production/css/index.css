@@ -23,13 +23,6 @@ select:hover{
     cursor: pointer;
 }
 
-#titre {
-    text-align: center;
-    font-size: 3em;
-    padding-bottom: 1rem;
-    padding-top: 1rem;
-}
-
 main {
     display: flex;
     justify-content: space-evenly;
@@ -42,14 +35,31 @@ main {
 }
 
 
+/* HEADER */
+
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 2rem;
+}
+
+#titre {
+    text-align: center;
+    font-size: 3em;
+}
+
+#liste-boutons {
+    display: flex;
+    gap: 0; /* les boutons sont collés les uns aux autrse */
+    padding-bottom: 2rem;
+    align-self: center;
+}
+
+
 /* PARTIE GAUCHE : VUES et CANVAS */
 
-/*#conteneur-boutons {*/
-/*    display: ;*/
-/*    position: fixed;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*}*/
 
 #canvas-container {
     height: fit-content;
@@ -57,18 +67,6 @@ main {
 
 #partie-gauche {
     flex-direction: column;
-}
-
-#liste-boutons {
-    /* organisation */
-    display: flex;
-    gap: 0; /* les boutons sont collés les uns aux autrse */
-    padding-bottom: 2rem;
-
-    /* position */
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
 }
 
 /* premier bouton (on lui applique un style aux angles du coté gauche) */
