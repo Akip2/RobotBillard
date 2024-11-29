@@ -183,6 +183,7 @@ canvas {
 
 #grid-boutons-manuel {
     display: grid;
+    place-items: center;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 30% 30% 30%;
 }
@@ -207,6 +208,22 @@ canvas {
     grid-row: 3 / 3;
 }
 
+#inputDuration {
+    /* position dans le grid */
+    grid-column: 2 / 2;
+    grid-row: 2 / 2;
+
+    /* style */
+    font-size: 0.9rem;
+    font-weight: bold;
+    height: 30%;
+    width: 66%;
+    border: 2px solid grey;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    padding-right: 0;
+}
+
 .fleche {
     all: unset;
     display: flex;
@@ -215,11 +232,11 @@ canvas {
 }
 
 #btn-tourner-a-gauche:hover {
-    animation: 1s linear tournerAGauche;
+    animation: 2s linear tournerAGauche;
 }
 
 #btn-tourner-a-droite:hover {
-    animation: 1s linear tournerADroite;
+    animation: 2s linear tournerADroite;
 }
 
 #btn-avancer:hover {
@@ -230,26 +247,33 @@ canvas {
     animation: 0.5s linear reculer;
 }
 
-#btn-tourner-a-gauche:active {
-    animation: 1s linear infinite tournerAGauche;
-}
-
 .fleche:active svg path {
     fill: green;
 }
 
+#btn-tourner-a-gauche:active {
+    animation: 2s linear infinite tournerAGauche;
+}
 
 #btn-tourner-a-droite:active {
-    animation: 1s linear infinite tournerADroite;
+    animation: 2s linear infinite tournerADroite;
 }
 
 #btn-avancer:active {
-    animation: 0.5s linear infinite avancer;
+    animation: 1s linear infinite avancer;
 }
 
 #btn-reculer:active {
-    animation: 0.5s linear infinite reculer;
+    animation: 1s linear infinite reculer;
 }
+
+.curseurMoteur {
+    transform: rotate(-90deg);
+}
+
+
+/* ANIMATIONS */
+
 
 @keyframes tournerAGauche {
     0% {

@@ -4,7 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Accéder à la caméra
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true })
+
+        navigator.mediaDevices.getUserMedia({ video:         {
+                width:{
+                    exact: 1024
+                },
+                height:{
+                    exact: 768
+                }
+            }, audio: false })
             .then((stream) => {
                 // Créer une vidéo virtuelle pour récupérer les frames du flux caméra
                 const video = document.createElement("video");
@@ -13,10 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Une fois que la vidéo est prête, on commence le traitement
                 video.addEventListener("loadeddata", () => {
-                    // Configurer le canvas avec les dimensions de la vidéo
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-
                     // Lancer la boucle de traitement vidéo
                     processVideo(video, canvas, ctx);
                 });
@@ -50,12 +54,17 @@ function processVideo(video, canvas, ctx) {
             cv.medianBlur(frame, blurred, 7); // flou
             cv.cvtColor(blurred, gray, cv.COLOR_RGBA2GRAY); // niveau de gris
 
-            // Détection des cercles
+
+            /*****************************************************/
+            /*************** Détection des cercles ***************/
+            /*****************************************************/
+
+
             let circles = new cv.Mat();
             cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT,
                 2,      // résolution 1 = résolution par défaut, 2 = résolution divisée par 2
                 20,     // distance entre les cercles
-                100,    // plus c'est bas plus il trouve de cerles
+                100,    // plus c'est bas plus il trouve de cercles
                 30,     //
                 10,     // diamètre minimum des boules
                 18      // diamètre maximum des boules
@@ -70,6 +79,13 @@ function processVideo(video, canvas, ctx) {
                 cv.circle(frame, center, 3, [0, 255, 0, 255], -1);
             }
 
+
+            /*****************************************************/
+            /*************** Détection de l'AruCo ****************/
+            /*****************************************************/
+
+            // TODO
+
             // Afficher le résultat final dans le canvas
             cv.imshow(canvas, frame);
 
@@ -78,7 +94,6 @@ function processVideo(video, canvas, ctx) {
             blurred.delete();
             circles.delete();
 
-            // Planifier la prochaine frame
             let delay = 1000 / FPS - (Date.now() - begin);
             setTimeout(processFrame, delay);
         } catch (err) {
