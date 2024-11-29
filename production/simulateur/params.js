@@ -12,6 +12,7 @@ const holeSize=ballSize*1.5;
 
 const robotWidth=30;
 const robotHeight=30;
+const wheelSize=6.5;
 
 export{
     ballSize,
@@ -21,5 +22,6 @@ export{
     width,
     height,
     robotWidth,
-    robotHeight
+    robotHeight,
+    wheelSize
 }
