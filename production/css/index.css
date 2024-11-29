@@ -26,8 +26,6 @@ select:hover{
 main {
     display: flex;
     justify-content: space-evenly;
-
-    /*border: 1px solid red;*/
 }
 
 .partie {
@@ -57,18 +55,6 @@ header {
     align-self: center;
 }
 
-
-/* PARTIE GAUCHE : VUES et CANVAS */
-
-
-#canvas-container {
-    height: fit-content;
-}
-
-#partie-gauche {
-    flex-direction: column;
-}
-
 /* premier bouton (on lui applique un style aux angles du coté gauche) */
 #liste-boutons>*:first-child {
     border-top-left-radius: 10px;
@@ -93,6 +79,18 @@ header {
     background-color: darkgray;
 }
 
+
+/* PARTIE GAUCHE : VUES et CANVAS */
+
+
+#canvas-container {
+    height: fit-content;
+}
+
+#partie-gauche {
+    flex-direction: column;
+}
+
 canvas {
     background-image: url('../img/img.png');
     background-size: cover;
@@ -106,6 +104,10 @@ canvas {
 
 #canvas-simulateur:active {
     cursor: grabbing;
+}
+
+#btn-recharger {
+
 }
 
 

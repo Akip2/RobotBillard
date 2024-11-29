@@ -5,14 +5,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // Accéder à la caméra
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
-        navigator.mediaDevices.getUserMedia({ video:         {
-                width:{
-                    exact: 1024
-                },
-                height:{
-                    exact: 768
-                }
-            }, audio: false })
+        // à utiliser lorsqu'on veut utiliser une caméra externe, pour pouvoir changer le ratio de la vidée
+        // navigator.mediaDevices.getUserMedia({ video: {
+        //         width:{
+        //             exact: 1024
+        //         },
+        //         height:{
+        //             exact: 768
+        //         }
+        //     }})
+
+        // pour pouvoir utiliser la caméra de l'ordi
+        navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
                 // Créer une vidéo virtuelle pour récupérer les frames du flux caméra
                 const video = document.createElement("video");
