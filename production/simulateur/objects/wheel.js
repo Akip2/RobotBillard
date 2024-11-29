@@ -3,9 +3,9 @@ import SimulationObject from "./simulation-object.js";
 
 class Wheel extends SimulationObject{
     constructor(radius, x=0, y=0){
-        const body=Bodies.circle(0, 0, radius, { 
+        const body=Bodies.circle(0, 0, radius, {
             render: {
-              fillStyle : "darkslategray"
+              fillStyle : "#2F2F2F" // couleur réelle de notre robot
             }
         });
 

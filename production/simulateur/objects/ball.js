@@ -4,8 +4,12 @@ import SimulationObject from "./simulation-object.js";
 class Ball extends SimulationObject{
     constructor(radius, color, circled=false, x=0, y=0){
         let body;
-
         const core=Bodies.circle(0, 0, radius, {
+            restitution:0.75,
+            frictionAir: 0.015,
+            collisionFilter: {
+                category: COLLISION_FILTERS.BALL,
+            },
             render: {
               fillStyle : color
             }

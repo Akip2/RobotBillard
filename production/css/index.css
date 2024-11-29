@@ -26,7 +26,7 @@ select:hover{
 #titre {
     text-align: center;
     font-size: 3em;
-    padding-bottom: 3rem;
+    padding-bottom: 1rem;
     padding-top: 1rem;
 }
 
@@ -44,7 +44,14 @@ main {
 
 /* PARTIE GAUCHE : VUES et CANVAS */
 
-#canvas-container{
+/*#conteneur-boutons {*/
+/*    display: ;*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*}*/
+
+#canvas-container {
     height: fit-content;
 }
 
@@ -53,9 +60,15 @@ main {
 }
 
 #liste-boutons {
+    /* organisation */
     display: flex;
     gap: 0; /* les boutons sont collés les uns aux autrse */
     padding-bottom: 2rem;
+
+    /* position */
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
 }
 
 /* premier bouton (on lui applique un style aux angles du coté gauche) */
@@ -87,6 +100,14 @@ canvas {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+}
+
+#canvas-simulateur:hover {
+    cursor: grab;
+}
+
+#canvas-simulateur:active {
+    cursor: grabbing;
 }
 
 
