@@ -23,6 +23,8 @@ class VueSimulateur {
             }
         });
 
+        this.render.canvas.id="canvas-simulateur";
+
         this.setupMouse();
     }
 
