@@ -10,14 +10,10 @@ class Robot extends SimulationObject{
             },
         });
 
-        const wheel1=new Wheel(wheelRadius, 50, (height/2)-wheelRadius);
-        const wheel2=new Wheel(wheelRadius, 100, (height/2)-wheelRadius);
-
-        /*
         const wheel1=new Wheel(wheelRadius, -width/2, (height/2)-wheelRadius);
         const wheel2=new Wheel(wheelRadius, width/2, (height/2)-wheelRadius);
-        */
 
+        /*
         const pin1 = Constraint.create({
             bodyA: core,
             pointA: { x: -width/2, y:  (height/2)-wheelRadius},
@@ -35,24 +31,19 @@ class Robot extends SimulationObject{
             stiffness: 0.9,
             length: 0
         });
-
-        /*
-        const pin2 = Constraint.create({
-            bodyA: wheel1.body,
-            pointB: { x: 0, y: 0 },
-            bodyB: core,
-            stiffness: 0.9,
-            length: 0
-        });
         */
 
+        const body=Body.create({
+            frictionAir: 0.5,
+            parts: [wheel1.body, wheel2.body, core],
+        });
 
-        super(core, width, height, x, y);
+        super(body, width, height, x, y);
 
         this.wheelLeft=wheel1;
         this.wheelRight=wheel2;
 
-        this.bodyArray=[core, pin1, wheel1.body, pin2, wheel2.body];
+        this.bodyArray=[core, wheel1.body, wheel2.body];
     }
 
     move(leftSpeed, leftTime, rightSpeed, rightTime){
@@ -80,11 +71,13 @@ class Robot extends SimulationObject{
          */
     }
 
+    /*
     addToEnv(world) {
         this.bodyArray.forEach((element) => {
             Composite.add(world, element);
         })
     }
+    */
 }
 
 export default Robot;
