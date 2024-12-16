@@ -6,14 +6,25 @@ class Robot extends SimulationObject{
     constructor(width, height, wheelRadius, x=0, y=0){
         const core=Bodies.rectangle(0, 0, width, height, {
             render: {
-              fillStyle : "#B6423F" // couleur réelle de notre robot
+              fillStyle : "#B6423F" // real color of our robot
             },
         });
 
         const wheel1=new Wheel(wheelRadius, -width/2, (height/2)-wheelRadius);
         const wheel2=new Wheel(wheelRadius, width/2, (height/2)-wheelRadius);
 
-        /*
+        wheel1.body.collisionFilter = {
+            'group': -1,
+            'category': 2,
+            'mask': 0,
+        };
+
+        wheel2.body.collisionFilter = {
+            'group': -1,
+            'category': 2,
+            'mask': 0,
+        };
+
         const pin1 = Constraint.create({
             bodyA: core,
             pointA: { x: -width/2, y:  (height/2)-wheelRadius},
@@ -31,19 +42,13 @@ class Robot extends SimulationObject{
             stiffness: 0.9,
             length: 0
         });
-        */
 
-        const body=Body.create({
-            frictionAir: 0.5,
-            parts: [wheel1.body, wheel2.body, core],
-        });
-
-        super(body, width, height, x, y);
+        super(core, width, height, x, y);
 
         this.wheelLeft=wheel1;
         this.wheelRight=wheel2;
 
-        this.bodyArray=[core, wheel1.body, wheel2.body];
+        this.bodyArray=[core, pin1, wheel1.body, pin2, wheel2.body];
     }
 
     move(leftSpeed, leftTime, rightSpeed, rightTime){
@@ -71,13 +76,11 @@ class Robot extends SimulationObject{
          */
     }
 
-    /*
     addToEnv(world) {
         this.bodyArray.forEach((element) => {
             Composite.add(world, element);
         })
     }
-    */
 }
 
 export default Robot;
