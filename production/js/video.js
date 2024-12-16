@@ -44,7 +44,7 @@ function processVideo(video, canvas, ctx) {
     let delay;
 
     function processFrame() {
-        if(stillContinue) {
+        if (stillContinue) {
             try {
                 let begin = Date.now();
 
@@ -100,12 +100,23 @@ function processVideo(video, canvas, ctx) {
                     let circle = circles.data32F.slice(i * 3, (i + 1) * 3);
                     let center = new cv.Point(circle[0], circle[1]);
                     let radius = circle[2];
-                    cv.circle(markerImage/*frame*/, center, radius, [255, 0, 0, 255], 3);
-                    cv.circle(markerImage/*frame*/, center, 3, [0, 255, 0, 255], -1);
+                    cv.circle(markerImage, center, radius, [255, 0, 0, 255], 3);
+                    cv.circle(markerImage, center, 3, [0, 255, 0, 255], -1);
+
+                    console.log(`cercle, x: ${circle[0]}, y:${circle[0]}`);
+                }
+
+                // console.log("Number of circles : " + circles.cols);
+                // console.log("Number of aruco : " + markerIds.rows)
+
+                for (let i = 0; i < markerIds.rows; i++) {
+                    let corners = markerCorners.get(i);
+                    let topLeftCorner = corners.data32F.slice(0, 2);
+
+                    console.log(`Id: ${markerIds.data32S[i]}, x: ${topLeftCorner[0]}, y: ${topLeftCorner[1]}`);
                 }
 
                 // Draw the final result in the canvas
-                // cv.imshow(canvas, frame);
                 cv.imshow(canvas, markerImage);
 
                 // Clean memory
@@ -122,7 +133,6 @@ function processVideo(video, canvas, ctx) {
                 markerIds.delete();
 
                 delay = 1000 / FPS - (Date.now() - begin);
-
             } catch (err) {
                 console.error(err);
             }
