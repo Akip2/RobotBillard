@@ -10,18 +10,16 @@ const io = require('socket.io').listen(server, {
 
 const port = 8001;
 
-// - Utilisé pour gérer des problèmes de répertoire -----------------
+// -- Used to solve some problems ----------------
 app.use(express.static(path.join(__dirname)));
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + "/index.html");
 });
 
-// - Affichage en continu des sockets qui passent -------------------
+// Display the sockets coming to the server, which are then sent to the robot
 server.listen(port);
 
-// Lorsqu'un ordre est envoyé au robot depuis le navigateur,
-// il passe par le serveur, puis est envoyé au(x) robot(s)
 io.sockets.on("connection", function (socket) {
     console.log("Socket connected: " + socket.conn.remoteAddress);
 
