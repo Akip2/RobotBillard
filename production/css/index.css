@@ -94,18 +94,18 @@ header {
 
 #views-list {
     display: flex;
-    gap: 0; /* les boutons sont collés les uns aux autrse */
+    gap: 0; /* buttons must be glued together */
     padding-bottom: 2rem;
     align-self: center;
 }
 
-/* premier bouton (on lui applique un style aux angles du coté gauche) */
+/* first button of the list (set the radius for its left angles) */
 #views-list>*:first-child {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
 
-/* dernier bouton (on lui applique un style aux angles du coté gauche) */
+/* last button of the list (set the radius for its right angles) */
 #views-list>*:last-child {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -124,7 +124,7 @@ header {
 }
 
 
-/* PARTIE GAUCHE : VUES et CANVAS */
+/* LEFT PART */
 
 
 #canvas-container {
@@ -166,7 +166,7 @@ canvas {
 }
 
 
-/* PARTIE DROITE (CAMERA) : GO et SCENARIOS */
+/* LEFT PART : GO and SCENARIOS */
 
 
 #go-scenarios {
@@ -176,20 +176,20 @@ canvas {
 }
 
 #div-scenarios {
-    margin-top: 3rem; /* espacement avec le bouton GO */
+    margin-top: 3rem; /* distance from the button GO */
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 #go-btn {
-    /* taille */
+    /* sizes */
     border-radius: 100%;
     width: 10rem;
     height: 10rem;
     margin: 1rem;
 
-    /* texte */
+    /* text */
     font-size: 3rem;
     font-weight: bold;
 
@@ -252,7 +252,7 @@ canvas {
 }
 
 
-/* PARTIE DROITE (MANUEL) : FLECHES DE CONTROLE */
+/* RIGHT PART : CONTROLS (ARROWS) */
 
 
 #arrow-controls {
@@ -288,7 +288,7 @@ canvas {
 }
 
 #input-duration {
-    /* position dans le grid */
+    /* positions in the grid */
     grid-column: 2 / 2;
     grid-row: 2 / 2;
 
@@ -382,11 +382,11 @@ footer {
     position: fixed;
     bottom: 0;
 
-    /* position texte */
+    /* position text */
     align-items: center;
     justify-content: center;
 
-    /* taille */
+    /* size */
     width: 100%;
     height: 3rem;
 
