@@ -5,6 +5,9 @@ import BillardConfig from "../simulateur/configurations/billard-config.js";
 
 const socket = io(); //Connection to server
 
+// loader
+const loader = document.querySelector("#loader-container");
+
 // header
 const viewsList = document.querySelector("#views-list");
 
@@ -16,8 +19,8 @@ const rightPart = document.querySelector("#right-part");
 const reload = document.querySelector("#reload-btn");
 const canvasContainer = document.querySelector("#canvas-container");
 const canvas = document.querySelector("#canvas-output-video");
-let newCanvas = document.createElement("canvas");
-newCanvas.id = "canvas-output-video";
+// let newCanvas = document.createElement("canvas");
+// newCanvas.id = "canvas-output-video";
 
 // right part
 const viewGoScenarios = document.querySelector("#go-scenarios");
@@ -52,13 +55,18 @@ function createOrder(left, right, duration) {
 }
 
 window.addEventListener("load", () => {
+
+    setTimeout(() => {
+        loader.style.display = "none";
+    }, 1000);
+
     reload.addEventListener("click" , () => {
         loadSimulator();
     });
 
     inputDuration.addEventListener("input", () => {
         let durationBeforeTest = inputDuration.value;
-        // on vérifie si le temps est bien compris entre 100 et 10 000 ms
+        // we check if time is really between 100ms and 10.000ms
         duration = durationBeforeTest < 100 ? 100 : durationBeforeTest > 10000 ? 10000 : durationBeforeTest;
         console.log(duration);
     });
@@ -87,24 +95,23 @@ window.addEventListener("load", () => {
         socket.emit('motor', createOrder(speedGauche, -speedDroit, duration));
     });
 
-    // changement de la vue courante
     viewsList.addEventListener("click", (event) => {
         switch (event.target.id) {
             case "camera":
-                tryAppendChild(canvasContainer, newCanvas);
+                afficherCanvas();
                 tryAdd(viewGoScenarios);
                 tryRemove(viewArrowControls)
                 hide(reload);
                 break;
             case "simulator":
-                canvasContainer.innerHTML = "";
+                hide(canvas);
                 loadSimulator();
                 tryAdd(viewGoScenarios);
                 tryAdd(viewArrowControls)
                 show(reload);
                 break;
             case "manual":
-                tryAppendChild(canvasContainer, newCanvas);
+                afficherCanvas();
                 tryRemove(viewGoScenarios);
                 tryAdd(viewArrowControls)
                 hide(reload);
@@ -135,7 +142,7 @@ function tryAdd(element) {
     }
 }
 
-// remove an element if it's not already displayed
+// remove an element if it's already
 function tryRemove(element) {
     if(element.classList.contains("displayFlex")) {
         element.classList.remove("displayFlex");
@@ -143,9 +150,14 @@ function tryRemove(element) {
     }
 }
 
-function tryAppendChild(parent, child) {
-    parent.innerHTML = "";
-    parent.appendChild(child);
+function afficherCanvas() {
+    if(canvas.classList.contains("displayNone")) {
+        let potentialCanvas = document.querySelector("#canvas-simulateur");
+        if(potentialCanvas != null){
+            hide(potentialCanvas);
+            show(canvas);
+        }
+    }
 }
 
 function loadSimulator() {
