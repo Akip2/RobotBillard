@@ -3,37 +3,44 @@ import RandomConfig from "../simulateur/configurations/random-config.js";
 import CollisionController from "../simulateur/collision-controller.js";
 import BillardConfig from "../simulateur/configurations/billard-config.js";
 
-const socket = io(); //Connexion au serveur
+const socket = io(); //Connection to server
 
-const listeVues = document.querySelector("#liste-boutons");
+// header
+const viewsList = document.querySelector("#views-list");
 
-const vueCamera = document.querySelector("#partie-droite-camera");
-// const vueControles = document.querySelector("#partie-droite-controles");
+// main
+const leftPart = document.querySelector("#left-part");
+const rightPart = document.querySelector("#right-part");
 
-const vueSimulateur = document.querySelector("#partie-droite-simulateur");
-const vueManuel = document.querySelector("#partie-droite-manuel");
-
-const partieGauche = document.querySelector("#partie-gauche");
+// left part
+const reload = document.querySelector("#reload-btn");
 const canvasContainer = document.querySelector("#canvas-container");
-const canvas = document.querySelector("#canvasOutputVideo");
+const canvas = document.querySelector("#canvas-output-video");
+let newCanvas = document.createElement("canvas");
+newCanvas.id = "canvas-output-video";
 
-const recharger = document.querySelector("#btn-recharger");
+// right part
+const viewGoScenarios = document.querySelector("#go-scenarios");
+const viewArrowControls = document.querySelector("#arrow-controls");
 
-const btnForward = document.getElementById("btn-avancer");
-const btnBackward = document.getElementById("btn-reculer");
-const btnLeftTurn = document.getElementById("btn-tourner-a-gauche");
-const btnRightTurn = document.getElementById("btn-tourner-a-droite");
+// viewGoScenarios
+const goBtn = document.querySelector("#go-btn");
+const selectScenarios = document.querySelector("#select-scenarios");
 
-const curseurMoteurGauche = document.getElementById("curseurMoteurGauche");
-const curseurMoteurDroit = document.getElementById("curseurMoteurDroit");
-const inputDuration = document.getElementById("inputDuration");
+// viewArrowControls
+const btnForward = document.querySelector("#btn-forward");
+const btnBackward = document.querySelector("#btn-backward");
+const btnTurnLeft = document.querySelector("#btn-turn-left");
+const btnTurnRight = document.querySelector("#btn-turn-right");
+const cursorLeftMotor = document.querySelector("#cursor-left-motor");
+const cursorRightMotor = document.querySelector("#cursor-right-motor");
+const inputDuration = document.querySelector("#input-duration");
 
 let speedGauche = 130;
 let speedDroit = 130;
 
 let duration = 1000;
 
-let vueActive = getVueActive();
 
 function createOrder(left, right, duration) {
     return {
@@ -45,25 +52,23 @@ function createOrder(left, right, duration) {
 }
 
 window.addEventListener("load", () => {
-    recharger.addEventListener("click" , () => {
-        if (vueActive === vueSimulateur) {
-            loadSimulator();
-        }
+    reload.addEventListener("click" , () => {
+        loadSimulator();
     });
 
     inputDuration.addEventListener("input", () => {
-        let durationAvantVerif = inputDuration.value;
+        let durationBeforeTest = inputDuration.value;
         // on vérifie si le temps est bien compris entre 100 et 10 000 ms
-        duration = durationAvantVerif < 100 ? 100 : durationAvantVerif > 10000 ? 10000 : durationAvantVerif;
+        duration = durationBeforeTest < 100 ? 100 : durationBeforeTest > 10000 ? 10000 : durationBeforeTest;
         console.log(duration);
     });
 
-    curseurMoteurGauche.addEventListener("input", () => {
-        speedGauche = curseurMoteurGauche.value;
+    cursorLeftMotor.addEventListener("input", () => {
+        speedGauche = cursorLeftMotor.value;
     });
 
-    curseurMoteurDroit.addEventListener("input", () => {
-        speedDroit = curseurMoteurDroit.value;
+    cursorRightMotor.addEventListener("input", () => {
+        speedDroit = cursorRightMotor.value;
     });
 
     btnForward.addEventListener("click", () => {
@@ -74,51 +79,35 @@ window.addEventListener("load", () => {
         socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration));
     });
 
-    btnRightTurn.addEventListener("click", () => {
+    btnTurnRight.addEventListener("click", () => {
         socket.emit('motor', createOrder(-speedGauche, speedDroit, duration));
     });
 
-    btnLeftTurn.addEventListener("click", () => {
+    btnTurnLeft.addEventListener("click", () => {
         socket.emit('motor', createOrder(speedGauche, -speedDroit, duration));
     });
 
     // changement de la vue courante
-    listeVues.addEventListener("click", (event) => {
+    viewsList.addEventListener("click", (event) => {
         switch (event.target.id) {
-            case "camera": // bouton caméra cliqué → on affiche la vue Caméra
-                if (vueActive === vueSimulateur){
-                    updateVueActive(vueCamera);
-                    let canvasSimulateur = document.querySelector("#canvas-simulateur");
-                    canvasContainer.removeChild(canvasSimulateur); // on supprime le canvas du simulateur
-                    canvasContainer.appendChild(canvas);
-
-                    // on supprime le bouton "recharger"
-                    cacherElement(recharger);
-                }
-                updateVueActive(vueCamera);
+            case "camera":
+                tryAppendChild(canvasContainer, newCanvas);
+                tryAdd(viewGoScenarios);
+                tryRemove(viewArrowControls)
+                hide(reload);
                 break;
-            case "simulateur": // bouton simulateur cliqué → on affiche la vue Simulateur
-                if (vueActive !== vueSimulateur) {
-                    updateVueActive(vueSimulateur);
-                    canvasContainer.removeChild(canvas);
-
-                    loadSimulator();
-
-                    // on ajoute le bouton "recharger"
-                    afficherElement(recharger);
-                }
+            case "simulator":
+                canvasContainer.innerHTML = "";
+                loadSimulator();
+                tryAdd(viewGoScenarios);
+                tryAdd(viewArrowControls)
+                show(reload);
                 break;
-            case "manuel": // bouton manuel cliqué → on affiche la vue Manuel
-                if (vueActive === vueSimulateur) {
-                    updateVueActive(vueManuel);
-                    let canvasSimulateur = document.querySelector("#canvas-simulateur");
-                    canvasContainer.removeChild(canvasSimulateur); // on supprime le canvas du simulateur
-                    canvasContainer.appendChild(canvas);
-
-                    // on supprime le bouton "recharger"
-                    cacherElement(recharger);
-                }
-                updateVueActive(vueManuel);
+            case "manual":
+                tryAppendChild(canvasContainer, newCanvas);
+                tryRemove(viewGoScenarios);
+                tryAdd(viewArrowControls)
+                hide(reload);
                 break;
             default: // dans le cas où on appuie sur un bouton qui n'a pas de vue, on affiche une erreur
                 console.log("Erreur : vue inconnue");
@@ -126,50 +115,42 @@ window.addEventListener("load", () => {
     });
 });
 
-// fonction qui permet de récupérer la vue courante en vérifiant quelle vue est affichée
-// (contient la classe "displayFlex" et non pas "displayNone")
-function getVueActive() {
-    if (vueCamera.classList.contains("displayFlex")) {
-        return vueCamera;
-    } else if (vueSimulateur.classList.contains("displayFlex")) {
-        return vueSimulateur;
-    } else {
-        return vueManuel;
-    }
-}
-
-// fonction qui permet de changer la vue active en remplaçant la classe "displayFlex" de la vue active par "displayNone"
-// et remplaçant la classe "displayNone" de la nouvelle vue active par "displayFlex"
-function updateVueActive(nouvelleVueActive) {
-    // on vérifie tout d'abord si la vue active change
-    if (nouvelleVueActive.id !== vueActive.id) {
-        // on retire la classe de la vue active de l'affichage
-        cacherElement(vueActive);
-
-        // on ajoute la classe de la nouvelle vue active sur la page
-        afficherElement(nouvelleVueActive);
-
-        // on met à jour la vue active
-        vueActive = nouvelleVueActive;
-    }
-}
-
-// méthode qui permet d'ajouter un élément de l'affichage
-function afficherElement(element) {
+// to show a view
+function show(element) {
     element.classList.remove("displayNone");
     element.classList.add("displayFlex");
 }
 
-// méthode qui permet de retirer un élément de l'affichage
-function cacherElement(element) {
+// to hide a view
+function hide(element) {
     element.classList.remove("displayFlex");
     element.classList.add("displayNone");
+}
+
+// add an element if it's not already displayed
+function tryAdd(element) {
+    if(element.classList.contains("displayNone")) {
+        element.classList.remove("displayNone");
+        element.classList.add("displayFlex");
+    }
+}
+
+// remove an element if it's not already displayed
+function tryRemove(element) {
+    if(element.classList.contains("displayFlex")) {
+        element.classList.remove("displayFlex");
+        element.classList.add("displayNone");
+    }
+}
+
+function tryAppendChild(parent, child) {
+    parent.innerHTML = "";
+    parent.appendChild(child);
 }
 
 function loadSimulator() {
     let canvasSimulateur = document.querySelector("#canvas-simulateur");
     if (canvasSimulateur !== null) {
-        // on supprime le canvas du simulateur
         canvasContainer.removeChild(canvasSimulateur);
     }
 

@@ -28,8 +28,46 @@ main {
     justify-content: space-evenly;
 }
 
-.partie {
+.part {
     /*border: 1px solid blue;*/
+}
+
+
+/* LOADER */
+
+
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.loader {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: linear-gradient(0deg, #FFFFFF 50%, #FF5C35 100%);
+    animation: spin 1s linear infinite;
+}
+
+.inner-circle {
+    width: 90%;
+    height: 90%;
+    background-color: white;
+    border-radius: 50%;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0);
+    }
+    to{
+        transform: rotate(360deg);
+    }
 }
 
 
@@ -48,7 +86,7 @@ header {
     font-size: 3em;
 }
 
-#liste-boutons {
+#views-list {
     display: flex;
     gap: 0; /* les boutons sont collés les uns aux autrse */
     padding-bottom: 2rem;
@@ -56,13 +94,13 @@ header {
 }
 
 /* premier bouton (on lui applique un style aux angles du coté gauche) */
-#liste-boutons>*:first-child {
+#views-list>*:first-child {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
 
 /* dernier bouton (on lui applique un style aux angles du coté gauche) */
-#liste-boutons>*:last-child {
+#views-list>*:last-child {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
@@ -87,7 +125,7 @@ header {
     height: fit-content;
 }
 
-#partie-gauche {
+#left-part {
     flex-direction: column;
 }
 
@@ -106,7 +144,7 @@ canvas {
     cursor: grabbing;
 }
 
-#btn-recharger {
+#reload-btn {
     background-color: lightgray;
     border: none;
     padding: 0.5em;
@@ -117,7 +155,7 @@ canvas {
     width: 7rem;
 }
 
-#btn-recharger:hover {
+#reload-btn:hover {
     background-color: darkgray;
 }
 
@@ -125,7 +163,7 @@ canvas {
 /* PARTIE DROITE (CAMERA) : GO et SCENARIOS */
 
 
-#partie-droite-camera {
+#go-scenarios {
     /*display: flex;*/
     flex-direction: column;
     align-items: center;
@@ -138,7 +176,7 @@ canvas {
     align-items: center;
 }
 
-#btn-go {
+#go-btn {
     /* taille */
     border-radius: 100%;
     width: 10rem;
@@ -156,7 +194,7 @@ canvas {
     transition: all ease 0.2s;
 }
 
-#btn-go:hover {
+#go-btn:hover {
     margin: 0.5rem;
 
     width: 11rem;
@@ -165,7 +203,7 @@ canvas {
     box-shadow: 20px 20px 10px 1px grey;
 }
 
-#btn-go:active {
+#go-btn:active {
     margin: 1rem;
 
     width: 10rem;
@@ -211,39 +249,39 @@ canvas {
 /* PARTIE DROITE (MANUEL) : FLECHES DE CONTROLE */
 
 
-#partie-droite-manuel {
+#arrow-controls {
     justify-content: center;
     align-items: center;
 }
 
-#grid-boutons-manuel {
+#grid-btns {
     display: grid;
     place-items: center;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 30% 30% 30%;
 }
 
-#btn-avancer {
+#btn-forward {
     grid-column: 2 / 2;
     grid-row: 1 / 1;
 }
 
-#btn-tourner-a-gauche {
+#btn-turn-left {
     grid-column: 1 / 1;
     grid-row: 2 / 2;
 }
 
-#btn-tourner-a-droite {
+#btn-turn-right {
     grid-column: 3 / 3;
     grid-row: 2 / 2;
 }
 
-#btn-reculer {
+#btn-backward {
     grid-column: 2 / 2;
     grid-row: 3 / 3;
 }
 
-#inputDuration {
+#input-duration {
     /* position dans le grid */
     grid-column: 2 / 2;
     grid-row: 2 / 2;
@@ -259,50 +297,35 @@ canvas {
     padding-right: 0;
 }
 
-.fleche {
+.arrow {
     all: unset;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-#btn-tourner-a-gauche:hover {
-    animation: 2s linear tournerAGauche;
-}
-
-#btn-tourner-a-droite:hover {
-    animation: 2s linear tournerADroite;
-}
-
-#btn-avancer:hover {
-    animation: 0.5s linear avancer;
-}
-
-#btn-reculer:hover {
-    animation: 0.5s linear reculer;
-}
-
-.fleche:active svg path {
+#fleche:hover svg path,
+#fleche:active svg path{
     fill: green;
 }
 
-#btn-tourner-a-gauche:active {
+#btn-turn-left:active {
     animation: 2s linear infinite tournerAGauche;
 }
 
-#btn-tourner-a-droite:active {
+#btn-turn-right:active {
     animation: 2s linear infinite tournerADroite;
 }
 
-#btn-avancer:active {
+#btn-forward:active {
     animation: 1s linear infinite avancer;
 }
 
-#btn-reculer:active {
+#btn-backward:active {
     animation: 1s linear infinite reculer;
 }
 
-.curseurMoteur {
+.cursor-motor {
     transform: rotate(-90deg);
 }
 
