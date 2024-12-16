@@ -1,22 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Test Video et OpenCV</title>
-</head>
-<body>
-    <p>Vidéo originale :</p>
-    <video autoplay muted loop width="320" id="video">
-        <source src="./video/TOP_14_BEST_SHOTS.mp4" type="video/mp4"/>
-    </video>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>Hello OpenCV.js</title>
+    </head>
+    <body>
+        <h2>Hello OpenCV.js</h2>
 
-    <div>
-        <p>Canvas :</p>
-        <canvas id="c1" width="320" height="192"></canvas>
-    </div>
-    <script src="./scripts/video.js"></script>
+        <img id="imageSrc" alt="No Image" src="img/arucos.png"/>
+        <canvas id="canvasOutput" ></canvas>
+
+<canvas id="canvasOutputVideo"></canvas>
 </body>
-
-<script src="https://docs.opencv.org/4.x/opencv.js"></script>
-
+<script async src="lib/opencv.js" type="text/javascript"></script>
+<!--<script src="scripts/video.js" type="text/javascript"></script>-->
+<script src="scripts/image.js" type="text/javascript"></script>
 </html>

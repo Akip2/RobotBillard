@@ -1,0 +1,9 @@
+Fonctionnalités et cas d'utilisation développés :
+	- Communication entre l'interface web et le robot : FONTANEZ Antoine (60%) et FROGER Corentin (40%)
+	- Avoir un simulateur : FONTANEZ Antoine (95%) et FROGER Corentin (5%)
+	- Avoir une interface web pratique : PIERROT Nathan (90%), FONTANEZ Antoine (5%) et FROGER Corentin (5%)
+	- Execution des requêtes par le robot (code Arduino) : FROGER Corentin (100%)
+	- Affichage du flux de la caméra dans le navigateur : FROGER Corentin (50%) et PIERROT Nathan (50%)
+	- Détection des boules avec la librairie OpenCV : FROGER Corentin (50%) et PIERROT Nathan (50%)
+	- Contrôle de la puissance, du sens et du délai donné au travers d'un json au robot : FONTANEZ Antoine (45%), FROGER Corentin (45%), et PIERROT Nathan (10%)
+	- Partage du réseau à travers un switch : FROGER Corentin (100%)

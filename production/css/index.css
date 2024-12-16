@@ -1,0 +1,375 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+NZ:wght@100..400&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
+    margin:0;
+    padding:0;
+    font-family: 'Rubik', sans-serif;
+}
+
+html {
+    height: 100%;
+
+}
+
+body {
+    min-height: 100%;
+}
+
+button:hover{
+    cursor: pointer;
+}
+
+select:hover{
+    cursor: pointer;
+}
+
+main {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.partie {
+    /*border: 1px solid blue;*/
+}
+
+
+/* HEADER */
+
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 2rem;
+}
+
+#titre {
+    text-align: center;
+    font-size: 3em;
+}
+
+#liste-boutons {
+    display: flex;
+    gap: 0; /* les boutons sont collés les uns aux autrse */
+    padding-bottom: 2rem;
+    align-self: center;
+}
+
+/* premier bouton (on lui applique un style aux angles du coté gauche) */
+#liste-boutons>*:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+/* dernier bouton (on lui applique un style aux angles du coté gauche) */
+#liste-boutons>*:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.btns-vue {
+    all: unset;
+    padding: 1rem;
+    background-color: lightgray;
+
+    transition: all ease 0.2s;
+}
+
+.btns-vue:hover {
+    background-color: darkgray;
+}
+
+
+/* PARTIE GAUCHE : VUES et CANVAS */
+
+
+#canvas-container {
+    height: fit-content;
+}
+
+#partie-gauche {
+    flex-direction: column;
+}
+
+canvas {
+    background-image: url('../img/img.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#canvas-simulateur:hover {
+    cursor: grab;
+}
+
+#canvas-simulateur:active {
+    cursor: grabbing;
+}
+
+#btn-recharger {
+    background-color: lightgray;
+    border: none;
+    padding: 0.5em;
+    margin: 0.8em;
+    justify-content: center;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    width: 7rem;
+}
+
+#btn-recharger:hover {
+    background-color: darkgray;
+}
+
+
+/* PARTIE DROITE (CAMERA) : GO et SCENARIOS */
+
+
+#partie-droite-camera {
+    /*display: flex;*/
+    flex-direction: column;
+    align-items: center;
+}
+
+#div-scenarios {
+    margin-top: 3rem; /* espacement avec le bouton GO */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#btn-go {
+    /* taille */
+    border-radius: 100%;
+    width: 10rem;
+    height: 10rem;
+    margin: 1rem;
+
+    /* texte */
+    font-size: 3rem;
+    font-weight: bold;
+
+    /* style */
+    border: none;
+    box-shadow: 10px 10px 10px 1px grey;
+
+    transition: all ease 0.2s;
+}
+
+#btn-go:hover {
+    margin: 0.5rem;
+
+    width: 11rem;
+    height: 11rem;
+    translate: -5px -5px;
+    box-shadow: 20px 20px 10px 1px grey;
+}
+
+#btn-go:active {
+    margin: 1rem;
+
+    width: 10rem;
+    height: 10rem;
+    translate: 10px 10px;
+    box-shadow: 3px 3px 5px 1px grey;
+}
+
+#text-scenarios {
+    font-size: 1.5rem;
+    padding: 1rem;
+}
+
+#select-scenarios {
+
+    padding: 0.5rem;
+
+    /* style */
+    border: none;
+    border-radius: 5px;
+    background-color: #F0F0F0;
+    box-shadow: 3px 3px 5px 1px #a8a8a8;
+    font-size: 1rem;
+
+    transition: all ease 0.2s;
+}
+
+#select-scenarios:hover {
+    background: lightgrey;
+}
+
+.option-scenarios {
+    background-color: #F0F0F0;
+
+    transition: all ease 0.2s;
+}
+
+.option-scenarios:hover {
+    background-color: lightgrey;
+}
+
+
+/* PARTIE DROITE (MANUEL) : FLECHES DE CONTROLE */
+
+
+#partie-droite-manuel {
+    justify-content: center;
+    align-items: center;
+}
+
+#grid-boutons-manuel {
+    display: grid;
+    place-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 30% 30% 30%;
+}
+
+#btn-avancer {
+    grid-column: 2 / 2;
+    grid-row: 1 / 1;
+}
+
+#btn-tourner-a-gauche {
+    grid-column: 1 / 1;
+    grid-row: 2 / 2;
+}
+
+#btn-tourner-a-droite {
+    grid-column: 3 / 3;
+    grid-row: 2 / 2;
+}
+
+#btn-reculer {
+    grid-column: 2 / 2;
+    grid-row: 3 / 3;
+}
+
+#inputDuration {
+    /* position dans le grid */
+    grid-column: 2 / 2;
+    grid-row: 2 / 2;
+
+    /* style */
+    font-size: 0.9rem;
+    font-weight: bold;
+    height: 30%;
+    width: 66%;
+    border: 2px solid grey;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    padding-right: 0;
+}
+
+.fleche {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#btn-tourner-a-gauche:hover {
+    animation: 2s linear tournerAGauche;
+}
+
+#btn-tourner-a-droite:hover {
+    animation: 2s linear tournerADroite;
+}
+
+#btn-avancer:hover {
+    animation: 0.5s linear avancer;
+}
+
+#btn-reculer:hover {
+    animation: 0.5s linear reculer;
+}
+
+.fleche:active svg path {
+    fill: green;
+}
+
+#btn-tourner-a-gauche:active {
+    animation: 2s linear infinite tournerAGauche;
+}
+
+#btn-tourner-a-droite:active {
+    animation: 2s linear infinite tournerADroite;
+}
+
+#btn-avancer:active {
+    animation: 1s linear infinite avancer;
+}
+
+#btn-reculer:active {
+    animation: 1s linear infinite reculer;
+}
+
+.curseurMoteur {
+    transform: rotate(-90deg);
+}
+
+
+/* ANIMATIONS */
+
+
+@keyframes tournerAGauche {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes tournerADroite {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes avancer {
+    100% {
+        transform: translate(0, -20px);
+        opacity: 0;
+    }
+}
+
+
+@keyframes reculer {
+    100% {
+        transform: translate(0, 20px);
+        opacity: 0;
+    }
+}
+
+
+/* FOOTER */
+
+
+footer {
+    /* position block */
+    display: flex;
+    position: fixed;
+    bottom: 0;
+
+    /* position texte */
+    align-items: center;
+    justify-content: center;
+
+    /* taille */
+    width: 100%;
+    height: 3rem;
+
+    /* style */
+    background: #F0F0F0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.displayNone{
+    display: none;
+}
+
+.displayFlex{
+    display: flex;
+}
