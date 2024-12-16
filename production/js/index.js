@@ -54,6 +54,10 @@ function createOrder(left, right, duration) {
     };
 }
 
+canvas.addEventListener("click", (event)=>{
+    console.log(event.offsetX+" "+event.offsetY);
+});
+
 window.addEventListener("load", () => {
 
     setTimeout(() => {
