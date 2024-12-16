@@ -1,10 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const canvas = document.getElementById("canvasOutputVideo");
+    const canvas = document.getElementById("canvas-output-video");
     const ctx = canvas.getContext("2d");
 
     // Access camera
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-
         // Use this code when you want to use an external camera, to change ratio of the empty one
         // navigator.mediaDevices.getUserMedia({ video: {
         //         width:{
