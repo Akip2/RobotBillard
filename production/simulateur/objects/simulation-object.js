@@ -18,11 +18,11 @@ class SimulationObject{
     }
 
     getX(){
-        return this.getPosition.x;
+        return this.getPosition().x;
     }
 
     getY(){
-        return this.getPosition.y;
+        return this.getPosition().y;
     }
 
     addToEnv(world){

@@ -6,11 +6,13 @@ const Engine = Matter.Engine,
     World=Matter.World,
     Body=Matter.Body,
     Mouse=Matter.Mouse,
+    Constraint=Matter.Constraint,
     MouseConstraint=Matter.MouseConstraint;
 
 const COLLISION_FILTERS=Object.freeze({
     BALL: 0x0001,
     HOLE: 0x0002,
+    ROBOT_BODY: 0x0003,
 });
 
 export{
@@ -23,5 +25,6 @@ export{
     Body,
     Mouse,
     MouseConstraint,
+    Constraint,
     COLLISION_FILTERS,
 }
