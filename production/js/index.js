@@ -3,6 +3,8 @@ import RandomConfig from "../simulateur/configurations/random-config.js";
 import CollisionController from "../simulateur/collision-controller.js";
 import BillardConfig from "../simulateur/configurations/billard-config.js";
 
+import {setSillContinue} from "./video.js";
+
 const socket = io(); //Connection to server
 
 // loader
@@ -19,8 +21,6 @@ const rightPart = document.querySelector("#right-part");
 const reload = document.querySelector("#reload-btn");
 const canvasContainer = document.querySelector("#canvas-container");
 const canvas = document.querySelector("#canvas-output-video");
-// let newCanvas = document.createElement("canvas");
-// newCanvas.id = "canvas-output-video";
 
 // right part
 const viewGoScenarios = document.querySelector("#go-scenarios");
@@ -38,6 +38,7 @@ const btnTurnRight = document.querySelector("#btn-turn-right");
 const cursorLeftMotor = document.querySelector("#cursor-left-motor");
 const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
+
 
 let speedGauche = 130;
 let speedDroit = 130;
@@ -106,6 +107,7 @@ window.addEventListener("load", () => {
                 tryAdd(viewGoScenarios);
                 tryRemove(viewArrowControls)
                 hide(reload);
+                setSillContinue(true);
                 break;
             case "simulator":
                 hide(canvas);
@@ -113,14 +115,16 @@ window.addEventListener("load", () => {
                 tryAdd(viewGoScenarios);
                 tryAdd(viewArrowControls)
                 show(reload);
+                setSillContinue(false);
                 break;
             case "manual":
                 afficherCanvas();
                 tryRemove(viewGoScenarios);
                 tryAdd(viewArrowControls)
                 hide(reload);
+                setSillContinue(true);
                 break;
-            default: // dans le cas où on appuie sur un bouton qui n'a pas de vue, on affiche une erreur
+            default:
                 console.log("Erreur : vue inconnue");
         }
     });
