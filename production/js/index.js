@@ -136,20 +136,7 @@ window.addEventListener("load", () => {
     });
 
     configurationChoice.addEventListener("change", (event) => {
-        switch (event.target.value) {
-            case "Billard":
-                loadSimulator("Billard")
-                break;
-            case "Foot":
-                loadSimulator("Foot")
-                break;
-            case "Facile":
-                loadSimulator("Facile")
-                break;
-            default:
-                loadSimulator("Random")
-        }
-
+        loadSimulator(event.target.value);
     });
 });
 
@@ -221,7 +208,6 @@ function loadSimulator(configurationName) {
         default:
             curentConfig = "Random";
             table = new RandomConfig(vue);
-            console.log("default");
     }
 
     let colController = new CollisionController(table);
