@@ -18,6 +18,7 @@ const leftPart = document.querySelector("#left-part");
 const rightPart = document.querySelector("#right-part");
 
 // left part
+const topTableSimulator = document.querySelector("#top-table-container");
 const reload = document.querySelector("#reload-btn");
 const canvasContainer = document.querySelector("#canvas-container");
 const canvas = document.querySelector("#canvas-output-video");
@@ -99,10 +100,10 @@ window.addEventListener("load", () => {
     viewsList.addEventListener("click", (event) => {
         switch (event.target.id) {
             case "camera":
-                afficherCanvas();
+                showCanvas();
                 tryAdd(viewGoScenarios);
                 tryRemove(viewArrowControls)
-                hide(reload);
+                hide(topTableSimulator);
                 setSillContinue(true);
                 break;
             case "simulator":
@@ -110,14 +111,14 @@ window.addEventListener("load", () => {
                 loadSimulator();
                 tryAdd(viewGoScenarios);
                 tryAdd(viewArrowControls)
-                show(reload);
+                show(topTableSimulator);
                 setSillContinue(false);
                 break;
             case "manual":
-                afficherCanvas();
+                showCanvas();
                 tryRemove(viewGoScenarios);
                 tryAdd(viewArrowControls)
-                hide(reload);
+                hide(topTableSimulator);
                 setSillContinue(true);
                 break;
             default:
@@ -154,7 +155,7 @@ function tryRemove(element) {
     }
 }
 
-function afficherCanvas() {
+function showCanvas() {
     if(canvas.classList.contains("displayNone")) {
         let potentialCanvas = document.querySelector("#canvas-simulateur");
         if(potentialCanvas != null){

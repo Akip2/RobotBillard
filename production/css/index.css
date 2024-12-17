@@ -150,6 +150,16 @@ canvas {
     cursor: grabbing;
 }
 
+#select-configuration {
+    background-color: lightgray;
+    border: none;
+    padding: 0.5em;
+    margin: 0.8em;
+    justify-content: center;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
 #reload-btn {
     background-color: lightgray;
     border: none;
@@ -223,7 +233,7 @@ canvas {
     padding: 1rem;
 }
 
-#select-scenarios {
+select {
 
     padding: 0.5rem;
 
