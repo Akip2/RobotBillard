@@ -36,18 +36,6 @@
         <!-- Right part which contains different views (one or more) -->
         <div class="part displayFlex" id="right-part">
 
-            <div class="part displayFlex" id="go-scenarios">
-                <button id="go-btn">GO</button>
-                <div id="div-scenarios">
-                    <p id="text-scenarios">Scénarios :</p>
-                    <select name="scenarios" id="select-scenarios">
-                        <option value="default" class="option-scenarios">Choissez un scénario</option>
-                        <option value="Billard" class="option-scenarios">Billard</option>
-                        <option value="Autre" class="option-scenarios">Autre</option>
-                    </select>
-                </div>
-            </div>
-
             <div class="part displayNone" id="arrow-controls">
 
                 <input type="range" class="cursor-motor" id="cursor-left-motor" min="0" max="255" list="steps">
@@ -80,6 +68,18 @@
                 </datalist>
             </div>
 
+            <div class="part displayFlex" id="go-scenarios">
+                <button id="go-btn">GO</button>
+                <div id="div-scenarios">
+                    <p id="text-scenarios">Scénarios :</p>
+                    <select name="scenarios" id="select-scenarios">
+                        <option value="default" class="option-scenarios">Choissez un scénario</option>
+                        <option value="Billard" class="option-scenarios">Billard</option>
+                        <option value="Autre" class="option-scenarios">Autre</option>
+                    </select>
+                </div>
+            </div>
+            
         </div>
     </main>
 

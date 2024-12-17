@@ -332,7 +332,11 @@ canvas {
 }
 
 .cursor-motor {
-    transform: rotate(-90deg);
+    width: 2rem;
+    padding: 0;
+    margin: 0;
+    writing-mode: vertical-lr;
+    direction: rtl;
 }
 
 
