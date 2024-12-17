@@ -1,7 +1,10 @@
 import VueSimulateur from "../simulateur/vue-simulateur.js";
-import RandomConfig from "../simulateur/configurations/random-config.js";
 import CollisionController from "../simulateur/collision-controller.js";
+
+// billard configurations
+import RandomConfig from "../simulateur/configurations/random-config.js";
 import BillardConfig from "../simulateur/configurations/billard-config.js";
+import EasyConfig from "../simulateur/configurations/easy-config.js";
 
 import {setSillContinue} from "./video.js";
 
@@ -176,7 +179,7 @@ function loadSimulator() {
     }
 
     let vue = new VueSimulateur(canvasContainer);
-    let table = new BillardConfig(vue);
+    let table = new EasyConfig(vue);
     let colController = new CollisionController(table);
 
     colController.createEvent(vue.engine);

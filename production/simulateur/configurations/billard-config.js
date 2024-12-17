@@ -4,10 +4,8 @@ import {
     ballColors,
     ballRadius,
     height,
-    holeRadius,
     robotHeight,
     robotWidth,
-    wallSize,
     wheelRadius,
     width
 } from "../params.js";
