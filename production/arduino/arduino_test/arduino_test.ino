@@ -16,7 +16,7 @@
 
 #define USE_SERIAL Serial
 
-// === MODIFIER EN FONCTION DU RESEAU =========================================
+// === MODIFY ACCORDING TO THE NETWORK ========================================
 char* SERVER_ADDRESS = "192.168.137.1";
 int SERVER_PORT = 8001;
 char* URL = "/socket.io/?EIO=4";
@@ -30,9 +30,14 @@ SocketIOclient socketIO;
 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
-// Moteurs
+// Motors
 Adafruit_DCMotor* leftMotor = AFMS.getMotor(1);
 Adafruit_DCMotor* rightMotor = AFMS.getMotor(2);
+
+// === Robot variables =======================================================================
+
+int lastTimestamp = -1;
+int delayTime = -1;
 
 int leftMotorDirection = 0;
 int rightMotorDirection = 0;
@@ -46,7 +51,7 @@ bool changeMotors = false;
   Handles what happens when an event is received
 */
 void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) {
-  DynamicJsonDocument doc(1024);
+  JsonDocument doc;
   String payload_str;
   String name_event;
 
@@ -80,12 +85,22 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
         USE_SERIAL.printf("%d\n", duration);
         USE_SERIAL.printf("%d\n", time);
 
+        // Deduce the time between 2 events
+        if (lastTimestamp == -1) {
+          lastTimestamp = time;
+        }
+        delayTime = time - lastTimestamp;
+
+        USE_SERIAL.printf("%d\n", delayTime);
+
+        // Change motor variables
+        leftMotorSpeed = abs(left);
+        rightMotorSpeed = abs(right);
+
         if (left > 0) {
           leftMotorDirection = FORWARD;
-          leftMotorSpeed = left;
         } else if (left < 0) {
           leftMotorDirection = BACKWARD;
-          leftMotorSpeed = abs(left);
         } else {  // when == 0
           leftMotorDirection = RELEASE;
           leftMotorSpeed = 0;
@@ -93,17 +108,14 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
 
         if (right > 0) {
           rightMotorDirection = FORWARD;
-          rightMotorSpeed = right;
         } else if (right < 0) {
           rightMotorDirection = BACKWARD;
-          rightMotorSpeed = abs(right);
         } else {  // when == 0
           rightMotorDirection = RELEASE;
           rightMotorSpeed = 0;
         }
 
         motorDuration = duration;
-
         changeMotors = true;
       }
       break;
@@ -131,8 +143,6 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
 // ############################################################################
 
 void setup() {
-  // pinMode(LED_BUILTIN, OUTPUT);
-
   USE_SERIAL.begin(115200);
   USE_SERIAL.setDebugOutput(true);
 
@@ -188,7 +198,6 @@ void loop() {
   if (changeMotors) {
     leftMotor->run(leftMotorDirection);
     rightMotor->run(rightMotorDirection);
-
     leftMotor->setSpeed(leftMotorSpeed);
     rightMotor->setSpeed(rightMotorSpeed);
 
@@ -221,7 +230,7 @@ void loop() {
     messageTimestamp = now;
 
     // create JSON message for Socket.IO (event)
-    DynamicJsonDocument doc(1024);
+    JsonDocument doc;
 
     JsonArray array = doc.to<JsonArray>();
 
