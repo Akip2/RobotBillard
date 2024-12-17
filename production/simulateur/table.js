@@ -28,17 +28,18 @@ class Table{
 
     removeBall(ball){
         let index=this.balls.indexOf(ball);
-        this.balls.splice(index,1);
+        let ballRemoved=this.balls.splice(index,1)[0];
 
-        this.notifyView();
+        this.vue.removeBall(ballRemoved.body);
     }
 
     getBalls(){
         return this.balls;
     }
 
-    notifyView(){
-        this.vue.update(this);
+    run(){
+        this.vue.setup(this);
+        this.vue.run();
     }
 }
 

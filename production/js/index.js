@@ -56,6 +56,10 @@ function createOrder(left, right, duration) {
     };
 }
 
+canvas.addEventListener("click", (event)=>{
+    console.log(event.offsetX+" "+event.offsetY);
+});
+
 window.addEventListener("load", () => {
 
     setTimeout(() => {
@@ -172,12 +176,9 @@ function loadSimulator() {
     }
 
     let vue = new VueSimulateur(canvasContainer);
-    vue.setup();
-    vue.run();
-
-    //let table=new RandomConfig(vue);
     let table = new BillardConfig(vue);
     let colController = new CollisionController(table);
+
     colController.createEvent(vue.engine);
-    table.notifyView();
+    table.run();
 }

@@ -4,10 +4,12 @@ import {height, width} from "./params.js";
 class VueSimulateur {
     constructor(canvasContainer){
         this.canvasContainer = canvasContainer;
-        this.objects=[];
+
+        this.createEngine();
+        this.createMouse();
     }
 
-    setup(){
+    createEngine(){
         this.engine=Engine.create();
         this.engine.gravity.y=0;
 
@@ -24,11 +26,9 @@ class VueSimulateur {
         });
 
         this.render.canvas.id="canvas-simulateur";
-
-        this.setupMouse();
     }
 
-    setupMouse(){
+    createMouse(){
         this.mouse = Mouse.create(this.render.canvas); // Création de la souris sur le canvas
         this.mouseConstraint = MouseConstraint.create(this.engine, {
             mouse: this.mouse,
@@ -56,45 +56,11 @@ class VueSimulateur {
         Runner.run(this.runner, this.engine);
     }
 
-    addToView(obj){
-        obj.addToEnv(this.engine.world);
-        this.objects.push(obj);
-    }
-
-    removeFromView(obj){
-        obj.destroy(this.engine.world);
-        this.objects.splice(this.objects.indexOf(obj), 1);
-    }
-
-    create(table){
-        table.balls.forEach(ball => {
-            ball.addToEnv(this.engine.world);
-        });
-
-        table.robots.forEach(robot => {
-            robot.addToEnv(this.engine.world);
-        });
-
-        table.walls.forEach(wall => {
-            wall.addToEnv(this.engine.world);
-        })
-
-        table.holes.forEach(hole => {
-            hole.addToEnv(this.engine.world);
-        });
-    }
-
-    update(table){
+    setup(table){
         const balls=table.balls;
         const holes=table.holes;
         const walls=table.walls;
         const robots=table.robots;
-
-        this.objects.forEach((obj) =>{
-            if(!(balls.includes(obj) || holes.includes(obj) || walls.includes(obj)) || robots.includes(obj) || walls.includes(obj)) {
-                this.removeFromView(obj);
-            }
-        });
 
         this.addObjects(walls);
         this.addObjects(holes);
@@ -104,10 +70,12 @@ class VueSimulateur {
 
     addObjects(objArray){
         objArray.forEach(obj => {
-            if(!this.objects.includes(obj)){
-                this.addToView(obj);
-            }
+            obj.addToEnv(this.engine.world);
         })
+    }
+
+    removeBall(ballBody){
+        Composite.remove(this.engine.world, ballBody);
     }
 }
 export default VueSimulateur;

@@ -2880,7 +2880,7 @@ var Axes = __webpack_require__(10);
      * Sets the linear velocity of the body instantly. Position, angle, force etc. are unchanged. See also `Body.applyForce`.
      * @method setVelocity
      * @param {body} body
-     * @param {vector} velocity
+     * @param {{x: number, y: number}} velocity
      */
     Body.setVelocity = function(body, velocity) {
         body.positionPrev.x = body.position.x - velocity.x;
