@@ -10,8 +10,8 @@ class Robot extends SimulationObject{
             },
         });
 
-        const wheel1=new Wheel(wheelRadius, -width/2, (height/2)-wheelRadius);
-        const wheel2=new Wheel(wheelRadius, width/2, (height/2)-wheelRadius);
+        const wheel1=new Wheel(wheelRadius, x-width/2, y+(height/2)-wheelRadius);
+        const wheel2=new Wheel(wheelRadius, x+width/2, y+(height/2)-wheelRadius);
 
         wheel1.body.collisionFilter = {
             'group': -1,
@@ -31,7 +31,7 @@ class Robot extends SimulationObject{
             bodyB: wheel1.body,
             pointB: { x: 0, y: 0 },
             stiffness: 0.9,
-            length: 0
+            length: 0,
         });
 
         const pin2 = Constraint.create({
@@ -40,7 +40,7 @@ class Robot extends SimulationObject{
             bodyB: wheel2.body,
             pointB: { x: 0, y: 0 },
             stiffness: 0.9,
-            length: 0
+            length: 0,
         });
 
         super(core, width, height, x, y);
@@ -50,8 +50,6 @@ class Robot extends SimulationObject{
 
         this.bodyArray=[core, wheel1.body, pin1, wheel2.body, pin2];
 
-        Body.setVelocity(this.body, {x:0, y:0});
-        Body.setAngularVelocity(this.body, 0);
         console.log(core);
     }
 
