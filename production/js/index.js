@@ -10,6 +10,7 @@ import FootConfig from "../simulateur/configurations/foot-config.js";
 import {setSillContinue} from "./video.js";
 
 const socket = io(); //Connection to server
+socket.emit("is-interface");
 
 // loader
 const loader = document.querySelector("#loader-container");
@@ -104,6 +105,7 @@ window.addEventListener("load", () => {
 
     // change curent view
     viewsList.addEventListener("click", (event) => {
+        socket.emit("change-mode", event.target.id);
         switch (event.target.id) {
             case "camera":
                 showCanvas();
