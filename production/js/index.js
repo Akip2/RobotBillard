@@ -47,6 +47,7 @@ const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
 let curentConfig = "Random";
+let vue = null;
 
 let speedGauche = 130;
 let speedDroit = 130;
@@ -153,9 +154,6 @@ window.addEventListener("load", () => {
             console.log("Camera : (" + x  + ", " + y + ")");
         }
     });
-
-
-
 });
 
 // to show a view
@@ -197,12 +195,11 @@ function showCanvas() {
 }
 
 function loadSimulator(configurationName) {
-    let canvasSimulateur = document.querySelector("#canvas-simulateur");
-    if (canvasSimulateur !== null) {
-        canvasContainer.removeChild(canvasSimulateur);
+    if (vue !== null) {
+        vue.clearSimulation();
     }
 
-    let vue = new VueSimulateur(canvasContainer);
+    vue=new VueSimulateur(canvasContainer);
     let table;
 
     switch (configurationName) {
