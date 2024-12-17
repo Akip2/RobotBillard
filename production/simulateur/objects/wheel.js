@@ -6,6 +6,12 @@ class Wheel extends SimulationObject{
         const body=Bodies.circle(x, y, radius, {
             render: {
               fillStyle : "#2F2F2F" // couleur réelle de notre robot
+            },
+
+            collisionFilter: {
+                group: -1,
+                category: 2,
+                mask: 0,
             }
         });
 
@@ -28,7 +34,8 @@ class Wheel extends SimulationObject{
         }
         else if(!this.isMoving && this.speed>0){  //The robot starts moving
             this.movingInterval=setInterval(()=>{
-                this.moving()
+                //console.log(this.body.angle);
+                this.moving();
             }, 10);
         }
     }
@@ -36,16 +43,9 @@ class Wheel extends SimulationObject{
     moving(){
         console.log("moving");
 
-        //Body.setPosition(this.body, {x:this.getX()+1, y:this.getY()});
         //Body.setVelocity(this.body, {x:0, y:(this.speed*this.direction)});
 
-        const force = {
-            x: 1000, // Force sur l'axe X
-            y: 0,              // Pas de force sur l'axe Y
-        };
-
-
-        //Body.applyForce(this.body, this.body.position, force);
+        //Body.setAngle(this.body, this.body.angle+1);
     }
 }
 

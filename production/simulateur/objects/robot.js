@@ -3,27 +3,16 @@ import SimulationObject from "./simulation-object.js";
 import Wheel from "./wheel.js";
 
 class Robot extends SimulationObject{
-    constructor(width, height, wheelRadius, x=0, y=0){
+    constructor(width, height, wheelRadius, x=0, y=0, angle=0){
         const core=Bodies.rectangle(x, y, width, height, {
             render: {
               fillStyle : "#B6423F" // real color of our robot
             },
+            frictionAir: 0.5,
         });
 
         const wheel1=new Wheel(wheelRadius, x-width/2, y+(height/2)-wheelRadius);
         const wheel2=new Wheel(wheelRadius, x+width/2, y+(height/2)-wheelRadius);
-
-        wheel1.body.collisionFilter = {
-            'group': -1,
-            'category': 2,
-            'mask': 0,
-        };
-
-        wheel2.body.collisionFilter = {
-            'group': -1,
-            'category': 2,
-            'mask': 0,
-        };
 
         const pin1 = Constraint.create({
             bodyA: core,
@@ -50,7 +39,7 @@ class Robot extends SimulationObject{
 
         this.bodyArray=[core, wheel1.body, pin1, wheel2.body, pin2];
 
-        console.log(core);
+        Body.setAngle(core, angle);
     }
 
     move(leftSpeed, leftTime, rightSpeed, rightTime){
@@ -68,14 +57,14 @@ class Robot extends SimulationObject{
             this.wheelRight.setDirection(1);
         }
 
-        this.wheelLeft.setSpeed(leftSpeed);
-        this.wheelRight.setSpeed(rightSpeed);
+        this.wheelLeft.setSpeed(Math.abs(leftSpeed));
+        this.wheelRight.setSpeed(Math.abs(rightSpeed));
 
-        /*
+
         this.movingInterval=setInterval(()=>{
-            console.log(this.body.parts[1].velocity);
-        }, 1000);
-         */
+            console.log(this.body.angle);
+            Body.setAngularVelocity(this.body, 0.1);
+        }, 10);
     }
 
     addToEnv(world) {

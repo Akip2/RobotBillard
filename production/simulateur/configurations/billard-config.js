@@ -12,6 +12,7 @@ import {
     width
 } from "../params.js";
 import Ball from "../objects/ball.js";
+import robot from "../objects/robot.js";
 
 class BillardConfig extends Table {
     constructor(vue) {
@@ -41,6 +42,8 @@ class BillardConfig extends Table {
         }
 
         super(robots, balls, vue);
+
+        //robots[0].move(0,0,1,1);
     }
 }
 
