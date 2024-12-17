@@ -4,7 +4,7 @@ import Wheel from "./wheel.js";
 
 class Robot extends SimulationObject{
     constructor(width, height, wheelRadius, x=0, y=0){
-        const core=Bodies.rectangle(0, 0, width, height, {
+        const core=Bodies.rectangle(x, y, width, height, {
             render: {
               fillStyle : "#B6423F" // real color of our robot
             },
@@ -48,7 +48,11 @@ class Robot extends SimulationObject{
         this.wheelLeft=wheel1;
         this.wheelRight=wheel2;
 
-        this.bodyArray=[core, pin1, wheel1.body, pin2, wheel2.body];
+        this.bodyArray=[core, wheel1.body, pin1, wheel2.body, pin2];
+
+        Body.setVelocity(this.body, {x:0, y:0});
+        Body.setAngularVelocity(this.body, 0);
+        console.log(core);
     }
 
     move(leftSpeed, leftTime, rightSpeed, rightTime){

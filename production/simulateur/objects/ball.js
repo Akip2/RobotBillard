@@ -4,7 +4,7 @@ import SimulationObject from "./simulation-object.js";
 class Ball extends SimulationObject{
     constructor(radius, color, x=0, y=0, circled=false){
         let body;
-        const core=Bodies.circle(0, 0, radius, {
+        const core=Bodies.circle(x, y, radius, {
             restitution:0.5,
             frictionAir: 0.025,
             collisionFilter: {
@@ -16,7 +16,7 @@ class Ball extends SimulationObject{
         });
 
         if(circled){
-            const circle=Bodies.circle(0, 0, radius*0.5, {
+            const circle=Bodies.circle(x, y, radius*0.5, {
                 render: {
                     fillStyle : "white"
                 }
@@ -31,7 +31,7 @@ class Ball extends SimulationObject{
             body=core;
         }
 
-        super(body, radius*2, radius*2, x, y);
+        super(body, radius*2, radius*2);
     }
 }
 
