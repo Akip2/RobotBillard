@@ -4,14 +4,14 @@ import Wheel from "./wheel.js";
 
 class Robot extends SimulationObject{
     constructor(width, height, wheelRadius, x=0, y=0){
-        const core=Bodies.rectangle(0, 0, width, height, {
+        const core=Bodies.rectangle(x, y, width, height, {
             render: {
               fillStyle : "#B6423F" // real color of our robot
             },
         });
 
-        const wheel1=new Wheel(wheelRadius, -width/2, (height/2)-wheelRadius);
-        const wheel2=new Wheel(wheelRadius, width/2, (height/2)-wheelRadius);
+        const wheel1=new Wheel(wheelRadius, x-width/2, y+(height/2)-wheelRadius);
+        const wheel2=new Wheel(wheelRadius, x+width/2, y+(height/2)-wheelRadius);
 
         wheel1.body.collisionFilter = {
             'group': -1,
@@ -31,7 +31,7 @@ class Robot extends SimulationObject{
             bodyB: wheel1.body,
             pointB: { x: 0, y: 0 },
             stiffness: 0.9,
-            length: 0
+            length: 0,
         });
 
         const pin2 = Constraint.create({
@@ -40,7 +40,7 @@ class Robot extends SimulationObject{
             bodyB: wheel2.body,
             pointB: { x: 0, y: 0 },
             stiffness: 0.9,
-            length: 0
+            length: 0,
         });
 
         super(core, width, height, x, y);
@@ -48,7 +48,9 @@ class Robot extends SimulationObject{
         this.wheelLeft=wheel1;
         this.wheelRight=wheel2;
 
-        this.bodyArray=[core, pin1, wheel1.body, pin2, wheel2.body];
+        this.bodyArray=[core, wheel1.body, pin1, wheel2.body, pin2];
+
+        console.log(core);
     }
 
     move(leftSpeed, leftTime, rightSpeed, rightTime){
