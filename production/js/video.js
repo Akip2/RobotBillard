@@ -68,7 +68,7 @@ function processVideo(video, canvas, ctx) {
                 let markerImage = new cv.Mat();
                 let dictionary = cv.getPredefinedDictionary(cv.DICT_ARUCO_ORIGINAL);
 
-                cv.cvtColor(frame, markerImage, cv.COLOR_RGBA2GRAY);
+                cv.cvtColor(frame, markerImage, cv.COLOR_RGBA2RGB);
 
                 // Detect ArUco markers
                 let markerCorners = new cv.MatVector();
