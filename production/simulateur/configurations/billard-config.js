@@ -41,7 +41,7 @@ class BillardConfig extends Table {
 
         super(robots, balls, vue);
 
-        //robots[0].move(0,0,1,1);
+        //robots[0].move(10,10,0,1);
     }
 }
 

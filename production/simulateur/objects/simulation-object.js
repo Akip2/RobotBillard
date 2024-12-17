@@ -25,6 +25,10 @@ class SimulationObject{
         return this.getPosition().y;
     }
 
+    getAngle(){
+        return this.body.angle;
+    }
+
     getWidth(){
         return this.width;
     }

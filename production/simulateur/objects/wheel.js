@@ -20,7 +20,7 @@ class Wheel extends SimulationObject{
                 group: -1,
                 category: 2,
                 mask: 0,
-            }
+            },
         });
 
         const pin = Constraint.create({
@@ -28,7 +28,7 @@ class Wheel extends SimulationObject{
             pointA: { x: relativeX, y: relativeY},
             bodyB: core,
             pointB: { x: 0, y: 0 },
-            stiffness: 0.9,
+            stiffness: 1 ,
             length: 0,
         });
 
@@ -39,6 +39,8 @@ class Wheel extends SimulationObject{
         this.isMoving=false;
 
         this.bodyArray=[core, pin];
+
+        this.robot=robot;
     }
 
     setDirection(direction){
@@ -53,18 +55,17 @@ class Wheel extends SimulationObject{
         }
         else if(!this.isMoving && this.speed>0){  //The robot starts moving
             this.movingInterval=setInterval(()=>{
-                //console.log(this.body.angle);
                 this.moving();
             }, 10);
         }
     }
 
     moving(){
-        console.log("moving");
+        let robotAngle=this.robot.getAngle();
+        let speedX=Math.cos(robotAngle)*this.speed*this.direction;
+        let speedY=Math.sin(robotAngle)*this.speed*this.direction;
 
-        //Body.setVelocity(this.body, {x:0, y:(this.speed*this.direction)});
-
-        //Body.setAngle(this.body, this.body.angle+1);
+        Body.setVelocity(this.body, {x:speedX, y:speedY});
     }
 
     addToEnv(world) {

@@ -3,19 +3,13 @@ import SimulationObject from "./simulation-object.js";
 import {Wheel, WHEEL_SIDE} from "./wheel.js";
 
 class Robot extends SimulationObject{
-    constructor(width, height, wheelRadius, x=0, y=0, angle=-Math.PI/2){
+    constructor(width, height, wheelRadius, x=0, y=0, angle=0){
         const core=Bodies.rectangle(x, y, width, height, {
             render: {
               fillStyle : "#B6423F" // real color of our robot
             },
-            frictionAir: 0.5,
+            frictionAir: 1,
         });
-
-        /*
-        const wheel1=new Wheel(wheelRadius, x-(width/2)+wheelRadius/3, y-(height/2)+wheelRadius/2);
-        const wheel2=new Wheel(wheelRadius, x-(width/2)+wheelRadius/3, y+(height/2)-wheelRadius/2);
-         */
-
 
         super(core, width, height, x, y);
 
@@ -47,12 +41,6 @@ class Robot extends SimulationObject{
 
         this.wheelLeft.setSpeed(Math.abs(leftSpeed));
         this.wheelRight.setSpeed(Math.abs(rightSpeed));
-
-
-        this.movingInterval=setInterval(()=>{
-            console.log(this.body.angle);
-            //Body.setAngularVelocity(this.body, 0.1);
-        }, 10);
     }
 
     addToEnv(world) {
