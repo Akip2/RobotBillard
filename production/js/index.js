@@ -5,6 +5,7 @@ import CollisionController from "../simulateur/collision-controller.js";
 import RandomConfig from "../simulateur/configurations/random-config.js";
 import BillardConfig from "../simulateur/configurations/billard-config.js";
 import EasyConfig from "../simulateur/configurations/easy-config.js";
+import FootConfig from "../simulateur/configurations/foot-config.js";
 
 import {setSillContinue} from "./video.js";
 
@@ -61,20 +62,19 @@ function createOrder(left, right, duration) {
     };
 }
 
-canvas.addEventListener("click", (event)=>{
-    console.log(event.offsetX+" "+event.offsetY);
-});
-
 window.addEventListener("load", () => {
 
+    // loader
     setTimeout(() => {
         loader.style.display = "none";
     }, 1000);
 
+    // reload the simulation
     reload.addEventListener("click" , () => {
         loadSimulator(curentConfig);
     });
 
+    // execution time of the motors
     inputDuration.addEventListener("input", () => {
         let durationBeforeTest = inputDuration.value;
         // we check if time is really between 100ms and 10.000ms
@@ -82,30 +82,27 @@ window.addEventListener("load", () => {
         console.log(duration);
     });
 
+    // buttons to move robots
     cursorLeftMotor.addEventListener("input", () => {
         speedGauche = cursorLeftMotor.value;
     });
-
     cursorRightMotor.addEventListener("input", () => {
         speedDroit = cursorRightMotor.value;
     });
-
     btnForward.addEventListener("click", () => {
         socket.emit('motor', createOrder(speedGauche, speedDroit, duration));
     });
-
     btnBackward.addEventListener("click", () => {
         socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration));
     });
-
     btnTurnRight.addEventListener("click", () => {
         socket.emit('motor', createOrder(-speedGauche, speedDroit, duration));
     });
-
     btnTurnLeft.addEventListener("click", () => {
         socket.emit('motor', createOrder(speedGauche, -speedDroit, duration));
     });
 
+    // change curent view
     viewsList.addEventListener("click", (event) => {
         switch (event.target.id) {
             case "camera":
@@ -135,9 +132,28 @@ window.addEventListener("load", () => {
         }
     });
 
+    // choose a configuration for the simulator
     configurationChoice.addEventListener("change", (event) => {
         loadSimulator(event.target.value);
     });
+
+    canvasContainer.addEventListener("click", (event) => {
+        let simulatorCanvas = document.querySelector("#canvas-simulateur");
+        if(simulatorCanvas != null) {
+            // get the position of a click on the simulator
+            let x = event.offsetX;
+            let y = event.offsetY;
+            console.log("Simulator : (" + x  + ", " + y + ")");
+        }else {
+            // get the position of a click on the camera
+            let x = event.offsetX;
+            let y = event.offsetY;
+            console.log("Camera : (" + x  + ", " + y + ")");
+        }
+    });
+
+
+
 });
 
 // to show a view
@@ -187,7 +203,7 @@ function loadSimulator(configurationName) {
     let vue = new VueSimulateur(canvasContainer);
     let table;
 
-    switch (configurationName){
+    switch (configurationName) {
         case "Ramdom":
             curentConfig = "Random";
             table = new RandomConfig(vue);
@@ -196,11 +212,10 @@ function loadSimulator(configurationName) {
             curentConfig = "Billard";
             table = new BillardConfig(vue);
             break;
-        // TODO
-        // case "Foot":
-        //     curentConfig = "Foot";
-        //     table = new EasyConfig(vue);
-        //     break;
+        case "Foot":
+            curentConfig = "Foot";
+            table = new FootConfig(vue);
+            break;
         case "Facile":
             curentConfig = "Facile";
             table = new EasyConfig(vue);
