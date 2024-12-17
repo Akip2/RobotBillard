@@ -25,6 +25,14 @@ class SimulationObject{
         return this.getPosition().y;
     }
 
+    getWidth(){
+        return this.width;
+    }
+
+    getHeight(){
+        return this.height;
+    }
+
     addToEnv(world){
         Composite.add(world, this.body);
     }

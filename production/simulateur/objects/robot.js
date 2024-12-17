@@ -1,9 +1,9 @@
 import {Bodies, Body, COLLISION_FILTERS, Composite, Constraint} from "../global.js";
 import SimulationObject from "./simulation-object.js";
-import Wheel from "./wheel.js";
+import {Wheel, WHEEL_SIDE} from "./wheel.js";
 
 class Robot extends SimulationObject{
-    constructor(width, height, wheelRadius, x=0, y=0, angle=0){
+    constructor(width, height, wheelRadius, x=0, y=0, angle=-Math.PI/2){
         const core=Bodies.rectangle(x, y, width, height, {
             render: {
               fillStyle : "#B6423F" // real color of our robot
@@ -11,33 +11,21 @@ class Robot extends SimulationObject{
             frictionAir: 0.5,
         });
 
-        const wheel1=new Wheel(wheelRadius, x-width/2, y+(height/2)-wheelRadius);
-        const wheel2=new Wheel(wheelRadius, x+width/2, y+(height/2)-wheelRadius);
+        /*
+        const wheel1=new Wheel(wheelRadius, x-(width/2)+wheelRadius/3, y-(height/2)+wheelRadius/2);
+        const wheel2=new Wheel(wheelRadius, x-(width/2)+wheelRadius/3, y+(height/2)-wheelRadius/2);
+         */
 
-        const pin1 = Constraint.create({
-            bodyA: core,
-            pointA: { x: -width/2, y:  (height/2)-wheelRadius},
-            bodyB: wheel1.body,
-            pointB: { x: 0, y: 0 },
-            stiffness: 0.9,
-            length: 0,
-        });
-
-        const pin2 = Constraint.create({
-            bodyA: core,
-            pointA: { x: width/2, y:  (height/2)-wheelRadius},
-            bodyB: wheel2.body,
-            pointB: { x: 0, y: 0 },
-            stiffness: 0.9,
-            length: 0,
-        });
 
         super(core, width, height, x, y);
+
+        const wheel1=new Wheel(this, wheelRadius, WHEEL_SIDE.LEFT);
+        const wheel2=new Wheel(this, wheelRadius, WHEEL_SIDE.RIGHT);
 
         this.wheelLeft=wheel1;
         this.wheelRight=wheel2;
 
-        this.bodyArray=[core, wheel1.body, pin1, wheel2.body, pin2];
+        this.bodyArray=[core, wheel1.body, wheel2.body];
 
         Body.setAngle(core, angle);
     }
@@ -63,14 +51,15 @@ class Robot extends SimulationObject{
 
         this.movingInterval=setInterval(()=>{
             console.log(this.body.angle);
-            Body.setAngularVelocity(this.body, 0.1);
+            //Body.setAngularVelocity(this.body, 0.1);
         }, 10);
     }
 
     addToEnv(world) {
-        this.bodyArray.forEach((element) => {
-            Composite.add(world, element);
-        })
+        super.addToEnv(world);
+
+        this.wheelLeft.addToEnv(world);
+        this.wheelRight.addToEnv(world);
     }
 }
 
