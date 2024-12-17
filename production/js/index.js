@@ -23,6 +23,7 @@ const rightPart = document.querySelector("#right-part");
 // left part
 const topTableSimulator = document.querySelector("#top-table-container");
 const reload = document.querySelector("#reload-btn");
+const configurationChoice = document.querySelector("#select-configuration");
 const canvasContainer = document.querySelector("#canvas-container");
 const canvas = document.querySelector("#canvas-output-video");
 
@@ -43,6 +44,7 @@ const cursorLeftMotor = document.querySelector("#cursor-left-motor");
 const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
+let curentConfig = "Random";
 
 let speedGauche = 130;
 let speedDroit = 130;
@@ -70,7 +72,7 @@ window.addEventListener("load", () => {
     }, 1000);
 
     reload.addEventListener("click" , () => {
-        loadSimulator();
+        loadSimulator(curentConfig);
     });
 
     inputDuration.addEventListener("input", () => {
@@ -132,6 +134,23 @@ window.addEventListener("load", () => {
                 console.log("Erreur : vue inconnue");
         }
     });
+
+    configurationChoice.addEventListener("change", (event) => {
+        switch (event.target.value) {
+            case "Billard":
+                loadSimulator("Billard")
+                break;
+            case "Foot":
+                loadSimulator("Foot")
+                break;
+            case "Facile":
+                loadSimulator("Facile")
+                break;
+            default:
+                loadSimulator("Random")
+        }
+
+    });
 });
 
 // to show a view
@@ -172,14 +191,39 @@ function showCanvas() {
     }
 }
 
-function loadSimulator() {
+function loadSimulator(configurationName) {
     let canvasSimulateur = document.querySelector("#canvas-simulateur");
     if (canvasSimulateur !== null) {
         canvasContainer.removeChild(canvasSimulateur);
     }
 
     let vue = new VueSimulateur(canvasContainer);
-    let table = new EasyConfig(vue);
+    let table;
+
+    switch (configurationName){
+        case "Ramdom":
+            curentConfig = "Random";
+            table = new RandomConfig(vue);
+            break;
+        case "Billard":
+            curentConfig = "Billard";
+            table = new BillardConfig(vue);
+            break;
+        // TODO
+        // case "Foot":
+        //     curentConfig = "Foot";
+        //     table = new EasyConfig(vue);
+        //     break;
+        case "Facile":
+            curentConfig = "Facile";
+            table = new EasyConfig(vue);
+            break;
+        default:
+            curentConfig = "Random";
+            table = new RandomConfig(vue);
+            console.log("default");
+    }
+
     let colController = new CollisionController(table);
 
     colController.createEvent(vue.engine);
