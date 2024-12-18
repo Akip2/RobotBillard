@@ -1,4 +1,4 @@
-import {Body, Composite, Engine, Mouse, MouseConstraint, Render, Runner} from "./global.js";
+import {Body, World, Composite, Engine, Mouse, MouseConstraint, Render, Runner} from "./global.js";
 import {height, width} from "./params.js";
 
 class VueSimulateur {
@@ -76,6 +76,18 @@ class VueSimulateur {
 
     removeBall(ballBody){
         Composite.remove(this.engine.world, ballBody);
+    }
+
+    clearSimulation(){
+        World.clear(this.engine.world);
+        Engine.clear(this.engine);
+        Render.stop(this.render);
+        Runner.stop(this.runner);
+        this.render.canvas.remove();
+        this.render.canvas = null;
+        this.render.context = null;
+
+        Composite.clear(this.engine.world, false);
     }
 }
 export default VueSimulateur;

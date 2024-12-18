@@ -10,6 +10,7 @@ import FootConfig from "../simulateur/configurations/foot-config.js";
 import {setSillContinue} from "./video.js";
 
 const socket = io(); //Connection to server
+socket.emit("is-interface");
 
 // loader
 const loader = document.querySelector("#loader-container");
@@ -46,6 +47,7 @@ const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
 let curentConfig = "Random";
+let vue = null;
 
 let speedGauche = 130;
 let speedDroit = 130;
@@ -105,6 +107,7 @@ window.addEventListener("load", () => {
 
     // change curent view
     viewsList.addEventListener("click", (event) => {
+        socket.emit("change-mode", event.target.id);
         switch (event.target.id) {
             case "camera":
                 showCanvas();
@@ -152,7 +155,6 @@ window.addEventListener("load", () => {
             console.log("Camera : (" + x  + ", " + y + ")");
         }
     });
-
 });
 
 // to show a view
@@ -194,12 +196,11 @@ function showCanvas() {
 }
 
 function loadSimulator(configurationName) {
-    let canvasSimulateur = document.querySelector("#canvas-simulateur");
-    if (canvasSimulateur !== null) {
-        canvasContainer.removeChild(canvasSimulateur);
+    if (vue !== null) {
+        vue.clearSimulation();
     }
 
-    let vue = new VueSimulateur(canvasContainer);
+    vue=new VueSimulateur(canvasContainer);
     let table;
 
     switch (configurationName) {
