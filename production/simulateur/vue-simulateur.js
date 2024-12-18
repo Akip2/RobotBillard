@@ -47,6 +47,7 @@ class VueSimulateur {
             const body = event.body;
             if (body) {
                 Body.setVelocity(body, {x: 0, y: 0});
+                Body.setAngularVelocity(body, 0);
             }
         });
     }

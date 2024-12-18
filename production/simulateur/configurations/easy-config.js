@@ -6,15 +6,14 @@ import {
     height,
     robotHeight,
     robotWidth,
-    wallSize,
-    wheelRadius,
+    wallSize, wheelHeight, wheelWidth,
     width
 } from "../params.js";
 import Ball from "../objects/ball.js";
 
 class EasyConfig extends Table {
     constructor(vue) {
-        const robots = [new Robot(robotWidth, robotHeight, wheelRadius, width / 3, height / 2)];
+        const robots = [new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width / 3, height / 2)];
         const balls = [];
 
         // top balls

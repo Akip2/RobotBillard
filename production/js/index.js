@@ -48,6 +48,7 @@ const inputDuration = document.querySelector("#input-duration");
 
 let curentConfig = "Random";
 let vue = null;
+let table = null;
 
 let speedGauche = 130;
 let speedDroit = 130;
@@ -201,7 +202,6 @@ function loadSimulator(configurationName) {
     }
 
     vue = new VueSimulateur(canvasContainer);
-    let table;
 
     switch (configurationName) {
         case "Ramdom":
@@ -230,3 +230,11 @@ function loadSimulator(configurationName) {
     colController.createEvent(vue.engine);
     table.run();
 }
+
+socket.on('connect', function () {
+    console.log("Connected to server with ID : ", socket.id);
+
+    socket.on("motor", function(order){
+        table.sendRobotOrder(order); //Send order to simulator
+    });
+});
