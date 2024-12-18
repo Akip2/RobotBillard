@@ -21,7 +21,6 @@ class Robot extends SimulationObject {
 
         this.bodyArray = [core, wheel1.body, wheel2.body];
 
-        this.orderQueue=[];
         Body.setAngle(core, angle);
     }
 

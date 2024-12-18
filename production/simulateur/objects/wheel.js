@@ -23,13 +23,15 @@ class Wheel extends SimulationObject {
             },
         });
 
+        const stiffness=0.6;
+
         const pin1 = Constraint.create({
             bodyA: robot.body,
             pointA: {x: relativeX-wheelWidth/2, y: relativeY},
 
             bodyB: core,
             pointB: {x: -wheelWidth/2, y: 0},
-            stiffness: 0.8,
+            stiffness: stiffness,
             length: 0,
 
             render: {
@@ -45,7 +47,7 @@ class Wheel extends SimulationObject {
 
             bodyB: core,
             pointB: {x: wheelWidth/2, y: 0},
-            stiffness: 0.8,
+            stiffness: stiffness,
             length: 0,
 
             render: {
@@ -61,7 +63,7 @@ class Wheel extends SimulationObject {
 
             bodyB: core,
             pointB: {x: 0, y: 0},
-            stiffness: 0.8,
+            stiffness: stiffness,
             length: 0,
 
             render: {
@@ -71,34 +73,10 @@ class Wheel extends SimulationObject {
             isStatic: true,
         });
 
-        /*
-        const core = Bodies.circle(robot.getX() + relativeX, robot.getY() + relativeY, radius, {
-            render: {
-                fillStyle: "#2F2F2F" // real color of our robot
-            },
-
-            collisionFilter: {
-                group: -1,
-                category: 2,
-                mask: 0,
-            },
-        });
-
-        const pin = Constraint.create({
-            bodyA: robot.body,
-            pointA: {x: relativeX, y: relativeY},
-            bodyB: core,
-            pointB: {x: 0, y: 0},
-            stiffness: 1,
-            length: 0,
-        });
-        */
-
         super(core, wheelWidth, wheelHeight);
 
         this.speed = 0;
         this.direction = 1;
-        this.isMoving = false;
 
         this.bodyArray = [core, pin1, pin2, pin3];
 
@@ -114,9 +92,9 @@ class Wheel extends SimulationObject {
 
         let delta=0;
 
-        if (this.isMoving && this.speed === 0) {  // Stops the robot
-            clearInterval(this.movingInterval);
-        } else if (!this.isMoving && this.speed > 0) {  // The robot starts moving
+
+        clearInterval(this.movingInterval);
+        if (this.speed > 0) {  // The robot starts moving
             this.movingInterval = setInterval(() => {
                 this.moving();
                 delta += 10;
