@@ -25,6 +25,8 @@ app.get('/', function (req, res) {
 // Display the sockets coming to the server, which are then sent to the robot
 server.listen(port);
 
+let lastDelay;
+
 io.sockets.on("connection", function (socket) {
     console.log("Socket connected: " + socket.conn.remoteAddress);
 
@@ -34,7 +36,8 @@ io.sockets.on("connection", function (socket) {
     }
 
     socket.on('event_name', function (val) {
-        console.log(val);
+        console.log(Math.abs((performance.now() - val["now"]) - lastDelay) + ' ms');
+        lastDelay = performance.now() - val["now"];
     });
 
     socket.on("motor", function (val) {

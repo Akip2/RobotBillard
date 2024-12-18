@@ -181,7 +181,7 @@ function processVideo(video, canvas, ctx) {
  */
 function distanceBetweenPoints(p1, p2) {
     return Math.sqrt(
-        Math.pow(p1[0] - p1[1], 2) + Math.pow(p2[0] - p2[1], 2)
+        Math.pow(p1.x - p1.y, 2) + Math.pow(p2.x - p2.y, 2)
     );
 }
 
@@ -221,6 +221,13 @@ function sortCorners(corners) {
             bottomRight = new cv.Point(x, y);
         if ((x > 0 && x < WIDTH / 2) && (y > HEIGHT / 2 && y < HEIGHT))
             bottomLeft = new cv.Point(x, y);
+    }
+
+    console.log(topLeft)
+    if (topLeft !== undefined && topRight !== undefined) {
+        let dist = distanceBetweenPoints(topLeft, topRight);
+        console.log(dist);
+        console.log(calculateBallSize(dist));
     }
 
     array.push(topLeft, topRight, bottomRight, bottomLeft);
