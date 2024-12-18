@@ -29,6 +29,7 @@ let lastDelay;
 
 io.sockets.on("connection", function (socket) {
     console.log("Socket connected: " + socket.conn.remoteAddress);
+    socket.emit("ask-identity");
 
     if (!socketIds.includes(socket.id)) {
         robotSockets.push(socket); // We assume the connecting socket is a robot
@@ -52,8 +53,9 @@ io.sockets.on("connection", function (socket) {
         }
     });
 
-    socket.on("is-interface", function () { // We learn that the socket is the interface
+    socket.on("is-interface", function (mode) { // We learn that the socket is the interface
         robotSockets.splice(robotSockets.indexOf(socket), 1);
+        simulatorMode = (mode === "simulator");
     });
 
     socket.on("change-mode", function (val) { // User is changing the mode of the interface (simulator, manual, camera...)

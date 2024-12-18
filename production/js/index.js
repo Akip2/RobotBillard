@@ -10,7 +10,6 @@ import FootConfig from "../simulateur/configurations/foot-config.js";
 import {setSillContinue} from "./video.js";
 
 const socket = io(); // Connection to server
-socket.emit("is-interface");
 
 // loader
 const loader = document.querySelector("#loader-container");
@@ -49,6 +48,7 @@ const inputDuration = document.querySelector("#input-duration");
 let curentConfig = "Random";
 let vue = null;
 let table = null;
+let currentView="camera";
 
 let speedGauche = 130;
 let speedDroit = 130;
@@ -109,7 +109,8 @@ window.addEventListener("load", () => {
     // Change curent view
     viewsList.addEventListener("click", (event) => {
         socket.emit("change-mode", event.target.id);
-        switch (event.target.id) {
+        currentView=event.target.id;
+        switch (currentView) {
             case "camera":
                 showCanvas();
                 tryAdd(viewGoScenarios);
@@ -236,5 +237,9 @@ socket.on('connect', function () {
 
     socket.on("motor", function(order){
         table.sendRobotOrder(order); //Send order to simulator
+    });
+
+    socket.on("ask-identity", function(){
+        socket.emit("is-interface", currentView);
     });
 });
