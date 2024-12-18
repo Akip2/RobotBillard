@@ -29,7 +29,7 @@ class Wheel extends SimulationObject {
 
             bodyB: core,
             pointB: {x: -wheelWidth/2, y: 0},
-            stiffness: 1,
+            stiffness: 0.8,
             length: 0,
 
             render: {
@@ -45,7 +45,7 @@ class Wheel extends SimulationObject {
 
             bodyB: core,
             pointB: {x: wheelWidth/2, y: 0},
-            stiffness: 1,
+            stiffness: 0.8,
             length: 0,
 
             render: {
@@ -61,7 +61,7 @@ class Wheel extends SimulationObject {
 
             bodyB: core,
             pointB: {x: 0, y: 0},
-            stiffness: 1,
+            stiffness: 0.8,
             length: 0,
 
             render: {
