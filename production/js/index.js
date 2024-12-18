@@ -72,11 +72,7 @@ window.addEventListener("load", () => {
         loader.style.display = "none";
     }, 1500);
 
-<<<<<<< HEAD
-    // reload the simulation
-=======
     // Reload the simulation
->>>>>>> 724aca68f57af330a6c2373fbbcec1a3fad25c9d
     reload.addEventListener("click", () => {
         loadSimulator(curentConfig);
     });
@@ -148,20 +144,12 @@ window.addEventListener("load", () => {
     canvasContainer.addEventListener("click", (event) => {
         let simulatorCanvas = document.querySelector("#canvas-simulateur");
         if (simulatorCanvas != null) {
-<<<<<<< HEAD
-            // get the position of a click on the simulator
-=======
             // Get the position of a click on the simulator
->>>>>>> 724aca68f57af330a6c2373fbbcec1a3fad25c9d
             let x = event.offsetX;
             let y = event.offsetY;
             console.log("Simulator : (" + x + ", " + y + ")");
         } else {
-<<<<<<< HEAD
-            // get the position of a click on the camera
-=======
             // Get the position of a click on the camera
->>>>>>> 724aca68f57af330a6c2373fbbcec1a3fad25c9d
             let x = event.offsetX;
             let y = event.offsetY;
             console.log("Camera : (" + x + ", " + y + ")");
