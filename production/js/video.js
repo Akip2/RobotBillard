@@ -10,16 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
         navigator.mediaDevices.getUserMedia({
             video: {
                 width: {
-                    exact: 700
+                    ideal: 700
                 },
                 height: {
-                    exact: 400
+                    ideal: 400
                 }
             }
         })
 
             // To use the PC webcam
-            // navigator.mediaDevices.getUserMedia({ video: true })
+            // navigator.mediaDevices.getUserMedia({video: true})
             .then((stream) => {
                 // Create a virtual video to get the frames of the camera stream
                 const video = document.createElement("video");
@@ -87,14 +87,21 @@ function processVideo(video, canvas, ctx) {
                 /****************** Circle detection *****************/
                 /*****************************************************/
 
+                // let ballDiameter = calculateBallSize(/* TODO */);
+                // let minDiameter = ballDiameter - 5;
+                // let maxDiameter = ballDiameter + 5;
+
+
                 let circles = new cv.Mat();
                 cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT,
-                    2,      // resolution : 1 = default resolution, 2 = resolution divided by 2
-                    15,     // distance between circles
-                    100,    // the lower it is, the more circles are detected (including false ones)
-                    30,     //
-                    7,      // minimum diameter of circles
-                    15      // maximum diameter of circles
+                    2,              // resolution : 1 = default resolution, 2 = resolution divided by 2
+                    15,             // distance between circles
+                    100,            // the lower it is, the more circles are detected (including false ones)
+                    30,             //
+                    7,              // minimum diameter of circles
+                    15
+                    // minDiameter,    // minimum diameter of circles
+                    // maxDiameter     // maximum diameter of circles
                 );
 
                 // Draw detected circles
@@ -156,6 +163,18 @@ function distanceBetweenPoints(p1, p2) {
     return Math.sqrt(
         Math.pow(p1[0] - p1[1], 2) + Math.pow(p2[0] - p2[1], 2)
     );
+}
+
+/**
+ * calculate the approximate size of a boll on the canvas
+ * @param {number} tableLength - length of the table on the canvas
+ * @returns {number} approximate diameter of balls on the canvas
+ */
+function calculateBallSize(tableLength) {
+    let ballRealSize = 5.5;
+    let tableRealSize = 118.5;
+
+    return (tableLength * ballRealSize) / tableRealSize;
 }
 
 export function setSillContinue(boolean) {
