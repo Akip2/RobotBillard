@@ -27,7 +27,9 @@ server.listen(port);
 io.sockets.on("connection", function (socket) {
     console.log("Socket connected: " + socket.conn.remoteAddress);
 
-    robotSockets.push(socket); // We assume the connecting socket is a robot
+    if(!robotSockets.includes(socket)) {
+        robotSockets.push(socket); // We assume the connecting socket is a robot
+    }
 
     socket.on("motor", function (val) {
         console.log("motor" + JSON.stringify(val));
