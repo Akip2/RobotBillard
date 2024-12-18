@@ -6,14 +6,15 @@ import {
     height,
     robotHeight,
     robotWidth,
-    wheelRadius,
+    wheelWidth,
+    wheelHeight,
     width
 } from "../params.js";
 import Ball from "../objects/ball.js";
 
 class BillardConfig extends Table {
     constructor(vue) {
-        const robots = [new Robot(robotWidth, robotHeight, wheelRadius, width/3, height/2)];
+        const robots = [new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width/3, height/2)];
 
         const balls = [];
 

@@ -6,8 +6,7 @@ import {
     height,
     robotHeight,
     robotWidth,
-    wallSize,
-    wheelRadius,
+    wallSize, wheelHeight, wheelWidth,
     width
 } from "../params.js";
 import Ball from "../objects/ball.js";
@@ -21,8 +20,8 @@ class FootConfig extends Table {
         balls.push(new Ball(ballRadius, "white", (width / 2) + ballRadius, height / 2));
 
         // Robots
-        let robot1 = new Robot(robotWidth, robotHeight, wheelRadius, width / 6, height / 2);      // left robot
-        let robot2 = new Robot(robotWidth, robotHeight, wheelRadius, width / 1.1666, height / 2); // right robot
+        let robot1 = new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width / 6, height / 2);      // left robot
+        let robot2 = new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width / 1.1666, height / 2); // right robot
         robots.push(robot1, robot2);
 
         super(robots, balls, vue);

@@ -18,7 +18,9 @@ const holeRadius = ballRadius * 1.5;
 
 const robotWidth = 30;
 const robotHeight = 30;
-const wheelRadius = 6.5;
+
+const wheelHeight = robotHeight/18;
+const wheelWidth = robotWidth/1.6;
 
 export {
     ballRadius,
@@ -29,5 +31,6 @@ export {
     height,         // table height
     robotWidth,
     robotHeight,
-    wheelRadius
+    wheelWidth,
+    wheelHeight,
 }
