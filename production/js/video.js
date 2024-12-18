@@ -105,7 +105,7 @@ function processVideo(video, canvas, ctx) {
                     cv.circle(markerImage, center, radius, [255, 0, 0, 255], 3);
                     cv.circle(markerImage, center, 3, [0, 255, 0, 255], -1);
 
-                    console.log(`cercle, x: ${circle[0]}, y:${circle[0]}`);
+                    console.log(`cercle, x: ${circle[0]}, y: ${circle[1]}, distance: ${distanceBetweenPoints(circle, circles)}`);
                 }
 
                 // console.log("Number of circles : " + circles.cols);
@@ -118,7 +118,7 @@ function processVideo(video, canvas, ctx) {
                     console.log(`Id: ${markerIds.data32S[i]}, x: ${topLeftCorner[0]}, y: ${topLeftCorner[1]}`);
                 }
 
-                // Draw the final result in the canvasl
+                // Draw the final result in the canvas
                 cv.imshow(canvas, markerImage);
 
                 // Clean memory
@@ -145,6 +145,19 @@ function processVideo(video, canvas, ctx) {
     // Process the next frame
     processFrame();
 }
+
+/**
+ * Calculates the distance between 2 points
+ * @param p1
+ * @param p2
+ * @returns {number}
+ */
+function distanceBetweenPoints(p1, p2) {
+    return Math.sqrt(
+        Math.pow(p1[0] - p1[1], 2) + Math.pow(p2[0] - p2[1], 2)
+    );
+}
+
 
 export function setSillContinue(boolean) {
     stillContinue = boolean;
