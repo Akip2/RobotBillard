@@ -1,5 +1,8 @@
 let stillContinue = true;
 
+const WIDTH = 700;
+const HEIGHT = 400;
+
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("canvas-output-video");
     const ctx = canvas.getContext("2d");
@@ -10,16 +13,16 @@ document.addEventListener("DOMContentLoaded", () => {
         navigator.mediaDevices.getUserMedia({
             video: {
                 width: {
-                    ideal: 700
+                    ideal: WIDTH
                 },
                 height: {
-                    ideal: 400
+                    ideal: HEIGHT
                 }
             }
         })
 
             // To use the PC webcam
-            // navigator.mediaDevices.getUserMedia({ video: true })
+            // navigator.mediaDevices.getUserMedia({video: true})
             .then((stream) => {
                 // Create a virtual video to get the frames of the camera stream
                 const video = document.createElement("video");
@@ -87,14 +90,21 @@ function processVideo(video, canvas, ctx) {
                 /****************** Circle detection *****************/
                 /*****************************************************/
 
+                // let ballDiameter = calculateBallSize(/* TODO */);
+                // let minDiameter = ballDiameter - 5;
+                // let maxDiameter = ballDiameter + 5;
+
+
                 let circles = new cv.Mat();
                 cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT,
-                    2,      // resolution : 1 = default resolution, 2 = resolution divided by 2
-                    15,     // distance between circles
-                    100,    // the lower it is, the more circles are detected (including false ones)
-                    30,     //
-                    7,      // minimum diameter of circles
-                    15      // maximum diameter of circles
+                    2,              // resolution : 1 = default resolution, 2 = resolution divided by 2
+                    15,             // distance between circles
+                    100,            // the lower it is, the more circles are detected (including false ones)
+                    30,             //
+                    7,              // minimum diameter of circles
+                    15
+                    // minDiameter,    // minimum diameter of circles
+                    // maxDiameter     // maximum diameter of circles
                 );
 
                 // Draw detected circles
@@ -105,17 +115,32 @@ function processVideo(video, canvas, ctx) {
                     cv.circle(markerImage, center, radius, [255, 0, 0, 255], 3);
                     cv.circle(markerImage, center, 3, [0, 255, 0, 255], -1);
 
-                    console.log(`cercle, x: ${circle[0]}, y: ${circle[1]}, distance: ${distanceBetweenPoints(circle, circles.data32F.slice(0, (1) * 3))}`);
+                    // console.log(`cercle, x: ${circle[0]}, y: ${circle[1]}, distance: ${distanceBetweenPoints(circle, circles.data32F.slice(0, (1) * 3))}`);
                 }
 
-                // console.log("Number of circles : " + circles.cols);
-                // console.log("Number of aruco : " + markerIds.rows)
+                let tab = [];
 
+                // Draw the ArUcos
                 for (let i = 0; i < markerIds.rows; i++) {
                     let corners = markerCorners.get(i);
                     let topLeftCorner = corners.data32F.slice(0, 2);
 
-                    console.log(`Id: ${markerIds.data32S[i]}, x: ${topLeftCorner[0]}, y: ${topLeftCorner[1]}`);
+                    tab.push(topLeftCorner);
+                    // console.log(`Id: ${markerIds.data32S[i]}, x: ${topLeftCorner[0]}, y: ${topLeftCorner[1]}`);
+                }
+
+                // Draw lines between each ArUco
+                let corners = sortCorners(tab);
+
+                if (!corners.includes(undefined)) { // Bug everything otherwise
+                    let j = 0;
+
+                    for (let i = 1; i < corners.length; i++) {
+                        cv.line(markerImage, corners[i], corners[j], [0, 255, 0, 255], 2); // [0, 255, 0, 255] green
+                        j++;
+                    }
+                    // To make a full rectangle
+                    cv.line(markerImage, corners[0], corners[corners.length - 1], [0, 255, 0, 255], 2);
                 }
 
                 // Draw the final result in the canvas
@@ -135,14 +160,16 @@ function processVideo(video, canvas, ctx) {
                 markerIds.delete();
 
                 delay = 1000 / FPS - (Date.now() - begin);
-            } catch (err) {
+            } catch
+                (err) {
                 console.error(err);
             }
         }
+
         setTimeout(processFrame, delay);
     }
 
-    // Process the next frame
+// Process the next frame
     processFrame();
 }
 
@@ -158,6 +185,47 @@ function distanceBetweenPoints(p1, p2) {
     );
 }
 
+/**
+ * calculate the approximate size of a boll on the canvas
+ * @param {number} tableLength - length of the table on the canvas
+ * @returns {number} approximate diameter of balls on the canvas
+ */
+function calculateBallSize(tableLength) {
+    let ballRealSize = 5.5;
+    let tableRealSize = 118.5;
+
+    return (tableLength * ballRealSize) / tableRealSize;
+}
+
+/**
+ * Sorts the corners given to a specific order
+ * @param corners
+ * @returns {*[]}
+ */
+function sortCorners(corners) {
+    let array = [];
+    let x, y;
+
+    let topLeft, topRight, bottomLeft, bottomRight;
+
+    for (let i = 0; i < corners.length; i++) {
+        x = corners[i][0];
+        y = corners[i][1];
+
+        // Separate the table in 4 areas, topLeft, BottomRight...
+        if ((x > 0 && x < WIDTH / 2) && (y > 0 && y < HEIGHT / 2))
+            topLeft = new cv.Point(x, y);
+        if ((x > WIDTH / 2 && x < WIDTH) && (y > 0 && y < HEIGHT / 2))
+            topRight = new cv.Point(x, y);
+        if ((x > WIDTH / 2 && x < WIDTH) && (y > HEIGHT / 2 && y < HEIGHT))
+            bottomRight = new cv.Point(x, y);
+        if ((x > 0 && x < WIDTH / 2) && (y > HEIGHT / 2 && y < HEIGHT))
+            bottomLeft = new cv.Point(x, y);
+    }
+
+    array.push(topLeft, topRight, bottomRight, bottomLeft);
+    return array;
+}
 
 export function setSillContinue(boolean) {
     stillContinue = boolean;

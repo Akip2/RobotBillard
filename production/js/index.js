@@ -71,7 +71,7 @@ window.addEventListener("load", () => {
     // Loader
     setTimeout(() => {
         loader.style.display = "none";
-    }, 1000);
+    }, 1500);
 
     // Reload the simulation
     reload.addEventListener("click", () => {
