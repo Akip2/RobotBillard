@@ -10,10 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
         navigator.mediaDevices.getUserMedia({
             video: {
                 width: {
-                    exact: 700
+                    ideal: 700
                 },
                 height: {
-                    exact: 400
+                    ideal: 400
                 }
             }
         })
@@ -105,7 +105,7 @@ function processVideo(video, canvas, ctx) {
                     cv.circle(markerImage, center, radius, [255, 0, 0, 255], 3);
                     cv.circle(markerImage, center, 3, [0, 255, 0, 255], -1);
 
-                    console.log(`cercle, x: ${circle[0]}, y: ${circle[1]}, distance: ${distanceBetweenPoints(circle, circles)}`);
+                    console.log(`cercle, x: ${circle[0]}, y: ${circle[1]}, distance: ${distanceBetweenPoints(circle, circles.data32F.slice(0, (1) * 3))}`);
                 }
 
                 // console.log("Number of circles : " + circles.cols);
