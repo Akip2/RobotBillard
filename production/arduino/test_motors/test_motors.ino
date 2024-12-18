@@ -29,32 +29,32 @@ void setup() {
 
 void loop() {
   // Left wheel
-  Serial.print("LEFT forward");
+  Serial.println("LEFT forward");
   leftMotor->run(FORWARD);
   leftMotor->setSpeed(speed);
   delay(delayTime);
 
-  Serial.print("LEFT backward");
+  Serial.println("LEFT backward");
   leftMotor->run(BACKWARD);
   leftMotor->setSpeed(speed);
   delay(delayTime);
 
-  Serial.print("LEFT RELEASE");
+  Serial.println("LEFT RELEASE");
   leftMotor->run(RELEASE);
   delay(delayTime);
 
   // Right wheel
-  Serial.print("RIGHT forward");
+  Serial.println("RIGHT forward");
   rightMotor->run(FORWARD);
   rightMotor->setSpeed(speed);
   delay(delayTime);
 
-  Serial.print("RIGHT backward");
+  Serial.println("RIGHT backward");
   rightMotor->run(BACKWARD);
   rightMotor->setSpeed(speed);
   delay(delayTime);
 
-  Serial.print("RIGHT RELEASE");
+  Serial.println("RIGHT RELEASE");
   rightMotor->run(RELEASE);
   delay(delayTime);
 }
