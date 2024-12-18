@@ -1,10 +1,10 @@
-const width=700;
-const height=300;
+const width = 700;
+const height = 300;
 
-const wallSize=20;
+const wallSize = 20;
 
-const ballRadius=10;
-const ballColors=[
+const ballRadius = 10;
+const ballColors = [
     "#FFD700", // yellow
     "#0000FF", // blue
     "#FF0000", // red
@@ -20,7 +20,7 @@ const robotWidth = 30;
 const robotHeight = 30;
 const wheelRadius = 6.5;
 
-export{
+export {
     ballRadius,
     ballColors,
     holeRadius,

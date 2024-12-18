@@ -60,7 +60,8 @@ function createOrder(left, right, duration) {
         left: left,
         right: right,
         duration: duration,
-        time: Date.now()
+        // time: Date.now()
+        time: performance.now(),
     };
 }
 

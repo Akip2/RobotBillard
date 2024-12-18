@@ -10,7 +10,6 @@ import {
     width
 } from "../params.js";
 import Ball from "../objects/ball.js";
-import robot from "../objects/robot.js";
 
 class BillardConfig extends Table {
     constructor(vue) {
@@ -23,7 +22,7 @@ class BillardConfig extends Table {
         let nbCol = 5;
 
         // White ball
-        balls.push(new Ball(ballRadius, "white", width / 2, height / 2));
+        balls.push(new Ball(ballRadius, "white", width/2, height/2));
 
         for (let i = 0; i <= nbCol; i++) {
             for (let j = 0; j < i; j++) {
@@ -36,12 +35,10 @@ class BillardConfig extends Table {
             }
 
             y = height / 2 - (i * ballRadius);
-            x += ballRadius * 2 - 3; // pour se faire rapprocher les balles
+            x += ballRadius * 2 - 3;
         }
 
         super(robots, balls, vue);
-
-        //robots[0].move(10,10,0,1);
     }
 }
 

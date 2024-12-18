@@ -1,47 +1,47 @@
-import { Body, Composite } from "../global.js";
+import {Body, Composite} from "../global.js";
 
-class SimulationObject{
-    constructor(body,w, h){
-        this.body=body;
-        this.width=w;
-        this.height=h;
+class SimulationObject {
+    constructor(body, w, h) {
+        this.body = body;
+        this.width = w;
+        this.height = h;
 
         //this.place(x, y);
     }
 
-    place(x, y){
-        Body.setPosition(this.body, { x: x, y: y});
+    place(x, y) {
+        Body.setPosition(this.body, {x: x, y: y});
     }
 
-    getPosition(){
+    getPosition() {
         return this.body.position;
     }
 
-    getX(){
+    getX() {
         return this.getPosition().x;
     }
 
-    getY(){
+    getY() {
         return this.getPosition().y;
     }
 
-    getAngle(){
+    getAngle() {
         return this.body.angle;
     }
 
-    getWidth(){
+    getWidth() {
         return this.width;
     }
 
-    getHeight(){
+    getHeight() {
         return this.height;
     }
 
-    addToEnv(world){
+    addToEnv(world) {
         Composite.add(world, this.body);
     }
 
-    destroy(world){
+    destroy(world) {
         Composite.remove(world, this.body);
     }
 }

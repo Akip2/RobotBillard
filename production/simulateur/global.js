@@ -3,19 +3,19 @@ const Engine = Matter.Engine,
     Runner = Matter.Runner,
     Bodies = Matter.Bodies,
     Composite = Matter.Composite,
-    World=Matter.World,
-    Body=Matter.Body,
-    Mouse=Matter.Mouse,
-    Constraint=Matter.Constraint,
-    MouseConstraint=Matter.MouseConstraint;
+    World = Matter.World,
+    Body = Matter.Body,
+    Mouse = Matter.Mouse,
+    Constraint = Matter.Constraint,
+    MouseConstraint = Matter.MouseConstraint;
 
-const COLLISION_FILTERS=Object.freeze({
+const COLLISION_FILTERS = Object.freeze({
     BALL: 0x0001,
     HOLE: 0x0002,
     ROBOT_BODY: 0x0003,
 });
 
-export{
+export {
     Engine,
     Render,
     Runner,
