@@ -84,7 +84,7 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    padding: 2rem;
+    padding: 1.5rem;
 }
 
 #titre {
