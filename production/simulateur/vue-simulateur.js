@@ -1,19 +1,19 @@
-import {Body, World, Composite, Engine, Mouse, MouseConstraint, Render, Runner} from "./global.js";
+import {Body, Composite, Engine, Mouse, MouseConstraint, Render, Runner, World,} from "./global.js";
 import {height, width} from "./params.js";
 
 class VueSimulateur {
-    constructor(canvasContainer){
+    constructor(canvasContainer) {
         this.canvasContainer = canvasContainer;
 
         this.createEngine();
         this.createMouse();
     }
 
-    createEngine(){
-        this.engine=Engine.create();
-        this.engine.gravity.y=0;
+    createEngine() {
+        this.engine = Engine.create();
+        this.engine.gravity.y = 0;
 
-        this.runner= Runner.create();
+        this.runner = Runner.create();
         this.render = Render.create({
             element: this.canvasContainer,
             engine: this.engine,
@@ -21,23 +21,23 @@ class VueSimulateur {
                 width: width,
                 height: height,
                 wireframes: false,
-                background: "grey" // le gris de notre table
-            }
+                background: "grey", // grey of our table
+            },
         });
 
-        this.render.canvas.id="canvas-simulateur";
+        this.render.canvas.id = "canvas-simulateur";
     }
 
-    createMouse(){
-        this.mouse = Mouse.create(this.render.canvas); // Création de la souris sur le canvas
+    createMouse() {
+        this.mouse = Mouse.create(this.render.canvas); // Creation of the mouse ON the canvas
         this.mouseConstraint = MouseConstraint.create(this.engine, {
             mouse: this.mouse,
             constraint: {
                 stiffness: 1,
                 render: {
-                    visible: false
-                }
-            }
+                    visible: false,
+                },
+            },
         });
 
         Composite.add(this.engine.world, this.mouseConstraint);
@@ -46,21 +46,21 @@ class VueSimulateur {
         Matter.Events.on(this.mouseConstraint, "enddrag", (event) => {
             const body = event.body;
             if (body) {
-                Body.setVelocity(body, { x: 0, y: 0});
+                Body.setVelocity(body, {x: 0, y: 0});
             }
         });
     }
 
-    run(){
+    run() {
         Render.run(this.render);
         Runner.run(this.runner, this.engine);
     }
 
-    setup(table){
-        const balls=table.balls;
-        const holes=table.holes;
-        const walls=table.walls;
-        const robots=table.robots;
+    setup(table) {
+        const balls = table.balls;
+        const holes = table.holes;
+        const walls = table.walls;
+        const robots = table.robots;
 
         this.addObjects(walls);
         this.addObjects(holes);
@@ -68,17 +68,17 @@ class VueSimulateur {
         this.addObjects(balls);
     }
 
-    addObjects(objArray){
-        objArray.forEach(obj => {
+    addObjects(objArray) {
+        objArray.forEach((obj) => {
             obj.addToEnv(this.engine.world);
-        })
+        });
     }
 
-    removeBall(ballBody){
+    removeBall(ballBody) {
         Composite.remove(this.engine.world, ballBody);
     }
 
-    clearSimulation(){
+    clearSimulation() {
         World.clear(this.engine.world);
         Engine.clear(this.engine);
         Render.stop(this.render);
@@ -90,4 +90,5 @@ class VueSimulateur {
         Composite.clear(this.engine.world, false);
     }
 }
+
 export default VueSimulateur;

@@ -7,17 +7,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // Access camera
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         // Use this code when you want to use an external camera, to change ratio of the empty one
-        navigator.mediaDevices.getUserMedia({ video: {
-                width:{
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                width: {
                     exact: 700
                 },
-                height:{
+                height: {
                     exact: 400
                 }
-            }})
+            }
+        })
 
-        // To use the PC webcam
-        // navigator.mediaDevices.getUserMedia({ video: true })
+            // To use the PC webcam
+            // navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
                 // Create a virtual video to get the frames of the camera stream
                 const video = document.createElement("video");
@@ -116,7 +118,7 @@ function processVideo(video, canvas, ctx) {
                     console.log(`Id: ${markerIds.data32S[i]}, x: ${topLeftCorner[0]}, y: ${topLeftCorner[1]}`);
                 }
 
-                // Draw the final result in the canvas
+                // Draw the final result in the canvasl
                 cv.imshow(canvas, markerImage);
 
                 // Clean memory

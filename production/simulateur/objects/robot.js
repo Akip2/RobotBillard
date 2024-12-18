@@ -2,40 +2,38 @@ import {Bodies, Body, COLLISION_FILTERS, Composite, Constraint} from "../global.
 import SimulationObject from "./simulation-object.js";
 import {Wheel, WHEEL_SIDE} from "./wheel.js";
 
-class Robot extends SimulationObject{
-    constructor(width, height, wheelRadius, x=0, y=0, angle=0){
-        const core=Bodies.rectangle(x, y, width, height, {
+class Robot extends SimulationObject {
+    constructor(width, height, wheelRadius, x = 0, y = 0, angle = 0) {
+        const core = Bodies.rectangle(x, y, width, height, {
             render: {
-              fillStyle : "#B6423F" // real color of our robot
+                fillStyle: "#B6423F" // real color of our robot
             },
             frictionAir: 1,
         });
 
         super(core, width, height, x, y);
 
-        const wheel1=new Wheel(this, wheelRadius, WHEEL_SIDE.LEFT);
-        const wheel2=new Wheel(this, wheelRadius, WHEEL_SIDE.RIGHT);
+        const wheel1 = new Wheel(this, wheelRadius, WHEEL_SIDE.LEFT);
+        const wheel2 = new Wheel(this, wheelRadius, WHEEL_SIDE.RIGHT);
 
-        this.wheelLeft=wheel1;
-        this.wheelRight=wheel2;
+        this.wheelLeft = wheel1;
+        this.wheelRight = wheel2;
 
-        this.bodyArray=[core, wheel1.body, wheel2.body];
+        this.bodyArray = [core, wheel1.body, wheel2.body];
 
         Body.setAngle(core, angle);
     }
 
-    move(leftSpeed, leftTime, rightSpeed, rightTime){
-        if(leftSpeed<0){
+    move(leftSpeed, leftTime, rightSpeed, rightTime) {
+        if (leftSpeed < 0) {
             this.wheelLeft.setDirection(-1);
-        }
-        else{
+        } else {
             this.wheelLeft.setDirection(1);
         }
 
-        if(rightSpeed<0){
+        if (rightSpeed < 0) {
             this.wheelRight.setDirection(-1);
-        }
-        else{
+        } else {
             this.wheelRight.setDirection(1);
         }
 
