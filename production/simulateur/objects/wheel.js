@@ -47,14 +47,21 @@ class Wheel extends SimulationObject {
         this.direction = direction;
     }
 
-    setSpeed(speed) {
+    setSpeed(speed, duration=1000) {
         this.speed = speed;
+
+        let delta=0;
 
         if (this.isMoving && this.speed === 0) {  // Stops the robot
             clearInterval(this.movingInterval);
         } else if (!this.isMoving && this.speed > 0) {  // The robot starts moving
             this.movingInterval = setInterval(() => {
                 this.moving();
+                delta += 10;
+
+                if(delta >= duration){
+                    clearInterval(this.movingInterval); //End of duration, the robot stops executing the order
+                }
             }, 10);
         }
     }

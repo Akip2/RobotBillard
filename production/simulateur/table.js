@@ -41,6 +41,10 @@ class Table {
         this.vue.setup(this);
         this.vue.run();
     }
+
+    sendRobotOrder(order, id = 0){
+        this.robots[id].executeOrder(order);
+    }
 }
 
 export default Table;

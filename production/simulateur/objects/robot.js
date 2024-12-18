@@ -24,21 +24,21 @@ class Robot extends SimulationObject {
         Body.setAngle(core, angle);
     }
 
-    move(leftSpeed, leftTime, rightSpeed, rightTime) {
-        if (leftSpeed < 0) {
+    executeOrder(order) {
+        if (order.left < 0) {
             this.wheelLeft.setDirection(-1);
         } else {
             this.wheelLeft.setDirection(1);
         }
 
-        if (rightSpeed < 0) {
+        if (order.right < 0) {
             this.wheelRight.setDirection(-1);
         } else {
             this.wheelRight.setDirection(1);
         }
 
-        this.wheelLeft.setSpeed(Math.abs(leftSpeed));
-        this.wheelRight.setSpeed(Math.abs(rightSpeed));
+        this.wheelLeft.setSpeed(Math.abs(order.left), order.duration);
+        this.wheelRight.setSpeed(Math.abs(order.right), order.duration);
     }
 
     addToEnv(world) {
