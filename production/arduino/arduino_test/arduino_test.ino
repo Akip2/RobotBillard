@@ -18,6 +18,7 @@
 
 // === MODIFY ACCORDING TO THE NETWORK ========================================
 char* SERVER_ADDRESS = "192.168.137.1";
+// char* SERVER_ADDRESS = "192.168.137.214";
 int SERVER_PORT = 8001;
 char* URL = "/socket.io/?EIO=4";
 
@@ -36,8 +37,8 @@ Adafruit_DCMotor* rightMotor = AFMS.getMotor(2);
 
 // === Robot variables =======================================================================
 
-int lastTimestamp = -1;
-int delayTime = -1;
+long lastTimestamp = -1;
+long delayTime = -1;
 
 int leftMotorDirection = 0;
 int rightMotorDirection = 0;
@@ -92,6 +93,8 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
         delayTime = time - lastTimestamp;
 
         USE_SERIAL.printf("%d\n", delayTime);
+
+        lastTimestamp = time;
 
         // Change motor variables
         leftMotorSpeed = abs(left);

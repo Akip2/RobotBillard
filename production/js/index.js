@@ -1,7 +1,7 @@
 import VueSimulateur from "../simulateur/vue-simulateur.js";
 import CollisionController from "../simulateur/collision-controller.js";
 
-// billard configurations
+// Billard configurations
 import RandomConfig from "../simulateur/configurations/random-config.js";
 import BillardConfig from "../simulateur/configurations/billard-config.js";
 import EasyConfig from "../simulateur/configurations/easy-config.js";
@@ -9,7 +9,7 @@ import FootConfig from "../simulateur/configurations/foot-config.js";
 
 import {setSillContinue} from "./video.js";
 
-const socket = io(); //Connection to server
+const socket = io(); // Connection to server
 socket.emit("is-interface");
 
 // loader
@@ -67,25 +67,29 @@ function createOrder(left, right, duration) {
 
 window.addEventListener("load", () => {
 
-    // loader
+    // Loader
     setTimeout(() => {
         loader.style.display = "none";
     }, 1500);
 
+<<<<<<< HEAD
     // reload the simulation
+=======
+    // Reload the simulation
+>>>>>>> 724aca68f57af330a6c2373fbbcec1a3fad25c9d
     reload.addEventListener("click", () => {
         loadSimulator(curentConfig);
     });
 
-    // execution time of the motors
+    // Execution time of the motors
     inputDuration.addEventListener("input", () => {
         let durationBeforeTest = inputDuration.value;
-        // we check if time is really between 100ms and 10.000ms
+        // We check if time is really between 100ms and 10.000ms
         duration = durationBeforeTest < 100 ? 100 : durationBeforeTest > 10000 ? 10000 : durationBeforeTest;
         console.log(duration);
     });
 
-    // buttons to move robots
+    // Buttons to move robots
     cursorLeftMotor.addEventListener("input", () => {
         speedGauche = cursorLeftMotor.value;
     });
@@ -105,7 +109,7 @@ window.addEventListener("load", () => {
         socket.emit('motor', createOrder(speedGauche, -speedDroit, duration));
     });
 
-    // change curent view
+    // Change curent view
     viewsList.addEventListener("click", (event) => {
         socket.emit("change-mode", event.target.id);
         switch (event.target.id) {
@@ -136,7 +140,7 @@ window.addEventListener("load", () => {
         }
     });
 
-    // choose a configuration for the simulator
+    // Choose a configuration for the simulator
     configurationChoice.addEventListener("change", (event) => {
         loadSimulator(event.target.value);
     });
@@ -144,12 +148,20 @@ window.addEventListener("load", () => {
     canvasContainer.addEventListener("click", (event) => {
         let simulatorCanvas = document.querySelector("#canvas-simulateur");
         if (simulatorCanvas != null) {
+<<<<<<< HEAD
             // get the position of a click on the simulator
+=======
+            // Get the position of a click on the simulator
+>>>>>>> 724aca68f57af330a6c2373fbbcec1a3fad25c9d
             let x = event.offsetX;
             let y = event.offsetY;
             console.log("Simulator : (" + x + ", " + y + ")");
         } else {
+<<<<<<< HEAD
             // get the position of a click on the camera
+=======
+            // Get the position of a click on the camera
+>>>>>>> 724aca68f57af330a6c2373fbbcec1a3fad25c9d
             let x = event.offsetX;
             let y = event.offsetY;
             console.log("Camera : (" + x + ", " + y + ")");
@@ -157,19 +169,19 @@ window.addEventListener("load", () => {
     });
 });
 
-// to show a view
+// To show a view
 function show(element) {
     element.classList.remove("displayNone");
     element.classList.add("displayFlex");
 }
 
-// to hide a view
+// To hide a view
 function hide(element) {
     element.classList.remove("displayFlex");
     element.classList.add("displayNone");
 }
 
-// add an element if it's not already displayed
+// Add an element if it's not already displayed
 function tryAdd(element) {
     if (element.classList.contains("displayNone")) {
         element.classList.remove("displayNone");
@@ -177,7 +189,7 @@ function tryAdd(element) {
     }
 }
 
-// remove an element if it's already
+// Remove an element if it's already
 function tryRemove(element) {
     if (element.classList.contains("displayFlex")) {
         element.classList.remove("displayFlex");
