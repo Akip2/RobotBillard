@@ -115,7 +115,7 @@ function processVideo(video, canvas, ctx) {
                     let corners = markerCorners.get(i);
                     let topLeftCorner = corners.data32F.slice(0, 2);
 
-                    console.log(`Id: ${markerIds.data32S[i]}, x: ${topLeftCorner[0]}, y: ${topLeftCorner[1]}`);
+                    console.log(`Id: ${markerIds.data32S[i]}, x: ${topLeftCorner[0]}, y: ${topLeftCorner[1]}, radius: ${}`);
                 }
 
                 // Draw the final result in the canvasl
@@ -144,6 +144,10 @@ function processVideo(video, canvas, ctx) {
 
     // Process the next frame
     processFrame();
+}
+
+function calculerCoteAruco() {
+
 }
 
 export function setSillContinue(boolean) {

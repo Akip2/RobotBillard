@@ -70,10 +70,10 @@ window.addEventListener("load", () => {
     // loader
     setTimeout(() => {
         loader.style.display = "none";
-    }, 1000);
+    }, 1500);
 
     // reload the simulation
-    reload.addEventListener("click" , () => {
+    reload.addEventListener("click", () => {
         loadSimulator(curentConfig);
     });
 
@@ -143,16 +143,16 @@ window.addEventListener("load", () => {
 
     canvasContainer.addEventListener("click", (event) => {
         let simulatorCanvas = document.querySelector("#canvas-simulateur");
-        if(simulatorCanvas != null) {
+        if (simulatorCanvas != null) {
             // get the position of a click on the simulator
             let x = event.offsetX;
             let y = event.offsetY;
-            console.log("Simulator : (" + x  + ", " + y + ")");
-        }else {
+            console.log("Simulator : (" + x + ", " + y + ")");
+        } else {
             // get the position of a click on the camera
             let x = event.offsetX;
             let y = event.offsetY;
-            console.log("Camera : (" + x  + ", " + y + ")");
+            console.log("Camera : (" + x + ", " + y + ")");
         }
     });
 });
@@ -171,7 +171,7 @@ function hide(element) {
 
 // add an element if it's not already displayed
 function tryAdd(element) {
-    if(element.classList.contains("displayNone")) {
+    if (element.classList.contains("displayNone")) {
         element.classList.remove("displayNone");
         element.classList.add("displayFlex");
     }
@@ -179,16 +179,16 @@ function tryAdd(element) {
 
 // remove an element if it's already
 function tryRemove(element) {
-    if(element.classList.contains("displayFlex")) {
+    if (element.classList.contains("displayFlex")) {
         element.classList.remove("displayFlex");
         element.classList.add("displayNone");
     }
 }
 
 function showCanvas() {
-    if(canvas.classList.contains("displayNone")) {
+    if (canvas.classList.contains("displayNone")) {
         let potentialCanvas = document.querySelector("#canvas-simulateur");
-        if(potentialCanvas != null){
+        if (potentialCanvas != null) {
             hide(potentialCanvas);
             show(canvas);
         }
@@ -200,7 +200,7 @@ function loadSimulator(configurationName) {
         vue.clearSimulation();
     }
 
-    vue=new VueSimulateur(canvasContainer);
+    vue = new VueSimulateur(canvasContainer);
     let table;
 
     switch (configurationName) {
