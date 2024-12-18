@@ -5,6 +5,7 @@ const server = require('http').createServer(app);
 
 
 const robotSockets = [];
+const socketIds = [];
 let simulatorMode = false;
 
 const io = require('socket.io').listen(server, {
@@ -27,9 +28,14 @@ server.listen(port);
 io.sockets.on("connection", function (socket) {
     console.log("Socket connected: " + socket.conn.remoteAddress);
 
-    if(!robotSockets.includes(socket)) {
+    if (!socketIds.includes(socket.id)) {
         robotSockets.push(socket); // We assume the connecting socket is a robot
+        socketIds.push(socket.id);
     }
+
+    socket.on('event_name', function (val) {
+        console.log(val);
+    });
 
     socket.on("motor", function (val) {
         console.log("motor" + JSON.stringify(val));
