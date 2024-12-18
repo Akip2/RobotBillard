@@ -7,17 +7,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // Access camera
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         // Use this code when you want to use an external camera, to change ratio of the empty one
-        // navigator.mediaDevices.getUserMedia({ video: {
-        //         width:{
-        //             exact: 700
-        //         },
-        //         height:{
-        //             exact: 400
-        //         }
-        //     }})
+        navigator.mediaDevices.getUserMedia({ video: {
+                width:{
+                    exact: 700
+                },
+                height:{
+                    exact: 400
+                }
+            }})
 
         // To use the PC webcam
-        navigator.mediaDevices.getUserMedia({ video: true })
+        // navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
                 // Create a virtual video to get the frames of the camera stream
                 const video = document.createElement("video");
@@ -88,11 +88,11 @@ function processVideo(video, canvas, ctx) {
                 let circles = new cv.Mat();
                 cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT,
                     2,      // resolution : 1 = default resolution, 2 = resolution divided by 2
-                    20,     // distance between circles
+                    15,     // distance between circles
                     100,    // the lower it is, the more circles are detected (including false ones)
                     30,     //
-                    10,     // minimum diameter of circles
-                    18      // maximum diameter of circles
+                    7,      // minimum diameter of circles
+                    15      // maximum diameter of circles
                 );
 
                 // Draw detected circles

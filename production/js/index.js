@@ -58,7 +58,8 @@ function createOrder(left, right, duration) {
         left: left,
         right: right,
         duration: duration,
-        time: Date.now()
+        // time: Date.now()
+        time: performance.now(),
     };
 }
 
@@ -151,8 +152,6 @@ window.addEventListener("load", () => {
             console.log("Camera : (" + x  + ", " + y + ")");
         }
     });
-
-
 
 });
 
