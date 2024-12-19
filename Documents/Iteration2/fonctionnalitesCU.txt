@@ -6,3 +6,4 @@ Fonctionnalités et cas d'utilisations développés :
 	- Déterminer et afficher les contours de la table de billard sur le canvas : FROGER Corentin (80%), PIERROT Nathan (20%)
 	- Détection des coordonnées des clics des utilisateurs sur le canvas : FONTANEZ Antoine (50%), PIERROT Nathan (50%)
 	- Mise à l'échelle du simulateur pour se conformer à la réalité : FONTANEZ Antoine (100%)
+	- Calcul des distances et des tailles des objets sur le canvas : FROGER Corentin (50%), PIERROT Nathan (50%)
