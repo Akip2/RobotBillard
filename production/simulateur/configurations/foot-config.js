@@ -21,7 +21,7 @@ class FootConfig extends Table {
 
         // Robots
         let robot1 = new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width / 6, height / 2);      // left robot
-        let robot2 = new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width / 1.1666, height / 2); // right robot
+        let robot2 = new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width / 1.1666, height / 2, Math.PI); // right robot
         robots.push(robot1, robot2);
 
         super(robots, balls, vue);

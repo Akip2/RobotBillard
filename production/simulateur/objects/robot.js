@@ -9,6 +9,7 @@ class Robot extends SimulationObject {
                 fillStyle: "#B6423F" // real color of our robot
             },
             frictionAir: 1,
+            restitution: 0.02
         });
 
         super(core, width, height, x, y);
