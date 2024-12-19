@@ -1,1 +1,8 @@
-Fonctionnalités et cas d'utilisation développés :
+Fonctionnalités et cas d'utilisations développés :
+	- Ajout de configurations prédéfinies pour le simulateur (mode facile, mode foot) : PIERROT Nathan (100%)
+	- Contrôle manuel du robot du simulateur de manière réaliste : FONTANEZ Antoine (100%)
+	- Ajout d'un prototype page de chargement sur le site : PIERROT Nathan (100%)
+	- Reconnaître et différencier les ArUcos sur le canvas : FROGER Corentin (100%)
+	- Déterminer et afficher les contours de la table de billard sur le canvas : FROGER Corentin (80%), PIERROT Nathan (20%)
+	- Détection des coordonnées des clics des utilisateurs sur le canvas : FONTANEZ Antoine (50%), PIERROT Nathan (50%)
+	- Mise à l'échelle du simulateur pour se conformer à la réalité : FONTANEZ Antoine (100%)
