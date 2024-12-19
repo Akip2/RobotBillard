@@ -209,21 +209,6 @@ void loop() {
     leftMotor->run(RELEASE);
     rightMotor->run(RELEASE);
 
-    // leftMotor->run(FORWARD);
-
-    // int i;
-    // for (i=0; i<255; i++) {
-    //   leftMotor->setSpeed(i);
-    //   delay(dureerightMotor);
-    // }
-    // for (i=255; i!=0; i--) {
-    //   leftMotor->setSpeed(i);
-    //   delay(dureerightMotor);
-    // }
-
-    // leftMotor->run(RELEASE);
-    // delay(dureerightMotor);
-
     changeMotors = false;
   }
 
