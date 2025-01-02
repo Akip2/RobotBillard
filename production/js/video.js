@@ -3,50 +3,56 @@ let stillContinue = true;
 const WIDTH = 700;
 const HEIGHT = 400;
 
-document.addEventListener("DOMContentLoaded", () => {
-    const canvas = document.getElementById("canvas-output-video");
-    const ctx = canvas.getContext("2d");
+function distanceBetweenPoints(p1, p2) {
+    return Math.sqrt(
+        Math.pow(p1.x - p1.y, 2) + Math.pow(p2.x - p2.y, 2)
+    );
+}
 
-    // Access camera
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        // Use this code when you want to use an external camera, to change ratio of the empty one
-        navigator.mediaDevices.getUserMedia({
-            video: {
-                width: {
-                    ideal: WIDTH
-                },
-                height: {
-                    ideal: HEIGHT
-                }
-            }
-        })
+function calculateBallSize(tableLength) {
+    let ballRealSize = 4.5;
+    let tableRealSize = 118.5;
 
-            // To use the PC webcam
-            // navigator.mediaDevices.getUserMedia({video: true})
-            .then((stream) => {
-                // Create a virtual video to get the frames of the camera stream
-                const video = document.createElement("video");
-                video.srcObject = stream;
-                video.play();
+    return (tableLength * ballRealSize) / tableRealSize;
+}
 
-                // When video is ready, start processing
-                video.addEventListener("loadeddata", () => {
-                    // Launch the loop of video processing
-                    processVideo(video, canvas, ctx);
-                });
-            })
-            .catch((error) => {
-                console.log("Camera access error :", error);
-            });
-    } else {
-        console.log("getUserMedia isn't supported by your browser.");
+/**
+ * Sorts the corners given to a specific order
+ * (topLeft, topRight, bottomRight, bottomLeft)
+ * @param corners the ArUco corners list
+ * @returns {*[]} the sorted list
+ */
+function sortCorners(corners) {
+    let topLeft, topRight, bottomLeft, bottomRight;
+
+    for (let i = 0; i < corners.length; i++) {
+        let x = corners[i][0];
+        let y = corners[i][1];
+
+        // Separate the table in 4 areas, topLeft, BottomRight...
+        if ((x > 0 && x < WIDTH / 2) && (y > 0 && y < HEIGHT / 2))
+            topLeft = new cv.Point(x, y);
+        if ((x > WIDTH / 2 && x < WIDTH) && (y > 0 && y < HEIGHT / 2))
+            topRight = new cv.Point(x, y);
+        if ((x > WIDTH / 2 && x < WIDTH) && (y > HEIGHT / 2 && y < HEIGHT))
+            bottomRight = new cv.Point(x, y);
+        if ((x > 0 && x < WIDTH / 2) && (y > HEIGHT / 2 && y < HEIGHT))
+            bottomLeft = new cv.Point(x, y);
     }
-});
 
+    return [topLeft, topRight, bottomRight, bottomLeft];
+}
+
+/**
+ * Process the video and draws detected things
+ * @param video
+ * @param canvas
+ * @param ctx
+ */
 function processVideo(video, canvas, ctx) {
+    let delay;
     const FPS = 30;
     const frame = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
-    let delay;
 
     function processFrame() {
         if (stillContinue) {
@@ -86,45 +92,12 @@ function processVideo(video, canvas, ctx) {
                 detector.detectMarkers(markerImage, markerCorners, markerIds);
                 cv.drawDetectedMarkers(markerImage, markerCorners, markerIds);
 
-                /*****************************************************/
-                /****************** Circle detection *****************/
-                /*****************************************************/
-
-                // let ballDiameter = calculateBallSize(/* TODO */);
-                // let minDiameter = ballDiameter - 5;
-                // let maxDiameter = ballDiameter + 5;
-
-
-                let circles = new cv.Mat();
-                cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT,
-                    2,              // resolution : 1 = default resolution, 2 = resolution divided by 2
-                    15,             // distance between circles
-                    100,            // the lower it is, the more circles are detected (including false ones)
-                    30,             //
-                    7,              // minimum diameter of circles
-                    15
-                    // minDiameter,    // minimum diameter of circles
-                    // maxDiameter     // maximum diameter of circles
-                );
-
-                // Draw detected circles
-                for (let i = 0; i < circles.cols; ++i) {
-                    let circle = circles.data32F.slice(i * 3, (i + 1) * 3);
-                    let center = new cv.Point(circle[0], circle[1]);
-                    let radius = circle[2];
-                    cv.circle(markerImage, center, radius, [255, 0, 0, 255], 3);
-                    cv.circle(markerImage, center, 3, [0, 255, 0, 255], -1);
-
-                    // console.log(`cercle, x: ${circle[0]}, y: ${circle[1]}, distance: ${distanceBetweenPoints(circle, circles.data32F.slice(0, (1) * 3))}`);
-                }
-
+                // Deduce the corners, and the size of the table
                 let tab = [];
 
-                // Draw the ArUcos
                 for (let i = 0; i < markerIds.rows; i++) {
                     let corners = markerCorners.get(i);
                     let topLeftCorner = corners.data32F.slice(0, 2);
-
                     tab.push(topLeftCorner);
                     // console.log(`Id: ${markerIds.data32S[i]}, x: ${topLeftCorner[0]}, y: ${topLeftCorner[1]}`);
                 }
@@ -132,15 +105,63 @@ function processVideo(video, canvas, ctx) {
                 // Draw lines between each ArUco
                 let corners = sortCorners(tab);
 
-                if (!corners.includes(undefined)) { // Bug everything otherwise
-                    let j = 0;
-
-                    for (let i = 1; i < corners.length; i++) {
-                        cv.line(markerImage, corners[i], corners[j], [0, 255, 0, 255], 2); // [0, 255, 0, 255] green
-                        j++;
+                if (!corners.includes(undefined)) {
+                    for (let i = 0; i < corners.length-1; i++) {
+                        cv.line(markerImage, corners[i], corners[i+1], [0, 255, 0, 255], 2); // [0, 255, 0, 255] green
                     }
                     // To make a full rectangle
                     cv.line(markerImage, corners[0], corners[corners.length - 1], [0, 255, 0, 255], 2);
+                }
+
+                let topLeft = corners[0];
+                let topRight = corners[1];
+                let bottomLeft = corners[2];
+                let bottomRight = corners[3];
+
+                /*****************************************************/
+                /****************** Circle detection *****************/
+                /*****************************************************/
+
+                let ballDiameter = 10;
+
+                if (topLeft !== undefined && bottomLeft !== undefined) {
+                    ballDiameter = calculateBallSize(distanceBetweenPoints(topLeft, bottomLeft));
+                }
+
+                let margin = (20 / 100) * ballDiameter;
+                let minDiameter = ballDiameter - margin;
+                let maxDiameter = ballDiameter + margin;
+
+                let circles = new cv.Mat();
+
+                cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT,
+                    2,              // resolution : 1 = default resolution, 2 = resolution divided by 2
+                    15,             // distance between circles
+                    100,            // the lower it is, the more circles are detected (including false ones)
+                    30,             //
+                    // 7,           // minimum diameter of circles
+                    // 15
+                    minDiameter,    // minimum diameter of circles
+                    maxDiameter     // maximum diameter of circles
+                );
+
+                // Draw detected circles
+                for (let i = 0; i < circles.cols; ++i) {
+                    let circle = circles.data32F.slice(i * 3, (i + 1) * 3);
+                    let x = circle[0];
+                    let y = circle[1];
+                    let center = new cv.Point(x, y);
+
+                    // Only if inside the table
+                    // if ((topLeft !== undefined) && (topRight !== undefined) && (bottomLeft !== undefined) && (bottomRight !== undefined)) {
+                    //     if (x > topLeft.x && (x > bottomLeft.x) && (x < topRight.x) && (x < bottomRight.x)) {
+                    //         if ((y > topLeft.y) && (y < bottomLeft.y) && (y > topRight.y) && (y < bottomRight.y)) {
+                                let radius = circle[2];
+                                cv.circle(markerImage, center, radius, [255, 0, 0, 255], 3);
+                                cv.circle(markerImage, center, 3, [0, 255, 0, 255], -1);
+                        //     }
+                        // }
+                    // }
                 }
 
                 // Draw the final result in the canvas
@@ -169,70 +190,49 @@ function processVideo(video, canvas, ctx) {
         setTimeout(processFrame, delay);
     }
 
-// Process the next frame
+    // Process the next frame
     processFrame();
 }
 
-/**
- * Calculates the distance between 2 points
- * @param p1
- * @param p2
- * @returns {number}
- */
-function distanceBetweenPoints(p1, p2) {
-    return Math.sqrt(
-        Math.pow(p1.x - p1.y, 2) + Math.pow(p2.x - p2.y, 2)
-    );
-}
+document.addEventListener("DOMContentLoaded", () => {
+    const canvas = document.getElementById("canvas-output-video");
+    const ctx = canvas.getContext("2d");
 
-/**
- * calculate the approximate size of a boll on the canvas
- * @param {number} tableLength - length of the table on the canvas
- * @returns {number} approximate diameter of balls on the canvas
- */
-function calculateBallSize(tableLength) {
-    let ballRealSize = 5.5;
-    let tableRealSize = 118.5;
+    // Access camera
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Use this code when you want to use an external camera, to change ratio of the empty one
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                width: {
+                    ideal: WIDTH
+                },
+                height: {
+                    ideal: HEIGHT
+                }
+            }
+        })
 
-    return (tableLength * ballRealSize) / tableRealSize;
-}
+        // To use the PC webcam
+        // navigator.mediaDevices.getUserMedia({video: true})
+        .then((stream) => {
+            // Create a virtual video to get the frames of the camera stream
+            const video = document.createElement("video");
+            video.srcObject = stream;
+            video.play();
 
-/**
- * Sorts the corners given to a specific order
- * @param corners
- * @returns {*[]}
- */
-function sortCorners(corners) {
-    let array = [];
-    let x, y;
-
-    let topLeft, topRight, bottomLeft, bottomRight;
-
-    for (let i = 0; i < corners.length; i++) {
-        x = corners[i][0];
-        y = corners[i][1];
-
-        // Separate the table in 4 areas, topLeft, BottomRight...
-        if ((x > 0 && x < WIDTH / 2) && (y > 0 && y < HEIGHT / 2))
-            topLeft = new cv.Point(x, y);
-        if ((x > WIDTH / 2 && x < WIDTH) && (y > 0 && y < HEIGHT / 2))
-            topRight = new cv.Point(x, y);
-        if ((x > WIDTH / 2 && x < WIDTH) && (y > HEIGHT / 2 && y < HEIGHT))
-            bottomRight = new cv.Point(x, y);
-        if ((x > 0 && x < WIDTH / 2) && (y > HEIGHT / 2 && y < HEIGHT))
-            bottomLeft = new cv.Point(x, y);
+            // When video is ready, start processing
+            video.addEventListener("loadeddata", () => {
+                // Launch the loop of video processing
+                processVideo(video, canvas, ctx);
+            });
+        })
+        .catch((error) => {
+            console.log("Camera access error :", error);
+        });
+    } else {
+        console.log("getUserMedia isn't supported by your browser.");
     }
-
-    console.log(topLeft)
-    if (topLeft !== undefined && topRight !== undefined) {
-        let dist = distanceBetweenPoints(topLeft, topRight);
-        console.log(dist);
-        console.log(calculateBallSize(dist));
-    }
-
-    array.push(topLeft, topRight, bottomRight, bottomLeft);
-    return array;
-}
+});
 
 export function setSillContinue(boolean) {
     stillContinue = boolean;
