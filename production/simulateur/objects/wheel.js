@@ -11,9 +11,14 @@ class Wheel extends SimulationObject {
         const relativeX = (-robot.getWidth() / 2) + wheelWidth / 2;
         const relativeY = side*(robot.getHeight() / 2) + side*wheelHeight;
 
-        const core=Bodies.rectangle(robot.getX() + relativeX, robot.getY() + relativeY, wheelWidth, wheelHeight, {
+        const core=Bodies.rectangle(
+            robot.getX() + relativeX,
+            robot.getY() + relativeY,
+            wheelWidth,
+            wheelHeight, {
             render: {
-                fillStyle: "#2F2F2F" // real color of our robot
+                fillStyle: "#2F2F2F", // real color of our robot
+                visible: false
             },
 
             collisionFilter: {
@@ -25,39 +30,7 @@ class Wheel extends SimulationObject {
 
         const stiffness=0.6;
 
-        const pin1 = Constraint.create({
-            bodyA: robot.body,
-            pointA: {x: relativeX-wheelWidth/2, y: relativeY},
-
-            bodyB: core,
-            pointB: {x: -wheelWidth/2, y: 0},
-            stiffness: stiffness,
-            length: 0,
-
-            render: {
-                visible: false
-            },
-
-            isStatic: true,
-        });
-
-        const pin2 = Constraint.create({
-            bodyA: robot.body,
-            pointA: {x: relativeX+wheelWidth/2, y: relativeY},
-
-            bodyB: core,
-            pointB: {x: wheelWidth/2, y: 0},
-            stiffness: stiffness,
-            length: 0,
-
-            render: {
-                visible: false
-            },
-
-            isStatic: true,
-        });
-
-        const pin3 = Constraint.create({
+        const pin = Constraint.create({
             bodyA: robot.body,
             pointA: {x: relativeX, y: relativeY},
 
@@ -67,10 +40,8 @@ class Wheel extends SimulationObject {
             length: 0,
 
             render: {
-                visible: false
+                visible: true
             },
-
-            isStatic: true,
         });
 
         super(core, wheelWidth, wheelHeight);
@@ -78,7 +49,7 @@ class Wheel extends SimulationObject {
         this.speed = 0;
         this.direction = 1;
 
-        this.bodyArray = [core, pin1, pin2, pin3];
+        this.bodyArray = [core, pin];
 
         this.robot = robot;
     }
@@ -89,12 +60,11 @@ class Wheel extends SimulationObject {
 
     setSpeed(speed, duration=1000) {
         this.speed = speed/3;
-
         let delta=0;
-
 
         clearInterval(this.movingInterval);
         if (this.speed > 0) {  // The robot starts moving
+            Body.setStatic(this.body, false);
             this.movingInterval = setInterval(() => {
                 this.moving();
                 delta += 10;
@@ -103,6 +73,9 @@ class Wheel extends SimulationObject {
                     clearInterval(this.movingInterval); //End of duration, the robot stops executing the order
                 }
             }, 10);
+        }
+        else if(!this.body.isStatic) {
+            Body.setStatic(this.body, true);
         }
     }
 
