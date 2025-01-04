@@ -8,6 +8,9 @@ class Robot extends SimulationObject {
             render: {
                 fillStyle: "#B6423F" // real color of our robot
             },
+            chamfer: {
+                radius: [10,10,10,10]
+            },
             frictionAir: 1,
             restitution: 0.02
         });
