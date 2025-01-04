@@ -1,7 +1,6 @@
 import Wall from "./objects/wall.js";
 import {width, height, holeRadius, wallSize} from "./params.js";
 import Hole from "./objects/hole.js";
-import wall from "./objects/wall.js";
 
 class Table {
     constructor(robots, balls, vue) {
