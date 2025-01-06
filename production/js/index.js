@@ -48,7 +48,7 @@ const inputDuration = document.querySelector("#input-duration");
 let curentConfig = "Random";
 let vue = null;
 let table = null;
-let currentView="camera";
+let currentView = "camera";
 
 let speedGauche = 130;
 let speedDroit = 130;
@@ -109,7 +109,7 @@ window.addEventListener("load", () => {
     // Change curent view
     viewsList.addEventListener("click", (event) => {
         socket.emit("change-mode", event.target.id);
-        currentView=event.target.id;
+        currentView = event.target.id;
         switch (currentView) {
             case "camera":
                 showCanvas();
@@ -145,15 +145,15 @@ window.addEventListener("load", () => {
 
     canvasContainer.addEventListener("click", (event) => {
         let simulatorCanvas = document.querySelector("#canvas-simulateur");
+
+        let x = event.offsetX;
+        let y = event.offsetY;
+
         if (simulatorCanvas != null) {
             // Get the position of a click on the simulator
-            let x = event.offsetX;
-            let y = event.offsetY;
             console.log("Simulator : (" + x + ", " + y + ")");
         } else {
             // Get the position of a click on the camera
-            let x = event.offsetX;
-            let y = event.offsetY;
             console.log("Camera : (" + x + ", " + y + ")");
         }
     });
@@ -235,11 +235,11 @@ function loadSimulator(configurationName) {
 socket.on('connect', function () {
     console.log("Connected to server with ID : ", socket.id);
 
-    socket.on("motor", function(order){
+    socket.on("motor", function (order) {
         table.sendRobotOrder(order); //Send order to simulator
     });
 
-    socket.on("ask-identity", function(){
+    socket.on("ask-identity", function () {
         socket.emit("is-interface", currentView);
     });
 });
