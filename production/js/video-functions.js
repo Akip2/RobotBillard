@@ -62,11 +62,10 @@ export function detectAndDrawArucos(frame) {
         if (ArucoId !== 0) {
             let topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
             topLeftCornerOfArucos.push(topLeftCornerOfAruco);
-
-            console.log(drawAndGetDirectionOfAruco(frame, cornersOfAruco) + "π");
         }
     }
-    return sortCorners(topLeftCornerOfArucos);
+
+    return sortArucos(topLeftCornerOfArucos);
 }
 
 export function detectCircles(frame, ballDiameter = 10) {
@@ -101,7 +100,6 @@ export function drawDetectedCircles(frame, circles, mv, isPerimeterFound = false
         // Detect which ones are inside the table or not and add the inside one in the atribute
         if (isPerimeterFound) {
             let result = cv.pointPolygonTest(mv, center, true);
-            console.log(result)
 
             // Change the color if inside or outside circle and differentiate balls from holes
             if (result >= 0) {
@@ -122,8 +120,9 @@ export function drawDetectedCircles(frame, circles, mv, isPerimeterFound = false
     }
 }
 
-export function sortCorners(corners) {
+export function sortArucos(corners) {
     let topLeft, topRight, bottomLeft, bottomRight;
+    let robotAruco;
 
     for (let i = 0; i < corners.length; i++) {
         let x = corners[i][0];
@@ -136,17 +135,66 @@ export function sortCorners(corners) {
 
         // Separate the table into 4 areas
         if (isTop && isLeft) {
-            topLeft = new cv.Point(x, y);
+            if(topLeft === undefined){ //first corner
+                topLeft = new cv.Point(x, y);
+            }
+            else{ //corner already detected
+                if( topLeft.x <= x && topLeft.y < y){ //current point is roobot, previous was corner
+                    robotAruco = new cv.Point(x, y);
+                }
+                else{ //previous point was robot, current is corner
+                    robotAruco = topLeft;
+                    topLeft = new cv.Point(x, y);
+                }
+            }
+
         } else if (isTop && isRight) {
-            topRight = new cv.Point(x, y);
+            if(topRight === undefined){ //first corner
+                topRight = new cv.Point(x, y);
+            }
+            else{ //corner already detected
+                if( topRight.x >= x && topRight.y <= y){ //current point is roobot, previous was corner
+                    robotAruco = new cv.Point(x, y);
+                }
+                else{ //previous point was robot, current is corner
+                    robotAruco = topRight;
+                    topRight = new cv.Point(x, y);
+                }
+            }
         } else if (isBottom && isRight) {
-            bottomRight = new cv.Point(x, y);
+            if(bottomRight === undefined){ //first corner
+                bottomRight = new cv.Point(x, y);
+            }
+            else{ //corner already detected
+                if( bottomRight.x >= x && bottomRight.y >= y){ //current point is roobot, previous was corner
+                    robotAruco = new cv.Point(x, y);
+                }
+                else{ //previous point was robot, current is corner
+                    robotAruco = bottomRight;
+                    bottomRight = new cv.Point(x, y);
+                }
+            }
         } else if (isBottom && isLeft) {
-            bottomLeft = new cv.Point(x, y);
+            if(bottomLeft === undefined){ //first corner
+                bottomLeft = new cv.Point(x, y);
+            }
+            else{ //corner already detected
+                if( bottomLeft.x <= x && bottomLeft.y >= y){ //current point is roobot, previous was corner
+                    robotAruco = new cv.Point(x, y);
+                }
+                else{ //previous point was robot, current is corner
+                    robotAruco = bottomLeft;
+                    bottomLeft = new cv.Point(x, y);
+                }
+            }
+        }
+        else{
+            console.log("AHAH MON GARS");
+            robotAruco = new cv.Point(x, y);
         }
     }
 
-    return [topLeft, topRight, bottomRight, bottomLeft];
+    return [topLeft, topRight, bottomRight, bottomLeft, robotAruco];
 }
 
 export function distanceBetweenPoints(p1, p2) {

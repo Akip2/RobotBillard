@@ -83,8 +83,14 @@ function processVideo(video, canvas, ctx) {
                 cv.cvtColor(frame, finalImage, cv.COLOR_RGBA2RGB);
 
                 // AruCo detection
-                let corners = detectAndDrawArucos(finalImage);
+                let arucos = detectAndDrawArucos(finalImage);
+
+                let corners = arucos.slice(0,4);
                 let [topLeft, topRight, bottomRight, bottomLeft] = corners;
+                let robotAruco = arucos[4];
+
+                console.log(robotAruco);
+
 
                 const markersVector = new cv.MatVector();
                 const mv = new cv.Mat(corners.length, 1, cv.CV_32SC2);
