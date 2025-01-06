@@ -8,6 +8,7 @@ import EasyConfig from "../simulateur/configurations/easy-config.js";
 import FootConfig from "../simulateur/configurations/foot-config.js";
 
 import {setSillContinue} from "./video.js";
+import {createOrder} from "./brain.js";
 
 const socket = io(); // Connection to server
 
@@ -54,17 +55,6 @@ let speedGauche = 130;
 let speedDroit = 130;
 
 let duration = 1000;
-
-
-function createOrder(left, right, duration) {
-    return {
-        left: left,
-        right: right,
-        duration: duration,
-        // time: Date.now()
-        time: performance.now(),
-    };
-}
 
 window.addEventListener("load", () => {
 
@@ -152,9 +142,24 @@ window.addEventListener("load", () => {
         if (simulatorCanvas != null) {
             // Get the position of a click on the simulator
             console.log("Simulator : (" + x + ", " + y + ")");
+            // moveRobotForward(socket, 100, 3000);
+            // turnRobot(socket, Math.PI);
+            // moveRobotForward(socket, 100, 3000);
+            // turnRobot(socket, Math.PI / 2);
         } else {
             // Get the position of a click on the camera
             console.log("Camera : (" + x + ", " + y + ")");
+
+            //TODO
+            //parseFloat(document.getElementById("tmp-1").value)
+            // turnRobot(socket, Math.PI / parseFloat(document.getElementById("tmp-1").value));
+
+            // moveRobotForward(socket, 50, 1000);
+            // turnRobot(socket, Math.PI);
+            // moveRobotForward(socket, 50, 1000);
+            // turnRobot(socket, Math.PI / 2);
+
+            // turnRobotInCircle(socket, 0,0,0);
         }
     });
 });
