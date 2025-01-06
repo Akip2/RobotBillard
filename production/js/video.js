@@ -41,21 +41,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // To use the PC webcam
         navigator.mediaDevices.getUserMedia({video: true})
-        .then((stream) => {
-            // Create a virtual video to get the frames of the camera stream
-            const video = document.createElement("video");
-            video.srcObject = stream;
-            video.play();
+            .then((stream) => {
+                // Create a virtual video to get the frames of the camera stream
+                const video = document.createElement("video");
+                video.srcObject = stream;
+                video.play();
 
-            // When video is ready, start processing
-            video.addEventListener("loadeddata", () => {
-                // Launch the loop of video processing
-                processVideo(video, canvas, ctx);
+                // When video is ready, start processing
+                video.addEventListener("loadeddata", () => {
+                    // Launch the loop of video processing
+                    processVideo(video, canvas, ctx);
+                });
+            })
+            .catch((error) => {
+                console.log("Camera access error :", error);
             });
-        })
-        .catch((error) => {
-            console.log("Camera access error :", error);
-        });
     } else {
         console.log("getUserMedia isn't supported by your browser.");
     }

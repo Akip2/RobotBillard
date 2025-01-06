@@ -55,7 +55,7 @@ export function detectAndDrawArucos(frame) {
         let ArucoId = ArucoIds.data32S[i];
         let cornersOfAruco = ArucoCorners.get(i);
 
-        // id 0 aruco can be detected too easily, causes problems
+        // id 0 aruco can be detected too easily, it causes problems
         if (ArucoId !== 0) {
             let topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
             topLeftCornerOfArucos.push(topLeftCornerOfAruco);
