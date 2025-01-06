@@ -5,40 +5,84 @@
     <link rel="stylesheet" href="css/index.css"/>
     <link rel="icon" type="image/png" href="./img/favicon.png">
     <title>Robot Billard</title>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="lib/matter_0.17.0.js"></script>
 </head>
 <body>
 
-    <header>
-        <div id="liste-boutons">
-            <button class="btns-vue" id="camera">Caméra</button>
-            <button class="btns-vue" id="simulateur">Simulateur</button>
-            <button class="btns-vue" id="manuel">Manuel</button>
+<div id="loader-container">
+    <div class="loader">
+        <div class="inner-circle"></div>
+    </div>
+</div>
+
+<header>
+    <div id="views-list">
+        <button class="btns-vue" id="camera">Caméra</button>
+        <button class="btns-vue" id="simulator">Simulateur</button>
+        <button class="btns-vue" id="manual">Manuel</button>
+    </div>
+    <h4 id="titre">Robot Billard joueur de Football</h4>
+</header>
+
+<main>
+    <!-- Left part which contains canvas and buttons to change view -->
+    <div class="part displayFlex" id="left-part">
+        <div class="displayNone" id="top-table-container">
+            <button id="reload-btn">Recharger</button>
+            <select name="scenarios" id="select-configuration">
+                <option value="Random" class="option-scenarios" selected>Random</option>
+                <option value="Billard" class="option-scenarios">Billard</option>
+                <option value="Foot" class="option-scenarios">Foot</option>
+                <option value="Facile" class="option-scenarios">Facile</option>
+            </select>
         </div>
-        <h4 id="titre">Robot Billard joueur de Football</h4>
-    </header>
+        <div id="canvas-container">
+<!--            <video autoplay loop muted id="canvas-input-video" width="700" height="400" src="./video/aruco.mp4"></video>-->
+            <canvas class="displayFlex" id="canvas-output-video"></canvas>
+        </div>
+    </div>
 
 
-    <main>
-        <!-- Partie Gauche contenant le canvas ainsi que les boutons permettant de changer de vue -->
+    <!-- Right part which contains different views (one or more) -->
+    <div class="part displayFlex" id="right-part">
 
+        <div class="part displayNone" id="arrow-controls">
 
-        <div class="partie displayFlex" id="partie-gauche">
-            <button class="displayNone" id="btn-recharger">Recharger</button>
-            <div id="canvas-container">
-                <canvas id="canvasOutputVideo"></canvas>
+            <input type="range" class="cursor-motor" id="cursor-left-motor" min="0" max="255" list="steps">
+
+            <div id="grid-btns">
+                <button class="arrow" id="btn-forward">
+                    <svg width="96" height="96" xmlns="http://www.w3.org/2000/svg"
+                         xml:space="preserve" overflow="hidden"><g transform="translate(-626 -133)"><path d="M677.031 221.951 677.031 147.192 685.931 156.092C687.091 157.252 688.971 157.252 690.131 156.092 691.291 154.932 691.291 153.052 690.131 151.892L676.131 137.9C675.026 136.74 673.191 136.695 672.031 137.8 671.997 137.833 671.964 137.866 671.931 137.9L657.941 151.89C656.781 152.995 656.736 154.83 657.841 155.99 657.873 156.024 657.907 156.057 657.941 156.09 659.046 157.25 660.881 157.295 662.041 156.19 662.075 156.158 662.109 156.124 662.141 156.09L671.036 147.195 671.036 221.951C671.036 223.608 672.379 224.951 674.036 224.951 675.693 224.951 677.036 223.608 677.036 221.951Z"/></g></svg>
+                </button>
+                <button class="arrow" id="btn-turn-left">
+                    <svg width="96" height="96" xmlns="http://www.w3.org/2000/svg"
+                         xml:space="preserve" overflow="hidden"><g transform="translate(-493 -245)"><path d="M548 260.1C528 260.1 511.5 275.9 510.5 295.9L501.6 287C500.4 285.9 498.6 285.9 497.4 287.1 496.3 288.2 496.2 290.1 497.3 291.3L511.4 305.4C511.7 305.7 512 305.9 512.4 306 512.5 306 512.6 306.1 512.8 306.1L513 306.2 513.3 306.2 513.6 306.2 513.8 306.2C514.5 306.2 515.2 305.8 515.7 305.3L529.8 291.2C531 290 531 288.1 529.8 287 528.6 285.8 526.7 285.8 525.6 287L516.5 296.1C517.2 281.9 527.3 270 541.2 266.9 555.1 263.8 569.3 270.4 575.9 283 582.5 295.6 579.9 311 569.5 320.7 568.3 321.8 568.2 323.7 569.4 324.9 570.5 326.1 572.4 326.2 573.6 325.1 584.9 314.6 588.6 298.3 582.9 283.9 577.3 269.5 563.4 260.1 548 260.1Z"/></g></svg>
+                </button>
+                <button class="arrow" id="btn-turn-right">
+                    <svg width="96" height="96" xmlns="http://www.w3.org/2000/svg"
+                         xml:space="preserve" overflow="hidden"><g transform="translate(-760 -245)"><path d="M851.5 287.1C850.4 286 848.5 285.9 847.3 287L838.4 295.9C837.5 275.9 821 260.1 801 260.1 785.6 260.1 771.7 269.5 766.1 283.9 760.5 298.2 764.2 314.6 775.4 325.1 776.6 326.2 778.5 326.2 779.6 324.9 780.7 323.7 780.7 321.8 779.5 320.7 769.1 311 766.5 295.5 773.1 283 779.7 270.4 794 263.8 807.8 266.9 821.7 270 831.8 282 832.4 296.2L823.3 287C822.1 285.8 820.2 285.8 819.1 287 818 288.2 817.9 290.1 819.1 291.2L833.2 305.3C833.7 305.8 834.4 306.1 835.1 306.2L835.3 306.2 835.6 306.2 835.9 306.2 836.1 306.1C836.2 306.1 836.3 306 836.4 306L836.4 306C836.8 305.9 837.1 305.6 837.4 305.3L851.5 291.2C852.7 290.1 852.7 288.2 851.5 287.1Z"/></g></svg>
+                </button>
+                <button class="arrow" id="btn-backward">
+                    <svg width="96" height="96" xmlns="http://www.w3.org/2000/svg"
+                         xml:space="preserve" overflow="hidden"><g transform="translate(-626 -341)"><path d="M670.981 348.05 670.981 422.809 662.081 413.914C660.921 412.754 659.041 412.754 657.881 413.914 656.721 415.074 656.721 416.954 657.881 418.114L671.881 432.1C672.986 433.26 674.821 433.305 675.981 432.2 676.015 432.168 676.049 432.134 676.081 432.1L690.071 418.112C691.231 417.007 691.276 415.172 690.171 414.012 690.138 413.978 690.105 413.945 690.071 413.912 688.966 412.752 687.131 412.707 685.971 413.812 685.937 413.844 685.904 413.878 685.871 413.912L676.976 422.807 676.976 348.05C676.976 346.393 675.633 345.05 673.976 345.05 672.319 345.05 670.976 346.393 670.976 348.05Z"/></g></svg>
+                </button>
+
+                <input type="number" id="input-duration" min="100" max="10000" step="100" value="1000">
             </div>
+
+            <input type="range" class="cursor-motor" id="cursor-right-motor" min="0" max="255" list="steps">
+
+            <datalist id="steps">
+                <option value="0"></option>
+                <option value="64"></option>
+                <option value="128"></option>
+                <option value="192"></option>
+                <option value="255"></option>
+            </datalist>
         </div>
 
-
-        <!-- Partie Droite contant les vues (une seule à la fois) -->
-
-        <!-- Vue Caméra : un bouton GO permettant de lancer un scénario, lui-même choisi juste en dessous grâce à une liste déroulante -->
-
-        <div class="partie displayFlex" id="partie-droite-camera">
-            <button id="btn-go">GO</button>
+        <div class="part displayFlex" id="go-scenarios">
+            <button id="go-btn">GO</button>
             <div id="div-scenarios">
                 <p id="text-scenarios">Scénarios :</p>
                 <select name="scenarios" id="select-scenarios">
@@ -49,63 +93,21 @@
             </div>
         </div>
 
+    </div>
+</main>
 
-        <!-- Vue Simulateur : contient ??? pour l'instant rien -->
+<footer>
+    <p>Projet réalisé par
+        <a href="https://github.com/Akip2" target="_blank">Antoine FONTANEZ</a>,
+        <a href="https://github.com/Corentin-Froger" target="_blank">Corentin FROGER</a> et
+        <a href="https://github.com/Ratz123323" target="_blank">Nathan PIERROT</a>
+    </p>
+</footer>
 
-        <div class="partie displayNone" id="partie-droite-simulateur">
-            <!-- <input type="number" id="inputDuration" min="10" max="10000">-->
-        </div>
-
-
-        <!-- Vue contrôles manuels : contient différents contrôles permettant de faire bouger le robot à distance :
-            - des flèches de direction,
-            - des curseurs de puissance des moteurs et
-            - un temps d'éxecution -->
-
-        <div class="partie displayNone" id="partie-droite-manuel">
-
-            <input type="range" class="curseurMoteur" id="curseurMoteurGauche" min="0" max="255" list="palliers">
-
-            <div id="grid-boutons-manuel">
-                <button class="fleche" id="btn-avancer">
-                    <svg width="96" height="96" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-626 -133)"><path d="M677.031 221.951 677.031 147.192 685.931 156.092C687.091 157.252 688.971 157.252 690.131 156.092 691.291 154.932 691.291 153.052 690.131 151.892L676.131 137.9C675.026 136.74 673.191 136.695 672.031 137.8 671.997 137.833 671.964 137.866 671.931 137.9L657.941 151.89C656.781 152.995 656.736 154.83 657.841 155.99 657.873 156.024 657.907 156.057 657.941 156.09 659.046 157.25 660.881 157.295 662.041 156.19 662.075 156.158 662.109 156.124 662.141 156.09L671.036 147.195 671.036 221.951C671.036 223.608 672.379 224.951 674.036 224.951 675.693 224.951 677.036 223.608 677.036 221.951Z"/></g></svg>
-                </button>
-                <button class="fleche" id="btn-tourner-a-gauche">
-                    <svg width="96" height="96" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-493 -245)"><path d="M548 260.1C528 260.1 511.5 275.9 510.5 295.9L501.6 287C500.4 285.9 498.6 285.9 497.4 287.1 496.3 288.2 496.2 290.1 497.3 291.3L511.4 305.4C511.7 305.7 512 305.9 512.4 306 512.5 306 512.6 306.1 512.8 306.1L513 306.2 513.3 306.2 513.6 306.2 513.8 306.2C514.5 306.2 515.2 305.8 515.7 305.3L529.8 291.2C531 290 531 288.1 529.8 287 528.6 285.8 526.7 285.8 525.6 287L516.5 296.1C517.2 281.9 527.3 270 541.2 266.9 555.1 263.8 569.3 270.4 575.9 283 582.5 295.6 579.9 311 569.5 320.7 568.3 321.8 568.2 323.7 569.4 324.9 570.5 326.1 572.4 326.2 573.6 325.1 584.9 314.6 588.6 298.3 582.9 283.9 577.3 269.5 563.4 260.1 548 260.1Z"/></g></svg>
-                </button>
-                <button class="fleche" id="btn-tourner-a-droite">
-                    <svg width="96" height="96" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-760 -245)"><path d="M851.5 287.1C850.4 286 848.5 285.9 847.3 287L838.4 295.9C837.5 275.9 821 260.1 801 260.1 785.6 260.1 771.7 269.5 766.1 283.9 760.5 298.2 764.2 314.6 775.4 325.1 776.6 326.2 778.5 326.2 779.6 324.9 780.7 323.7 780.7 321.8 779.5 320.7 769.1 311 766.5 295.5 773.1 283 779.7 270.4 794 263.8 807.8 266.9 821.7 270 831.8 282 832.4 296.2L823.3 287C822.1 285.8 820.2 285.8 819.1 287 818 288.2 817.9 290.1 819.1 291.2L833.2 305.3C833.7 305.8 834.4 306.1 835.1 306.2L835.3 306.2 835.6 306.2 835.9 306.2 836.1 306.1C836.2 306.1 836.3 306 836.4 306L836.4 306C836.8 305.9 837.1 305.6 837.4 305.3L851.5 291.2C852.7 290.1 852.7 288.2 851.5 287.1Z"/></g></svg>
-                </button>
-                <button class="fleche" id="btn-reculer">
-                    <svg width="96" height="96" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-626 -341)"><path d="M670.981 348.05 670.981 422.809 662.081 413.914C660.921 412.754 659.041 412.754 657.881 413.914 656.721 415.074 656.721 416.954 657.881 418.114L671.881 432.1C672.986 433.26 674.821 433.305 675.981 432.2 676.015 432.168 676.049 432.134 676.081 432.1L690.071 418.112C691.231 417.007 691.276 415.172 690.171 414.012 690.138 413.978 690.105 413.945 690.071 413.912 688.966 412.752 687.131 412.707 685.971 413.812 685.937 413.844 685.904 413.878 685.871 413.912L676.976 422.807 676.976 348.05C676.976 346.393 675.633 345.05 673.976 345.05 672.319 345.05 670.976 346.393 670.976 348.05Z"/></g></svg>
-                </button>
-
-                <input type="number" id="inputDuration" min="100" max="10000" step="100" value="1000">
-            </div>
-
-            <input type="range" class="curseurMoteur" id="curseurMoteurDroit" min="0" max="255" list="palliers">
-
-            <datalist id="palliers">
-                <option value="0"></option>
-                <option value="64"></option>
-                <option value="128"></option>
-                <option value="192"></option>
-                <option value="255"></option>
-            </datalist>
-
-        </div>
-    </main>
-
-    <footer>
-        <p>Projet réalisé par
-            <a href="https://github.com/Akip2" target="_blank">Antoine FONTANEZ</a>,
-            <a href="https://github.com/Corentin-Froger" target="_blank">Corentin FROGER</a> et
-            <a href="https://github.com/Ratz123323" target="_blank">Nathan PIERROT</a>
-        </p>
-    </footer>
-
-    <script async src="lib/openCV.js" type="text/javascript"></script>
-    <script type="module" src="js/index.js"></script>
-    <script src="js/video.js" type="text/javascript"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="lib/matter_0.17.0.js"></script>
+<script async src="lib/openCV.js" type="text/javascript"></script>
+<script type="module" src="js/video.js"></script>
+<script type="module" src="js/index.js"></script>
 </body>
 </html>

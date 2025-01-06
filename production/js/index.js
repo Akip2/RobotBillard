@@ -1,185 +1,245 @@
 import VueSimulateur from "../simulateur/vue-simulateur.js";
-import RandomConfig from "../simulateur/configurations/random-config.js";
 import CollisionController from "../simulateur/collision-controller.js";
+
+// Billard configurations
+import RandomConfig from "../simulateur/configurations/random-config.js";
 import BillardConfig from "../simulateur/configurations/billard-config.js";
+import EasyConfig from "../simulateur/configurations/easy-config.js";
+import FootConfig from "../simulateur/configurations/foot-config.js";
 
-const socket = io(); //Connexion au serveur
+import {setSillContinue} from "./video.js";
 
-const listeVues = document.querySelector("#liste-boutons");
+const socket = io(); // Connection to server
 
-const vueCamera = document.querySelector("#partie-droite-camera");
-// const vueControles = document.querySelector("#partie-droite-controles");
+// loader
+const loader = document.querySelector("#loader-container");
 
-const vueSimulateur = document.querySelector("#partie-droite-simulateur");
-const vueManuel = document.querySelector("#partie-droite-manuel");
+// header
+const viewsList = document.querySelector("#views-list");
 
-const partieGauche = document.querySelector("#partie-gauche");
+// main
+const leftPart = document.querySelector("#left-part");
+const rightPart = document.querySelector("#right-part");
+
+// left part
+const topTableSimulator = document.querySelector("#top-table-container");
+const reload = document.querySelector("#reload-btn");
+const configurationChoice = document.querySelector("#select-configuration");
 const canvasContainer = document.querySelector("#canvas-container");
-const canvas = document.querySelector("#canvasOutputVideo");
+const canvas = document.querySelector("#canvas-output-video");
 
-const recharger = document.querySelector("#btn-recharger");
+// right part
+const viewGoScenarios = document.querySelector("#go-scenarios");
+const viewArrowControls = document.querySelector("#arrow-controls");
 
-const btnForward = document.getElementById("btn-avancer");
-const btnBackward = document.getElementById("btn-reculer");
-const btnLeftTurn = document.getElementById("btn-tourner-a-gauche");
-const btnRightTurn = document.getElementById("btn-tourner-a-droite");
+// viewGoScenarios
+const goBtn = document.querySelector("#go-btn");
+const selectScenarios = document.querySelector("#select-scenarios");
 
-const curseurMoteurGauche = document.getElementById("curseurMoteurGauche");
-const curseurMoteurDroit = document.getElementById("curseurMoteurDroit");
-const inputDuration = document.getElementById("inputDuration");
+// viewArrowControls
+const btnForward = document.querySelector("#btn-forward");
+const btnBackward = document.querySelector("#btn-backward");
+const btnTurnLeft = document.querySelector("#btn-turn-left");
+const btnTurnRight = document.querySelector("#btn-turn-right");
+const cursorLeftMotor = document.querySelector("#cursor-left-motor");
+const cursorRightMotor = document.querySelector("#cursor-right-motor");
+const inputDuration = document.querySelector("#input-duration");
+
+let curentConfig = "Random";
+let vue = null;
+let table = null;
+let currentView = "camera";
 
 let speedGauche = 130;
 let speedDroit = 130;
 
 let duration = 1000;
 
-let vueActive = getVueActive();
 
 function createOrder(left, right, duration) {
     return {
         left: left,
         right: right,
         duration: duration,
-        time: Date.now()
+        // time: Date.now()
+        time: performance.now(),
     };
 }
 
 window.addEventListener("load", () => {
-    recharger.addEventListener("click" , () => {
-        if (vueActive === vueSimulateur) {
-            loadSimulator();
-        }
+
+    // Loader
+    setTimeout(() => {
+        loader.style.display = "none";
+    }, 1500);
+
+    // Reload the simulation
+    reload.addEventListener("click", () => {
+        loadSimulator(curentConfig);
     });
 
+    // Execution time of the motors
     inputDuration.addEventListener("input", () => {
-        let durationAvantVerif = inputDuration.value;
-        // on vérifie si le temps est bien compris entre 100 et 10 000 ms
-        duration = durationAvantVerif < 100 ? 100 : durationAvantVerif > 10000 ? 10000 : durationAvantVerif;
+        let durationBeforeTest = inputDuration.value;
+        // We check if time is really between 100ms and 10.000ms
+        duration = durationBeforeTest < 100 ? 100 : durationBeforeTest > 10000 ? 10000 : durationBeforeTest;
         console.log(duration);
     });
 
-    curseurMoteurGauche.addEventListener("input", () => {
-        speedGauche = curseurMoteurGauche.value;
+    // Buttons to move robots
+    cursorLeftMotor.addEventListener("input", () => {
+        speedGauche = cursorLeftMotor.value;
     });
-
-    curseurMoteurDroit.addEventListener("input", () => {
-        speedDroit = curseurMoteurDroit.value;
+    cursorRightMotor.addEventListener("input", () => {
+        speedDroit = cursorRightMotor.value;
     });
-
     btnForward.addEventListener("click", () => {
         socket.emit('motor', createOrder(speedGauche, speedDroit, duration));
     });
-
     btnBackward.addEventListener("click", () => {
         socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration));
     });
-
-    btnRightTurn.addEventListener("click", () => {
+    btnTurnRight.addEventListener("click", () => {
         socket.emit('motor', createOrder(-speedGauche, speedDroit, duration));
     });
-
-    btnLeftTurn.addEventListener("click", () => {
+    btnTurnLeft.addEventListener("click", () => {
         socket.emit('motor', createOrder(speedGauche, -speedDroit, duration));
     });
 
-    // changement de la vue courante
-    listeVues.addEventListener("click", (event) => {
-        switch (event.target.id) {
-            case "camera": // bouton caméra cliqué → on affiche la vue Caméra
-                if (vueActive === vueSimulateur){
-                    updateVueActive(vueCamera);
-                    let canvasSimulateur = document.querySelector("#canvas-simulateur");
-                    canvasContainer.removeChild(canvasSimulateur); // on supprime le canvas du simulateur
-                    canvasContainer.appendChild(canvas);
-
-                    // on supprime le bouton "recharger"
-                    cacherElement(recharger);
-                }
-                updateVueActive(vueCamera);
+    // Change curent view
+    viewsList.addEventListener("click", (event) => {
+        socket.emit("change-mode", event.target.id);
+        currentView = event.target.id;
+        switch (currentView) {
+            case "camera":
+                showCanvas();
+                tryAdd(viewGoScenarios);
+                tryRemove(viewArrowControls)
+                hide(topTableSimulator);
+                setSillContinue(true);
                 break;
-            case "simulateur": // bouton simulateur cliqué → on affiche la vue Simulateur
-                if (vueActive !== vueSimulateur) {
-                    updateVueActive(vueSimulateur);
-                    canvasContainer.removeChild(canvas);
-
-                    loadSimulator();
-
-                    // on ajoute le bouton "recharger"
-                    afficherElement(recharger);
-                }
+            case "simulator":
+                hide(canvas);
+                loadSimulator();
+                tryAdd(viewGoScenarios);
+                tryAdd(viewArrowControls)
+                show(topTableSimulator);
+                setSillContinue(false);
                 break;
-            case "manuel": // bouton manuel cliqué → on affiche la vue Manuel
-                if (vueActive === vueSimulateur) {
-                    updateVueActive(vueManuel);
-                    let canvasSimulateur = document.querySelector("#canvas-simulateur");
-                    canvasContainer.removeChild(canvasSimulateur); // on supprime le canvas du simulateur
-                    canvasContainer.appendChild(canvas);
-
-                    // on supprime le bouton "recharger"
-                    cacherElement(recharger);
-                }
-                updateVueActive(vueManuel);
+            case "manual":
+                showCanvas();
+                tryRemove(viewGoScenarios);
+                tryAdd(viewArrowControls)
+                hide(topTableSimulator);
+                setSillContinue(true);
                 break;
-            default: // dans le cas où on appuie sur un bouton qui n'a pas de vue, on affiche une erreur
+            default:
                 console.log("Erreur : vue inconnue");
+        }
+    });
+
+    // Choose a configuration for the simulator
+    configurationChoice.addEventListener("change", (event) => {
+        loadSimulator(event.target.value);
+    });
+
+    canvasContainer.addEventListener("click", (event) => {
+        let simulatorCanvas = document.querySelector("#canvas-simulateur");
+
+        let x = event.offsetX;
+        let y = event.offsetY;
+
+        if (simulatorCanvas != null) {
+            // Get the position of a click on the simulator
+            console.log("Simulator : (" + x + ", " + y + ")");
+        } else {
+            // Get the position of a click on the camera
+            console.log("Camera : (" + x + ", " + y + ")");
         }
     });
 });
 
-// fonction qui permet de récupérer la vue courante en vérifiant quelle vue est affichée
-// (contient la classe "displayFlex" et non pas "displayNone")
-function getVueActive() {
-    if (vueCamera.classList.contains("displayFlex")) {
-        return vueCamera;
-    } else if (vueSimulateur.classList.contains("displayFlex")) {
-        return vueSimulateur;
-    } else {
-        return vueManuel;
-    }
-}
-
-// fonction qui permet de changer la vue active en remplaçant la classe "displayFlex" de la vue active par "displayNone"
-// et remplaçant la classe "displayNone" de la nouvelle vue active par "displayFlex"
-function updateVueActive(nouvelleVueActive) {
-    // on vérifie tout d'abord si la vue active change
-    if (nouvelleVueActive.id !== vueActive.id) {
-        // on retire la classe de la vue active de l'affichage
-        cacherElement(vueActive);
-
-        // on ajoute la classe de la nouvelle vue active sur la page
-        afficherElement(nouvelleVueActive);
-
-        // on met à jour la vue active
-        vueActive = nouvelleVueActive;
-    }
-}
-
-// méthode qui permet d'ajouter un élément de l'affichage
-function afficherElement(element) {
+// To show a view
+function show(element) {
     element.classList.remove("displayNone");
     element.classList.add("displayFlex");
 }
 
-// méthode qui permet de retirer un élément de l'affichage
-function cacherElement(element) {
+// To hide a view
+function hide(element) {
     element.classList.remove("displayFlex");
     element.classList.add("displayNone");
 }
 
-function loadSimulator() {
-    let canvasSimulateur = document.querySelector("#canvas-simulateur");
-    if (canvasSimulateur !== null) {
-        // on supprime le canvas du simulateur
-        canvasContainer.removeChild(canvasSimulateur);
+// Add an element if it's not already displayed
+function tryAdd(element) {
+    if (element.classList.contains("displayNone")) {
+        element.classList.remove("displayNone");
+        element.classList.add("displayFlex");
+    }
+}
+
+// Remove an element if it's already
+function tryRemove(element) {
+    if (element.classList.contains("displayFlex")) {
+        element.classList.remove("displayFlex");
+        element.classList.add("displayNone");
+    }
+}
+
+function showCanvas() {
+    if (canvas.classList.contains("displayNone")) {
+        let potentialCanvas = document.querySelector("#canvas-simulateur");
+        if (potentialCanvas != null) {
+            hide(potentialCanvas);
+            show(canvas);
+        }
+    }
+}
+
+function loadSimulator(configurationName) {
+    if (vue !== null) {
+        vue.clearSimulation();
     }
 
-    let vue = new VueSimulateur(canvasContainer);
-    vue.setup();
-    vue.run();
+    vue = new VueSimulateur(canvasContainer);
 
-    //let table=new RandomConfig(vue);
-    let table = new BillardConfig(vue);
+    switch (configurationName) {
+        case "Ramdom":
+            curentConfig = "Random";
+            table = new RandomConfig(vue);
+            break;
+        case "Billard":
+            curentConfig = "Billard";
+            table = new BillardConfig(vue);
+            break;
+        case "Foot":
+            curentConfig = "Foot";
+            table = new FootConfig(vue);
+            break;
+        case "Facile":
+            curentConfig = "Facile";
+            table = new EasyConfig(vue);
+            break;
+        default:
+            curentConfig = "Random";
+            table = new RandomConfig(vue);
+    }
+
     let colController = new CollisionController(table);
+
     colController.createEvent(vue.engine);
-    table.notifyView();
+    table.run();
 }
+
+socket.on('connect', function () {
+    console.log("Connected to server with ID : ", socket.id);
+
+    socket.on("motor", function (order) {
+        table.sendRobotOrder(order); //Send order to simulator
+    });
+
+    socket.on("ask-identity", function () {
+        socket.emit("is-interface", currentView);
+    });
+});

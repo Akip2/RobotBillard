@@ -4,18 +4,17 @@ import {
     ballColors,
     ballRadius,
     height,
-    holeRadius,
     robotHeight,
     robotWidth,
-    wallSize,
-    wheelRadius,
+    wheelWidth,
+    wheelHeight,
     width
 } from "../params.js";
 import Ball from "../objects/ball.js";
 
 class BillardConfig extends Table {
     constructor(vue) {
-        const robots = [new Robot(robotWidth, robotHeight, wheelRadius, width/3, height/2)];
+        const robots = [new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width/3, height/2)];
 
         const balls = [];
 
@@ -24,7 +23,7 @@ class BillardConfig extends Table {
         let nbCol = 5;
 
         // White ball
-        balls.push(new Ball(ballRadius, "white", width / 2, height / 2));
+        balls.push(new Ball(ballRadius, "white", width/2, height/2));
 
         for (let i = 0; i <= nbCol; i++) {
             for (let j = 0; j < i; j++) {
@@ -37,7 +36,7 @@ class BillardConfig extends Table {
             }
 
             y = height / 2 - (i * ballRadius);
-            x += ballRadius * 2 - 3; // pour se faire rapprocher les balles
+            x += ballRadius * 2 - 3;
         }
 
         super(robots, balls, vue);

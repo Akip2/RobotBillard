@@ -1,9 +1,9 @@
 import {Bodies, COLLISION_FILTERS} from "../global.js";
 import SimulationObject from "./simulation-object.js";
 
-class Hole extends SimulationObject{
-    constructor(radius, x=0, y=0){
-        const body=Bodies.circle(0, 0, radius, {
+class Hole extends SimulationObject {
+    constructor(radius, x = 0, y = 0) {
+        const body = Bodies.circle(x, y, radius, {
             isStatic: true,
 
             collisionFilter: {
@@ -17,7 +17,7 @@ class Hole extends SimulationObject{
             }
         });
 
-        super(body, radius*2, radius*2, x, y);
+        super(body, radius * 2, radius * 2);
     }
 }
 

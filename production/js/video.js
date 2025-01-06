@@ -1,110 +1,145 @@
+import {
+    calculateBallSize,
+    detectAndDrawArucos,
+    detectCircles,
+    distanceBetweenPoints,
+    drawDetectedCircles,
+    HEIGHT,
+    preProcess,
+    WIDTH
+} from "./video-functions.js";
+
+let stillContinue = true;
+
 document.addEventListener("DOMContentLoaded", () => {
-    const canvas = document.getElementById("canvasOutputVideo");
+    const canvas = document.getElementById("canvas-output-video");
     const ctx = canvas.getContext("2d");
 
-    // Accéder à la caméra
+    // Access camera
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-
-        // à utiliser lorsqu'on veut utiliser une caméra externe, pour pouvoir changer le ratio de la vidée
-        navigator.mediaDevices.getUserMedia({ video: {
-                width:{
-                    exact: 700
+        // Use this code when you want to use an external camera, to change ratio of the empty one
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                width: {
+                    ideal: WIDTH
                 },
-                height:{
-                    exact: 400
+                height: {
+                    ideal: HEIGHT
                 }
-            }})
+            }
+        })
 
-        // pour pouvoir utiliser la caméra de l'ordi
-        // navigator.mediaDevices.getUserMedia({ video: true })
-            .then((stream) => {
-                // Créer une vidéo virtuelle pour récupérer les frames du flux caméra
-                const video = document.createElement("video");
-                video.srcObject = stream;
-                video.play();
+        // To use a prerecorded video instead
+        // .then((stream) => {
+        //     // Create a virtual video to get the frames of the camera stream
+        //     const video = document.getElementById("canvas-input-video");
+        //     video.play();
+        //
+        //     // Launch the loop of video processing
+        //     processVideo(video, canvas, ctx);
+        // })
 
-                // Une fois que la vidéo est prête, on commence le traitement
-                video.addEventListener("loadeddata", () => {
-                    // Lancer la boucle de traitement vidéo
-                    processVideo(video, canvas, ctx);
-                });
-            })
-            .catch((error) => {
-                console.log("Erreur d'accès à la caméra :", error);
+        // To use the PC webcam
+        navigator.mediaDevices.getUserMedia({video: true})
+        .then((stream) => {
+            // Create a virtual video to get the frames of the camera stream
+            const video = document.createElement("video");
+            video.srcObject = stream;
+            video.play();
+
+            // When video is ready, start processing
+            video.addEventListener("loadeddata", () => {
+                // Launch the loop of video processing
+                processVideo(video, canvas, ctx);
             });
+        })
+        .catch((error) => {
+            console.log("Camera access error :", error);
+        });
     } else {
-        console.log("getUserMedia n'est pas supporté par ce navigateur.");
+        console.log("getUserMedia isn't supported by your browser.");
     }
 });
 
 function processVideo(video, canvas, ctx) {
+    let delay;
     const FPS = 30;
     const frame = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
 
     function processFrame() {
-        try {
-            let begin = Date.now();
+        if (stillContinue) {
+            try {
+                let begin = Date.now();
 
-            // Capturer la frame depuis la vidéo dans un canvas temporaire
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                // Capture the frame of the video in a temporary canvas
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-            // Convertir le frame en une matrice OpenCV
-            frame.data.set(imageData.data);
+                // Convert the frame in an OpenCV matrix
+                frame.data.set(imageData.data);
 
-            // transformation de l'image
-            let gray = new cv.Mat();
-            let blurred = new cv.Mat();
-            cv.medianBlur(frame, blurred, 7); // flou
-            cv.cvtColor(blurred, gray, cv.COLOR_RGBA2GRAY); // niveau de gris
+                let finalImage = new cv.Mat();
+                let preProcessedFrame = preProcess(frame);
+                cv.cvtColor(frame, finalImage, cv.COLOR_RGBA2RGB);
 
+                // AruCo detection
+                let corners = detectAndDrawArucos(finalImage);
+                let [topLeft, topRight, bottomRight, bottomLeft] = corners;
 
-            /*****************************************************/
-            /*************** Détection des cercles ***************/
-            /*****************************************************/
+                const markersVector = new cv.MatVector();
+                const mv = new cv.Mat(corners.length, 1, cv.CV_32SC2);
 
+                let ballDiameter = 10;
+                let isPerimeterFound = false;
 
-            let circles = new cv.Mat();
-            cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT,
-                2,      // résolution 1 = résolution par défaut, 2 = résolution divisée par 2
-                20,     // distance entre les cercles
-                100,    // plus c'est bas plus il trouve de cercles
-                30,     //
-                10,     // diamètre minimum des boules
-                18      // diamètre maximum des boules
-            );
+                // If the 4 table corners are detected, draw them and lines between them
+                if (topLeft && topRight && bottomLeft && bottomRight) {
+                    let points = [
+                        {x: topLeft.x, y: topLeft.y},
+                        {x: topRight.x, y: topRight.y},
+                        {x: bottomRight.x, y: bottomRight.y},
+                        {x: bottomLeft.x, y: bottomLeft.y},
+                    ];
 
-            // Dessiner les cercles détectés
-            for (let i = 0; i < circles.cols; ++i) {
-                let circle = circles.data32F.slice(i * 3, (i + 1) * 3);
-                let center = new cv.Point(circle[0], circle[1]);
-                let radius = circle[2];
-                cv.circle(frame, center, radius, [255, 0, 0, 255], 3);
-                cv.circle(frame, center, 3, [0, 255, 0, 255], -1);
+                    points.forEach(({x, y}, idx) => {
+                        mv.intPtr(idx, 0)[0] = x;
+                        mv.intPtr(idx, 0)[1] = y;
+                    });
+
+                    markersVector.push_back(mv);
+                    cv.polylines(finalImage, markersVector, true, new cv.Scalar(0, 255, 0), 4);
+
+                    // We can deduce some parameters as well
+                    ballDiameter = calculateBallSize(distanceBetweenPoints(topLeft, bottomLeft));
+                    isPerimeterFound = true;
+                }
+
+                // Detect and draw the circles
+                let circles = detectCircles(preProcessedFrame, ballDiameter);
+                drawDetectedCircles(finalImage, circles, mv, isPerimeterFound);
+
+                // Draw the final result in the canvas
+                cv.imshow(canvas, finalImage);
+
+                // Clean memory
+                preProcessedFrame.delete();
+                circles.delete();
+                finalImage.delete();
+
+                delay = 1000 / FPS - (Date.now() - begin);
+            } catch
+                (err) {
+                console.error(err);
             }
-
-
-            /*****************************************************/
-            /*************** Détection de l'AruCo ****************/
-            /*****************************************************/
-
-            // TODO
-
-            // Afficher le résultat final dans le canvas
-            cv.imshow(canvas, frame);
-
-            // Nettoyer la mémoire
-            gray.delete();
-            blurred.delete();
-            circles.delete();
-
-            let delay = 1000 / FPS - (Date.now() - begin);
-            setTimeout(processFrame, delay);
-        } catch (err) {
-            console.error(err);
         }
+
+        setTimeout(processFrame, delay);
     }
 
-    // Lancer la boucle de traitement
+    // Process the next frame
     processFrame();
+}
+
+export function setSillContinue(boolean) {
+    stillContinue = boolean;
 }

@@ -1,17 +1,19 @@
-import {Body, Composite, Engine, Mouse, MouseConstraint, Render, Runner} from "./global.js";
+import {Body, Composite, Engine, Mouse, MouseConstraint, Render, Runner, World,} from "./global.js";
 import {height, width} from "./params.js";
 
 class VueSimulateur {
-    constructor(canvasContainer){
+    constructor(canvasContainer) {
         this.canvasContainer = canvasContainer;
-        this.objects=[];
+
+        this.createEngine();
+        this.createMouse();
     }
 
-    setup(){
-        this.engine=Engine.create();
-        this.engine.gravity.y=0;
+    createEngine() {
+        this.engine = Engine.create();
+        this.engine.gravity.y = 0;
 
-        this.runner= Runner.create();
+        this.runner = Runner.create();
         this.render = Render.create({
             element: this.canvasContainer,
             engine: this.engine,
@@ -19,25 +21,23 @@ class VueSimulateur {
                 width: width,
                 height: height,
                 wireframes: false,
-                background: "grey" // le gris de notre table
-            }
+                background: "grey", // grey of our table
+            },
         });
 
-        this.render.canvas.id="canvas-simulateur";
-
-        this.setupMouse();
+        this.render.canvas.id = "canvas-simulateur";
     }
 
-    setupMouse(){
-        this.mouse = Mouse.create(this.render.canvas); // Création de la souris sur le canvas
+    createMouse() {
+        this.mouse = Mouse.create(this.render.canvas); // Creation of the mouse ON the canvas
         this.mouseConstraint = MouseConstraint.create(this.engine, {
             mouse: this.mouse,
             constraint: {
                 stiffness: 1,
                 render: {
-                    visible: false
-                }
-            }
+                    visible: false,
+                },
+            },
         });
 
         Composite.add(this.engine.world, this.mouseConstraint);
@@ -46,55 +46,22 @@ class VueSimulateur {
         Matter.Events.on(this.mouseConstraint, "enddrag", (event) => {
             const body = event.body;
             if (body) {
-                Body.setVelocity(body, { x: 0, y: 0});
+                Body.setVelocity(body, {x: 0, y: 0});
+                Body.setAngularVelocity(body, 0);
             }
         });
     }
 
-    run(){
+    run() {
         Render.run(this.render);
         Runner.run(this.runner, this.engine);
     }
 
-    addToView(obj){
-        obj.addToEnv(this.engine.world);
-        this.objects.push(obj);
-    }
-
-    removeFromView(obj){
-        obj.destroy(this.engine.world);
-        this.objects.splice(this.objects.indexOf(obj), 1);
-    }
-
-    create(table){
-        table.balls.forEach(ball => {
-            ball.addToEnv(this.engine.world);
-        });
-
-        table.robots.forEach(robot => {
-            robot.addToEnv(this.engine.world);
-        });
-
-        table.walls.forEach(wall => {
-            wall.addToEnv(this.engine.world);
-        })
-
-        table.holes.forEach(hole => {
-            hole.addToEnv(this.engine.world);
-        });
-    }
-
-    update(table){
-        const balls=table.balls;
-        const holes=table.holes;
-        const walls=table.walls;
-        const robots=table.robots;
-
-        this.objects.forEach((obj) =>{
-            if(!(balls.includes(obj) || holes.includes(obj) || walls.includes(obj)) || robots.includes(obj) || walls.includes(obj)) {
-                this.removeFromView(obj);
-            }
-        });
+    setup(table) {
+        const balls = table.balls;
+        const holes = table.holes;
+        const walls = table.walls;
+        const robots = table.robots;
 
         this.addObjects(walls);
         this.addObjects(holes);
@@ -102,12 +69,27 @@ class VueSimulateur {
         this.addObjects(balls);
     }
 
-    addObjects(objArray){
-        objArray.forEach(obj => {
-            if(!this.objects.includes(obj)){
-                this.addToView(obj);
-            }
-        })
+    addObjects(objArray) {
+        objArray.forEach((obj) => {
+            obj.addToEnv(this.engine.world);
+        });
+    }
+
+    removeBall(ballBody) {
+        Composite.remove(this.engine.world, ballBody);
+    }
+
+    clearSimulation() {
+        World.clear(this.engine.world);
+        Engine.clear(this.engine);
+        Render.stop(this.render);
+        Runner.stop(this.runner);
+        this.render.canvas.remove();
+        this.render.canvas = null;
+        this.render.context = null;
+
+        Composite.clear(this.engine.world, false);
     }
 }
+
 export default VueSimulateur;

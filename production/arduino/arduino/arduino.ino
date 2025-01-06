@@ -16,13 +16,13 @@
 
 #define USE_SERIAL Serial
 
-// === MODIFIER EN FONCTION DU RESEAU =========================================
-char* ADRESSE_SERVEUR = "192.168.137.1";
-int PORT_SERVEUR = 8001;
+// === MODIFY ACCORDING TO THE NETWORK ========================================
+char* SERVER_ADDRESS = "192.168.137.1";
+int SERVER_PORT = 8001;
 char* URL = "/socket.io/?EIO=4";
 
-char* NOM_RESEAU = "TP-LINK_7A134E";
-char* MDP_RESEAU = "C27A134E";
+char* NETWORK_NAME = "TP-LINK_7A134E";
+char* NETWORK_PASSWORD = "C27A134E";
 // ============================================================================
 
 ESP8266WiFiMulti WiFiMulti;
@@ -30,26 +30,27 @@ SocketIOclient socketIO;
 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
-// Moteurs
-Adafruit_DCMotor* moteurGauche = AFMS.getMotor(1);
-Adafruit_DCMotor* moteurDroit = AFMS.getMotor(2);
+// Motors
+Adafruit_DCMotor* leftMotor = AFMS.getMotor(1);
+Adafruit_DCMotor* rightMotor = AFMS.getMotor(2);
 
-int sensMoteurGauche = 0;
-int sensMoteurDroit = 0;
-int vitesseMoteurGauche = 0;
-int vitesseMoteurDroit = 0;
-int dureeMoteurs = 0;
+// === Robot variables =======================================================================
+
+int leftMotorDirection = 0;
+int rightMotorDirection = 0;
+int leftMotorSpeed = 0;
+int rightMotorSpeed = 0;
+int motorDuration = 0;
 
 bool changeMotors = false;
 
 /*
-  C'est ici que l'on gère ce qu'il se passe lorsqu'un évènement est reçu
-  En quelque sorte le contrôleur
+  Handles what happens when an event is received
 */
 void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) {
   DynamicJsonDocument doc(1024);
   String payload_str;
-  String nom_event;
+  String name_event;
 
   switch (type) {
     case sIOtype_DISCONNECT:
@@ -64,13 +65,13 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
     case sIOtype_EVENT:
       USE_SERIAL.printf("[IOc] get event: %s\n", payload);
 
-      // On récupère l'évènement
+      // Get the event
       payload_str = String((char*)payload);
       deserializeJson(doc, payload_str);
 
-      nom_event = String(doc[0]);
+      name_event = String(doc[0]);
 
-      if (nom_event == "motor") {
+      if (name_event == "motor") {
         int left = doc[1]["left"];
         int right = doc[1]["right"];
         int duration = doc[1]["duration"];
@@ -82,28 +83,28 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
         USE_SERIAL.printf("%d\n", time);
 
         if (left > 0) {
-          sensMoteurGauche = FORWARD;
-          vitesseMoteurGauche = left;
+          leftMotorDirection = FORWARD;
+          leftMotorSpeed = left;
         } else if (left < 0) {
-          sensMoteurGauche = BACKWARD;
-          vitesseMoteurGauche = abs(left);
-        } else {  // 0 en gros
-          sensMoteurGauche = RELEASE;
-          vitesseMoteurGauche = 0;
+          leftMotorDirection = BACKWARD;
+          leftMotorSpeed = abs(left);
+        } else {  // when == 0
+          leftMotorDirection = RELEASE;
+          leftMotorSpeed = 0;
         }
 
         if (right > 0) {
-          sensMoteurDroit = FORWARD;
-          vitesseMoteurDroit = right;
+          rightMotorDirection = FORWARD;
+          rightMotorSpeed = right;
         } else if (right < 0) {
-          sensMoteurDroit = BACKWARD;
-          vitesseMoteurDroit = abs(right);
-        } else {  // 0 en gros
-          sensMoteurDroit = RELEASE;
-          vitesseMoteurDroit = 0;
+          rightMotorDirection = BACKWARD;
+          rightMotorSpeed = abs(right);
+        } else {  // when == 0
+          rightMotorDirection = RELEASE;
+          rightMotorSpeed = 0;
         }
-        
-        dureeMoteurs = duration;
+
+        motorDuration = duration;
 
         changeMotors = true;
       }
@@ -132,7 +133,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
 // ############################################################################
 
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
+  // pinMode(LED_BUILTIN, OUTPUT);
 
   USE_SERIAL.begin(115200);
   USE_SERIAL.setDebugOutput(true);
@@ -148,7 +149,7 @@ void setup() {
     WiFi.softAPdisconnect(true);
   }
 
-  WiFiMulti.addAP(NOM_RESEAU, MDP_RESEAU);
+  WiFiMulti.addAP(NETWORK_NAME, NETWORK_PASSWORD);
 
   while (WiFiMulti.run() != WL_CONNECTED) {
     delay(100);
@@ -157,10 +158,10 @@ void setup() {
   String ip = WiFi.localIP().toString();
   USE_SERIAL.printf("[SETUP] WiFi Connected %s\n", ip.c_str());
 
-  socketIO.begin(ADRESSE_SERVEUR, PORT_SERVEUR, URL);
+  socketIO.begin(SERVER_ADDRESS, SERVER_PORT, URL);
   socketIO.onEvent(socketIOEvent);
 
-  // Moteurs
+  // Motors
   if (!AFMS.begin()) {  // create with the default frequency 1.6KHz
     // if (!AFMS.begin(1000)) {  // OR with a different frequency, say 1KHz
     Serial.println("Could not find Motor Shield. Check wiring.");
@@ -170,10 +171,10 @@ void setup() {
   Serial.println("Motor Shield found.");
 
   // Set the speed to start, from 0 (off) to 255 (max speed)
-  moteurGauche->setSpeed(150);
-  moteurGauche->run(FORWARD);
+  leftMotor->setSpeed(150);
+  leftMotor->run(FORWARD);
   // turn on motor
-  moteurGauche->run(RELEASE);
+  leftMotor->run(RELEASE);
 }
 
 // ############################################################################
@@ -185,33 +186,33 @@ unsigned long messageTimestamp = 0;
 void loop() {
   socketIO.loop();
 
-  // Changement des moteurs ici
+  // Motors are changed here
   if (changeMotors) {
-    moteurGauche->run(sensMoteurGauche);
-    moteurDroit->run(sensMoteurDroit);
+    leftMotor->run(leftMotorDirection);
+    rightMotor->run(rightMotorDirection);
 
-    moteurGauche->setSpeed(vitesseMoteurGauche);
-    moteurDroit->setSpeed(vitesseMoteurDroit);
+    leftMotor->setSpeed(leftMotorSpeed);
+    rightMotor->setSpeed(rightMotorSpeed);
 
-    delay(dureeMoteurs);
+    delay(motorDuration);
 
-    moteurGauche->run(RELEASE);
-    moteurDroit->run(RELEASE);
+    leftMotor->run(RELEASE);
+    rightMotor->run(RELEASE);
 
-    // moteurGauche->run(FORWARD);
+    // leftMotor->run(FORWARD);
 
     // int i;
     // for (i=0; i<255; i++) {
-    //   moteurGauche->setSpeed(i);
-    //   delay(dureeMoteurDroit);
+    //   leftMotor->setSpeed(i);
+    //   delay(dureerightMotor);
     // }
     // for (i=255; i!=0; i--) {
-    //   moteurGauche->setSpeed(i);
-    //   delay(dureeMoteurDroit);
+    //   leftMotor->setSpeed(i);
+    //   delay(dureerightMotor);
     // }
 
-    // moteurGauche->run(RELEASE);
-    // delay(dureeMoteurDroit);
+    // leftMotor->run(RELEASE);
+    // delay(dureerightMotor);
 
     changeMotors = false;
   }
