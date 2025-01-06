@@ -9,29 +9,29 @@ class Robot extends SimulationObject {
                 fillStyle: "#B6423F" // real color of our robot
             },
             chamfer: {
-                radius: [10,10,10,10]
+                radius: [15, 15, 15, 15]
             },
             frictionAir: 1,
             restitution: 0.02
         });
 
-        const leftWheel=Bodies.rectangle(
-            x  -height / 2 + wheelWidth / 2,
-            y -(height / 2) -wheelHeight,
+        const leftWheel = Bodies.rectangle(
+            x - height / 2 + wheelWidth / 2,
+            y - (height / 2) - wheelHeight,
             wheelWidth,
             wheelHeight, {
-            render: {
-                fillStyle: "#2F2F2F" // real color of our robot
-            },
-        });
+                render: {
+                    fillStyle: "#2F2F2F" // real color of our robot wheel
+                },
+            });
 
-        const rightWheel=Bodies.rectangle(
-            x  -height / 2 + wheelWidth / 2,
+        const rightWheel = Bodies.rectangle(
+            x - height / 2 + wheelWidth / 2,
             y + (height / 2) + wheelHeight,
             wheelWidth,
             wheelHeight, {
                 render: {
-                    fillStyle: "#2F2F2F" // real color of our robot
+                    fillStyle: "#2F2F2F" // real color of our robot wheel
                 },
             });
 
@@ -53,7 +53,7 @@ class Robot extends SimulationObject {
 
         this.bodyArray = [core, wheel1.body, wheel2.body];
 
-        Body.setAngle(core, angle);
+        Body.setAngle(body, angle);
     }
 
     executeOrder(order) {

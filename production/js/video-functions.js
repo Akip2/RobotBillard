@@ -1,6 +1,9 @@
 export const WIDTH = 700;
 export const HEIGHT = 400;
 
+let ballsPositions = [];
+let holesPositions = [];
+
 export function preProcess(frame) {
     // let blurred = new cv.Mat();
     let gray = new cv.Mat();
@@ -86,17 +89,32 @@ export function detectCircles(frame, ballDiameter = 10) {
 }
 
 export function drawDetectedCircles(frame, circles, mv, isPerimeterFound = false) {
+
+    ballsPositions = [];
+    holesPositions = [];
+
     for (let i = 0; i < circles.cols; ++i) {
         let circle = circles.data32F.slice(i * 3, (i + 1) * 3);
         let center = new cv.Point(circle[0], circle[1]);
-        let perimeterColor = [0, 0, 255, 255];
+        let perimeterColor = [0, 0, 255, 255]; // color when no table is detected
 
-        // Detect which ones are inside the table or not
+        // Detect which ones are inside the table or not and add the inside one in the atribute
         if (isPerimeterFound) {
-            let result = cv.pointPolygonTest(mv, center, false);
+            let result = cv.pointPolygonTest(mv, center, true);
+            console.log(result)
 
-            // Change the color if inside or outside circle
-            result >= 0 ? perimeterColor = [0, 255, 0, 255] : perimeterColor = [255, 0, 0, 255]
+            // Change the color if inside or outside circle and differentiate balls from holes
+            if (result >= 0) {
+                // if the center of the detected circle is too close from the site of the table it may be a hole
+                if (result < 38 && holesPositions.length < 6) {
+                    perimeterColor = [128, 128, 128, 255] // color of holes
+                } else {
+                    perimeterColor = [0, 255, 0, 255] // color of balls inside the table (green)
+                    ballsPositions.push(center);
+                }
+            } else {
+                perimeterColor = [255, 0, 0, 255] // color of balls outsite the table (red)
+            }
         }
 
         cv.circle(frame, center, circle[2], perimeterColor, 3);
@@ -142,4 +160,16 @@ export function calculateBallSize(tableLength) {
     let tableRealSize = 118.5;
 
     return (tableLength * ballRealSize) / tableRealSize;
+}
+
+function isCloseToBorder(perimeter, circleCenter) {
+    // TODO
+}
+
+export function getBallsPositions() {
+    return ballsPositions;
+}
+
+export function getHolesPositions() {
+    return holesPositions;
 }
