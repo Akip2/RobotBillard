@@ -48,7 +48,7 @@ const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
 let curentConfig = "Random";
-let curentRobot;
+// let curentRobot;
 let vue = null;
 let table = null;
 let currentView = "camera";
@@ -63,7 +63,7 @@ window.addEventListener("load", () => {
     // socket.emit('get-robots');
 
     selectRobots.addEventListener("change", (event) => {
-        curentRobot = event.target.value;
+        // curentRobot = event.target.value;
     });
 
     // Reload the simulation
