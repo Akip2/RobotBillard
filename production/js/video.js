@@ -1,15 +1,8 @@
-import {
-    calculateBallSize,
-    detectAndDrawArucos,
-    detectCircles,
-    distanceBetweenPoints,
-    drawDetectedCircles,
-    HEIGHT,
-    preProcess,
-    WIDTH
-} from "./video-functions.js";
+import {detectAndDrawArucos, detectCircles, drawDetectedCircles, HEIGHT, preProcess, WIDTH} from "./video-functions.js";
+import {calculateBallSize, distanceBetweenPoints} from "./brain.js";
 
 let stillContinue = true;
+let robots = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("canvas-output-video");
@@ -40,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // })
 
         // To use the PC webcam
-        navigator.mediaDevices.getUserMedia({video: true})
+        // navigator.mediaDevices.getUserMedia({video: true})
         .then((stream) => {
             // Create a virtual video to get the frames of the camera stream
             const video = document.createElement("video");
@@ -83,8 +76,16 @@ function processVideo(video, canvas, ctx) {
                 cv.cvtColor(frame, finalImage, cv.COLOR_RGBA2RGB);
 
                 // AruCo detection
-                let corners = detectAndDrawArucos(finalImage);
+                let arucos = detectAndDrawArucos(finalImage);
+
+                let corners = arucos.slice(0, 4);
                 let [topLeft, topRight, bottomRight, bottomLeft] = corners;
+                robots = arucos.slice(4, arucos.length);
+
+                //print every robot position
+                for (let i = 0; i < robots.length; i++) {
+                    console.log(robots[i]);
+                }
 
                 const markersVector = new cv.MatVector();
                 const mv = new cv.Mat(corners.length, 1, cv.CV_32SC2);
@@ -142,4 +143,12 @@ function processVideo(video, canvas, ctx) {
 
 export function setSillContinue(boolean) {
     stillContinue = boolean;
+}
+
+export function getRobots(){
+    return robots;
+}
+
+export function getRobot(index){
+    return robots[index];
 }
