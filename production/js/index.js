@@ -1,5 +1,6 @@
 import VueSimulateur from "../simulateur/vue-simulateur.js";
 import CollisionController from "../simulateur/collision-controller.js";
+import Camera from "../simulateur/camera.js";
 
 // Billard configurations
 import RandomConfig from "../simulateur/configurations/random-config.js";
@@ -52,6 +53,8 @@ let curentConfig = "Random";
 // let curentRobot;
 let vue = null;
 let table = null;
+let camera = null;
+
 let currentView = "camera";
 
 let speedGauche = 130;
@@ -221,28 +224,31 @@ function loadSimulator(configurationName) {
         vue.clearSimulation();
     }
 
+    if(camera !== null){
+        camera.stop();
+    }
+
     vue = new VueSimulateur(canvasContainer);
+    camera = new Camera(canvasContainer);
+
+    curentConfig = configurationName;
 
     switch (configurationName) {
         case "Ramdom":
-            curentConfig = "Random";
-            table = new RandomConfig(vue);
+            table = new RandomConfig(vue, camera);
             break;
         case "Billard":
-            curentConfig = "Billard";
-            table = new BillardConfig(vue);
+            table = new BillardConfig(vue, camera);
             break;
         case "Foot":
-            curentConfig = "Foot";
-            table = new FootConfig(vue);
+            table = new FootConfig(vue, camera);
             break;
         case "Facile":
-            curentConfig = "Facile";
-            table = new EasyConfig(vue);
+            table = new EasyConfig(vue, camera);
             break;
         default:
             curentConfig = "Random";
-            table = new RandomConfig(vue);
+            table = new RandomConfig(vue, camera);
     }
 
     let colController = new CollisionController(table);

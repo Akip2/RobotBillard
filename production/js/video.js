@@ -90,7 +90,7 @@ function processVideo(video, canvas, ctx) {
                 const markersVector = new cv.MatVector();
                 const mv = new cv.Mat(corners.length, 1, cv.CV_32SC2);
 
-                let ballDiameter = 10;
+                let ballRadius = 10;
                 let isPerimeterFound = false;
 
                 // If the 4 table corners are detected, draw them and lines between them
@@ -111,12 +111,12 @@ function processVideo(video, canvas, ctx) {
                     cv.polylines(finalImage, markersVector, true, new cv.Scalar(0, 255, 0), 4);
 
                     // We can deduce some parameters as well
-                    ballDiameter = calculateBallSize(distanceBetweenPoints(topLeft, bottomLeft));
+                    ballRadius = calculateBallSize(distanceBetweenPoints(topLeft, bottomLeft));
                     isPerimeterFound = true;
                 }
 
                 // Detect and draw the circles
-                let circles = detectCircles(preProcessedFrame, ballDiameter);
+                let circles = detectCircles(preProcessedFrame, ballRadius);
                 drawDetectedCircles(finalImage, circles, mv, isPerimeterFound);
 
                 // Draw the final result in the canvas
