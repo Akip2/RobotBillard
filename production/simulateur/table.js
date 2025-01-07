@@ -3,10 +3,11 @@ import {width, height, holeRadius, wallSize} from "./params.js";
 import Hole from "./objects/hole.js";
 
 class Table {
-    constructor(robots, balls, vue) {
+    constructor(robots, balls, vue, camera) {
         this.robots = robots;
         this.balls = balls;
         this.vue = vue;
+        this.camera = camera;
 
         this.walls = [
             new Wall(wallSize, height, 2.5, height / 2),
@@ -39,6 +40,7 @@ class Table {
     run() {
         this.vue.setup(this);
         this.vue.run();
+        this.camera.start();
     }
 
     sendRobotOrder(order, id = 0){
