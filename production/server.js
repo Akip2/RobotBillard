@@ -35,7 +35,7 @@ io.sockets.on("connection", function (socket) {
         robotSockets.push(socket); // We assume the connecting socket is a robot
         socketIds.push(socket.id);
 
-        updateRobotsList(socket)
+        updateRobotsList(socket);
     }
 
     socket.on('event_name', function (val) {
@@ -73,15 +73,15 @@ io.sockets.on("connection", function (socket) {
 
         console.log("Socket disconnected");
     });
-
 });
 
 console.log(`Server is running on localhost:${port}`);
 
 
 function updateRobotsList(socket) {
+    console.log("serveur : updateRobotsList");
     const robots = robotSockets.map(robotSocket => ({
-        name: `Robot ${robotSocket.id.substring(0, 5)}`
+        name: `Robot ${robotSocket.id}`
     }));
     socket.emit("robots-list", robots);
 }

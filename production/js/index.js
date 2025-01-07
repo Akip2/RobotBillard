@@ -7,7 +7,7 @@ import BillardConfig from "../simulateur/configurations/billard-config.js";
 import EasyConfig from "../simulateur/configurations/easy-config.js";
 import FootConfig from "../simulateur/configurations/foot-config.js";
 
-import {setSillContinue} from "./video.js";
+import {setStillContinue} from "./video.js";
 import {createOrder, moveRobotTo} from "./brain.js";
 
 const socket = io(); // Connection to server
@@ -59,6 +59,8 @@ let duration = 1000;
 
 window.addEventListener("load", () => {
 
+    // socket.emit('get-robots');
+
     selectRobots.addEventListener("change", (event) => {
         // TODO
     });
@@ -106,7 +108,7 @@ window.addEventListener("load", () => {
                 tryAdd(viewGoScenarios);
                 tryRemove(viewArrowControls)
                 hide(topTableSimulator);
-                setSillContinue(true);
+                setStillContinue(true);
                 break;
             case "simulator":
                 hide(canvas);
@@ -114,14 +116,14 @@ window.addEventListener("load", () => {
                 tryAdd(viewGoScenarios);
                 tryAdd(viewArrowControls)
                 show(topTableSimulator);
-                setSillContinue(false);
+                setStillContinue(false);
                 break;
             case "manual":
                 showCanvas();
                 tryRemove(viewGoScenarios);
                 tryAdd(viewArrowControls)
                 hide(topTableSimulator);
-                setSillContinue(true);
+                setStillContinue(true);
                 break;
             default:
                 console.log("Erreur : vue inconnue");
@@ -245,6 +247,7 @@ function loadSimulator(configurationName) {
 }
 
 socket.on("robots-list", function (robots) {
+    console.log("socket on : robots-list : " + robots)
     if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
         selectRobots.innerHTML = "";
         robots.forEach(function (robot) {
@@ -252,6 +255,8 @@ socket.on("robots-list", function (robots) {
             option.text = robot.name;
             selectRobots.appendChild(option);
         });
+    } else {
+        console.log("socket on : robots-list : videeee");
     }
 });
 
