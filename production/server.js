@@ -58,6 +58,7 @@ io.sockets.on("connection", function (socket) {
     socket.on("is-interface", function (mode) { // We learn that the socket is the interface
         robotSockets.splice(robotSockets.indexOf(socket), 1);
         simulatorMode = (mode === "simulator");
+        updateRobotsList(socket);
     });
 
     socket.on("change-mode", function (val) { // User is changing the mode of the interface (simulator, manual, camera...)
@@ -79,9 +80,13 @@ console.log(`Server is running on localhost:${port}`);
 
 
 function updateRobotsList(socket) {
-    console.log("serveur : updateRobotsList");
-    const robots = robotSockets.map(robotSocket => ({
-        name: `Robot ${robotSocket.id}`
-    }));
+    let robots = [];
+
+    robotSockets.forEach(robotSocket => {
+        robots.push({
+            name: `Robot ${robotSocket.id}`
+        });
+    })
+
     socket.emit("robots-list", robots);
 }

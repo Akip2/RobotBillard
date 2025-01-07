@@ -246,16 +246,19 @@ function loadSimulator(configurationName) {
 }
 
 socket.on("robots-list", function (robots) {
-    console.log("socket on : robots-list : " + robots)
+    selectRobots.innerHTML = "";
     if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
-        selectRobots.innerHTML = "";
+        console.log("ni null ni vide");
         robots.forEach(function (robot) {
+            console.log(robot)
             let option = document.createElement("option");
             option.text = robot.name;
             selectRobots.appendChild(option);
         });
     } else {
-        console.log("socket on : robots-list : videeee");
+        let option = document.createElement("option");
+        option.text = "Aucun robot disponible";
+        selectRobots.appendChild(option);
     }
 });
 
