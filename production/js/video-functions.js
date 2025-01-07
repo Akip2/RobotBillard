@@ -86,7 +86,13 @@ export function detectAndDrawArucos(frame) {
                     bottomRight = point
                     break;
                 default:
-                    robotsArucos.push(point);
+                    let orientation = drawAndGetDirectionOfAruco(frame, cornersOfAruco);
+                    let robotData = {
+                        position: point,
+                        orientation: orientation,
+                    }
+
+                    robotsArucos.push(robotData);
             }
         }
     }
