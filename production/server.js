@@ -84,13 +84,12 @@ function updateRobotsList(socket) {
 
     console.log(socket.handshake.address);
 
+    // We check if the robot has already been listed, if not, we add it to the robots list
     robotSockets.forEach(robotSocket => {
-        if (!robots.includes(`Robot ${robotSocket.handshake.address}`)) {
-            robots.push({
-                name: `Robot ${robotSocket.handshake.address}`
-            });
+        let adresseIp = robotSocket.handshake.address;
+        if (!robots.includes(adresseIp)) {
+            robots.push(adresseIp);
         }
-
     })
 
     socket.emit("robots-list", robots);

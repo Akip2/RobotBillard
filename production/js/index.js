@@ -249,11 +249,9 @@ function loadSimulator(configurationName) {
 socket.on("robots-list", function (robots) {
     selectRobots.innerHTML = "";
     if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
-        console.log("ni null ni vide");
         robots.forEach(function (robot) {
-            console.log(robot)
             let option = document.createElement("option");
-            option.text = robot.name;
+            option.text = robot;
             selectRobots.appendChild(option);
         });
     } else {
