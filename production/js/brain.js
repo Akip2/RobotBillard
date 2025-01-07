@@ -1,4 +1,4 @@
-import {getRobot} from "./video.js";
+import {getRobot} from "./index.js";
 
 export function moveRobotForward(socket, distance, time = 3000) {
     // dist = 0,6245 * puissance - 11,66;
@@ -31,6 +31,35 @@ export function turnRobot(socket, angle) {
     }
 }
 
+export function moveRobotTo(socket, index, x, y) {
+    let robot = getRobot(index);
+
+    let distance = distanceBetweenPoints(robot.position, {x: x, y: y}) / (calculateBallSize(460) / 4.5);
+    let targetAngle = Math.atan2(y - robot.position.y, x - robot.position.x) * (180 / Math.PI);
+
+    if (targetAngle < 0) {
+        targetAngle += 360;
+    }
+
+    let interval = setInterval(() => {
+        let robotAngle = getRobot(index).orientation % 360;
+        let delta = Math.abs(targetAngle - robotAngle);
+
+        console.log(robotAngle)
+        console.log(targetAngle)
+        console.log(delta)
+
+        if (delta > 10) {
+            turnRobot(socket, 15);
+        }/* else if (delta < -10) {
+            turnRobot(socket, 180 + 15);
+        } */ else {
+            moveRobotForward(socket, distance);
+            clearInterval(interval);
+        }
+    }, 100);
+}
+
 export function turnRobotInCircle(socket, radius, angle) {
     // if radius = 21
     // divide time by angle or something similar
@@ -41,30 +70,6 @@ export function turnRobotInCircle(socket, radius, angle) {
     // TODO
 
     socket.emit('motor', createOrder(speedLeft, speedRight, time));
-}
-
-export function moveRobotTo(socket, x, y) {
-    let robot = getRobot(0); //TODO
-    let robotAngle = robot.orientation;
-
-    let distance = distanceBetweenPoints(robot.position, {x: x, y: y}) / (calculateBallSize(460) / 4.5);
-    let targetAngle = Math.atan2(robot.position.y - y, x - robot.position.x) * (180 / Math.PI);
-
-    console.log(distance)
-    console.log(robotAngle)
-    console.log(targetAngle)
-
-    let interval = setInterval(() => {
-        let delta = Math.abs(getRobot(0).orientation - targetAngle);
-
-        if (delta > 30) {
-            turnRobot(socket, targetAngle);
-        } else {
-            clearInterval(interval);
-        }
-    }, 1500);
-
-    moveRobotForward(socket, distance);
 }
 
 export function distanceBetweenPoints(p1, p2) {

@@ -140,10 +140,10 @@ export function setStillContinue(boolean) {
     stillContinue = boolean;
 }
 
-export function getRobots() {
+export function getRealRobots() {
     return robots;
 }
 
-export function getRobot(index) {
+export function getRealRobot(index) {
     return robots[index];
 }

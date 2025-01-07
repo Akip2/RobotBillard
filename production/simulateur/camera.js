@@ -1,5 +1,5 @@
-import {simulatorCameraFPS, ballRadius} from "./params.js";
-import {detectCircles, drawDetectedCircles, preProcess} from "../js/video-functions.js";
+import {ballRadius, simulatorCameraFPS} from "./params.js";
+import {detectCircles, preProcess} from "../js/video-functions.js";
 
 class Camera {
     constructor(canvasContainer) {
@@ -46,7 +46,7 @@ class Camera {
             preProcessedImg.delete();
             circles.delete();
 
-            console.log(ballsDetected);
+            // console.log(ballsDetected);
             this.ballsPosition = ballsDetected;
 
         } catch
@@ -55,7 +55,7 @@ class Camera {
         }
     }
 
-    getBallsPositions(){
+    getBallsPositions() {
         return this.ballsPosition;
     }
 }
