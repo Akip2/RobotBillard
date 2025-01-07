@@ -137,11 +137,12 @@ window.addEventListener("load", () => {
 
     canvasContainer.addEventListener("click", (event) => {
         let simulatorCanvas = document.querySelector("#canvas-simulateur");
+        let isSimulator = simulatorCanvas ? !simulatorCanvas.classList.contains("displayNone") : false;
 
         let x = event.offsetX;
         let y = event.offsetY;
 
-        if (simulatorCanvas != null) {
+        if (isSimulator) {
             // Get the position of a click on the simulator
             console.log("Simulator : (" + x + ", " + y + ")");
             // moveRobotForward(socket, 100, 3000);
