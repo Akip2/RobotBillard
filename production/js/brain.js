@@ -57,10 +57,11 @@ export function moveRobotTo(socket, x, y) {
     let robotAngle = Math.PI;//getRobotAngle //TODO
 
     let distance = distanceBetweenPoints(robotPos, {x: x, y: y});
+    console.log(distance)
     let angle = robotAngle + Math.atan2(robotPos.y - y, x - robotPos.x) / Math.PI;
 
     turnRobot(socket, angle);
-    moveRobotForward(socket, distance, 4000);
+    moveRobotForward(socket, distance, 2000);
 }
 
 export function distanceBetweenPoints(p1, p2) {
