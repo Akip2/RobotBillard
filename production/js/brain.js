@@ -54,13 +54,13 @@ export function moveRobotTo(socket, x, y) {
     console.log(robotAngle)
     console.log(targetAngle)
 
-    setInterval(() => {
-        let delta = 31;
+    let interval = setInterval(() => {
+        let delta = Math.abs(getRobot(0).orientation - targetAngle);
 
-        while (delta > 30) {
+        if (delta > 30) {
             turnRobot(socket, targetAngle);
-            setTimeout(() => {console.log("a")}, 1500);
-            delta = Math.abs(getRobot(0).orientation - targetAngle);
+        } else {
+            clearInterval(interval);
         }
     }, 1500);
 
