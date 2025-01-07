@@ -8,7 +8,7 @@ import EasyConfig from "../simulateur/configurations/easy-config.js";
 import FootConfig from "../simulateur/configurations/foot-config.js";
 
 import {setSillContinue} from "./video.js";
-import {createOrder} from "./brain.js";
+import {createOrder, moveRobotTo} from "./brain.js";
 
 const socket = io(); // Connection to server
 
@@ -160,6 +160,7 @@ window.addEventListener("load", () => {
             // turnRobot(socket, Math.PI / 2);
 
             // turnRobotInCircle(socket, 0,0,0);
+            moveRobotTo(socket, x, y);
         }
     });
 });

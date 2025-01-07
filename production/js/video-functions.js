@@ -70,7 +70,7 @@ export function detectAndDrawArucos(frame) {
             let x = topLeftCornerOfAruco[0];
             let y = topLeftCornerOfAruco[1];
 
-            let point = new cv.Point(x,y);
+            let point = new cv.Point(x, y);
 
             switch (ArucoId) {
                 case topLeftId:
@@ -145,19 +145,6 @@ export function drawDetectedCircles(frame, circles, mv, isPerimeterFound = false
         cv.circle(frame, center, circle[2], perimeterColor, 3);
         cv.circle(frame, center, 3, [255, 255, 0, 255], -1);
     }
-}
-
-export function distanceBetweenPoints(p1, p2) {
-    return Math.sqrt(
-        Math.pow(p1.x - p1.y, 2) + Math.pow(p2.x - p2.y, 2)
-    );
-}
-
-export function calculateBallSize(tableLength) {
-    let ballRealSize = 4.5;
-    let tableRealSize = 118.5;
-
-    return (tableLength * ballRealSize) / tableRealSize;
 }
 
 export function getBallsPositions() {

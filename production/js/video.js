@@ -1,13 +1,5 @@
-import {
-    calculateBallSize,
-    detectAndDrawArucos,
-    detectCircles,
-    distanceBetweenPoints,
-    drawDetectedCircles,
-    HEIGHT,
-    preProcess,
-    WIDTH
-} from "./video-functions.js";
+import {detectAndDrawArucos, detectCircles, drawDetectedCircles, HEIGHT, preProcess, WIDTH} from "./video-functions.js";
+import {calculateBallSize, distanceBetweenPoints} from "./brain.js";
 
 let stillContinue = true;
 
@@ -85,12 +77,12 @@ function processVideo(video, canvas, ctx) {
                 // AruCo detection
                 let arucos = detectAndDrawArucos(finalImage);
 
-                let corners = arucos.slice(0,4);
+                let corners = arucos.slice(0, 4);
                 let [topLeft, topRight, bottomRight, bottomLeft] = corners;
                 let robotsArucos = arucos.slice(4, arucos.length);
 
                 //print every robot position
-                for(let i = 0; i < robotsArucos.length; i++){
+                for (let i = 0; i < robotsArucos.length; i++) {
                     console.log(robotsArucos[i]);
                 }
 
