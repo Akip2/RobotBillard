@@ -26,7 +26,7 @@ class Camera {
             let imgData = cv.imread(this.canvas);
             let preProcessedImg = preProcess(imgData);
 
-            let circles = detectCircles(preProcessedImg, ballRadius * 2);
+            let circles = detectCircles(preProcessedImg, ballRadius);
 
             /*
             let finalImage = new cv.Mat();

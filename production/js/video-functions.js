@@ -101,20 +101,20 @@ export function detectAndDrawArucos(frame) {
     return corners.concat(robotsArucos);
 }
 
-export function detectCircles(frame, ballDiameter = 10) {
+export function detectCircles(frame, ballRadius = 10) {
     let circles = new cv.Mat();
 
-    let margin = (20 / 100) * ballDiameter; // + or - 20% of expected size
-    let minDiameter = ballDiameter - margin;
-    let maxDiameter = ballDiameter + margin;
+    let margin = (20 / 100) * ballRadius; // + or - 20% of expected size
+    let minRadius = ballRadius - margin;
+    let maxRadius = ballRadius + margin;
 
     cv.HoughCircles(frame, circles, cv.HOUGH_GRADIENT,
         2,              // resolution : 1 = default resolution, 2 = resolution divided by 2
         15,             // distance between circles
         100,            // the lower it is, the more circles are detected (including false ones)
         30,             //
-        minDiameter,    // minimum diameter of circles
-        maxDiameter     // maximum diameter of circles
+        minRadius,    // minimum diameter of circles
+        maxRadius     // maximum diameter of circles
     );
 
     return circles;
