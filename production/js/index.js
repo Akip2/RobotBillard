@@ -26,6 +26,7 @@ const rightPart = document.querySelector("#right-part");
 const topTableSimulator = document.querySelector("#top-table-container");
 const reload = document.querySelector("#reload-btn");
 const configurationChoice = document.querySelector("#select-configuration");
+const robotChoice = document.querySelector("#select-robot");
 const canvasContainer = document.querySelector("#canvas-container");
 const canvas = document.querySelector("#canvas-output-video");
 
@@ -36,7 +37,7 @@ const viewArrowControls = document.querySelector("#arrow-controls");
 // viewGoScenarios
 const goBtn = document.querySelector("#go-btn");
 const selectScenarios = document.querySelector("#select-scenarios");
-const selectRobots = document.querySelector("#select-curent-robot");
+const selectRobots = document.querySelector("#select-robot");
 
 // viewArrowControls
 const btnForward = document.querySelector("#btn-forward");
@@ -107,23 +108,26 @@ window.addEventListener("load", () => {
             case "camera":
                 showCanvas();
                 tryAdd(viewGoScenarios);
-                tryRemove(viewArrowControls)
-                hide(topTableSimulator);
+                tryRemove(viewArrowControls);
+                tryRemove(reload);
+                tryRemove(configurationChoice);
                 setStillContinue(true);
                 break;
             case "simulator":
                 hide(canvas);
                 loadSimulator();
                 tryAdd(viewGoScenarios);
-                tryAdd(viewArrowControls)
-                show(topTableSimulator);
+                tryAdd(viewArrowControls);
+                tryAdd(reload);
+                tryAdd(configurationChoice);
                 setStillContinue(false);
                 break;
             case "manual":
                 showCanvas();
                 tryRemove(viewGoScenarios);
-                tryAdd(viewArrowControls)
-                hide(topTableSimulator);
+                tryAdd(viewArrowControls);
+                tryRemove(reload);
+                tryRemove(configurationChoice);
                 setStillContinue(true);
                 break;
             default:

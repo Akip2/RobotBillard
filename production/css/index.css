@@ -150,7 +150,12 @@ canvas {
     cursor: grabbing;
 }
 
-#select-configuration {
+#top-table-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.select-top-table-container {
     background-color: lightgray;
     border: none;
     padding: 0.5em;
