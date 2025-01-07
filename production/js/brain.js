@@ -32,30 +32,35 @@ export function turnRobot(socket, angle) {
 }
 
 export function moveRobotTo(socket, index, x, y) {
-    let robot = getRobot(index);
-
-    let distance = distanceBetweenPoints(robot.position, {x: x, y: y}) / (calculateBallSize(460) / 4.5);
-    let targetAngle = Math.atan2(y - robot.position.y, x - robot.position.x) * (180 / Math.PI);
+    let robotPosition = getRobot(index).position;
+    let targetAngle = Math.atan2(y - robotPosition.y, x - robotPosition.x) * (180 / Math.PI);
 
     if (targetAngle < 0) {
         targetAngle += 360;
     }
 
-    let interval = setInterval(() => {
+    // Step 1 : turn
+    let turnInterval = setInterval(() => {
         let robotAngle = getRobot(index).orientation % 360;
         let delta = Math.abs(targetAngle - robotAngle);
-
-        console.log(robotAngle)
-        console.log(targetAngle)
-        console.log(delta)
 
         if (delta > 10) {
             turnRobot(socket, 15);
         }/* else if (delta < -10) {
             turnRobot(socket, 180 + 15);
         } */ else {
-            moveRobotForward(socket, distance);
-            clearInterval(interval);
+            // Step 2 : move forward
+            let forwardInterval = setInterval(() => {
+                robotPosition = getRobot(index).position;
+                let distance = distanceBetweenPoints(robotPosition, {x: x, y: y}) / (calculateBallSize(460) / 4.5)
+
+                if (distance > 20) {
+                    moveRobotForward(socket, 5);
+                } else {
+                    clearInterval(forwardInterval);
+                }
+            }, 100);
+            clearInterval(turnInterval);
         }
     }, 100);
 }
@@ -66,8 +71,6 @@ export function turnRobotInCircle(socket, radius, angle) {
     let speedLeft = 255;
     let speedRight = 128;
     let time = 2300;
-
-    // TODO
 
     socket.emit('motor', createOrder(speedLeft, speedRight, time));
 }

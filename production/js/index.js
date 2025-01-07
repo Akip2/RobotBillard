@@ -150,12 +150,13 @@ window.addEventListener("load", () => {
             // Get the position of a click on the simulator
             console.log("Simulator : (" + x + ", " + y + ")");
             // turnRobot(socket, 90)
+            // moveRobotForward(socket, 50);
             moveRobotTo(socket, 0, x, y);
+            // turnRobotInCircle(socket, 10, 360);
         } else {
             // Get the position of a click on the camera
             console.log("Camera : (" + x + ", " + y + ")");
             moveRobotTo(socket, 0, x, y);
-            // turnRobotInCircle(socket, 0,0,0);
         }
     });
 
