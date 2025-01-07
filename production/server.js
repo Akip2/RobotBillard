@@ -69,6 +69,14 @@ io.sockets.on("connection", function (socket) {
 
         console.log("Socket disconnected");
     });
+
+    socket.on("get-robots", function () {
+        console.log("serveur : get-robots");
+        const robots = robotSockets.map(robotSocket => ({
+            name: `Robot ${robotSocket.id.substring(0, 5)}`
+        }));
+        socket.emit("robots-list", robots);
+    });
 });
 
 console.log(`Server is running on localhost:${port}`);

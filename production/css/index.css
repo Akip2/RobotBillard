@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+NZ:wght@100..400&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 * {
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
     font-family: 'Rubik', sans-serif;
 }
 
@@ -15,11 +15,11 @@ body {
     min-height: 100%;
 }
 
-button:hover{
+button:hover {
     cursor: pointer;
 }
 
-select:hover{
+select:hover {
     cursor: pointer;
 }
 
@@ -71,7 +71,7 @@ main {
     from {
         transform: rotate(0);
     }
-    to{
+    to {
         transform: rotate(360deg);
     }
 }
@@ -100,13 +100,13 @@ header {
 }
 
 /* first button of the list (set the radius for its left angles) */
-#views-list>*:first-child {
+#views-list > *:first-child {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
 
 /* last button of the list (set the radius for its right angles) */
-#views-list>*:last-child {
+#views-list > *:last-child {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
@@ -180,13 +180,12 @@ canvas {
 /* LEFT PART : GO and SCENARIOS */
 
 
-#go-scenarios {
+#robots-go-scenarios {
     flex-direction: column;
     align-items: center;
 }
 
-#div-scenarios {
-    margin-top: 3rem; /* distance from the button GO */
+.div-choice {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -197,7 +196,7 @@ canvas {
     border-radius: 100%;
     width: 10rem;
     height: 10rem;
-    margin: 1rem;
+    margin: 2rem 1rem 2rem 1rem;
 
     /* text */
     font-size: 3rem;
@@ -211,7 +210,7 @@ canvas {
 }
 
 #go-btn:hover {
-    margin: 0.5rem;
+    margin: 2rem 1rem 1rem 1rem;
 
     width: 11rem;
     height: 11rem;
@@ -220,7 +219,7 @@ canvas {
 }
 
 #go-btn:active {
-    margin: 1rem;
+    margin: 2rem 1rem 2rem 1rem;
 
     width: 10rem;
     height: 10rem;
@@ -228,7 +227,7 @@ canvas {
     box-shadow: 3px 3px 5px 1px grey;
 }
 
-#text-scenarios {
+.text-up-to-select {
     font-size: 1.5rem;
     padding: 1rem;
 }
@@ -251,13 +250,13 @@ select {
     background: lightgrey;
 }
 
-.option-scenarios {
+.option {
     background-color: #F0F0F0;
 
     transition: all ease 0.2s;
 }
 
-.option-scenarios:hover {
+.option:hover {
     background-color: lightgrey;
 }
 
@@ -321,7 +320,7 @@ select {
 }
 
 #fleche:hover svg path,
-#fleche:active svg path{
+#fleche:active svg path {
     fill: green;
 }
 
@@ -409,10 +408,10 @@ footer {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.displayNone{
+.displayNone {
     display: none;
 }
 
-.displayFlex{
+.displayFlex {
     display: flex;
 }

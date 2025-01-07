@@ -21,20 +21,21 @@ const viewsList = document.querySelector("#views-list");
 const leftPart = document.querySelector("#left-part");
 const rightPart = document.querySelector("#right-part");
 
-// left part
+// LEFT PART
 const topTableSimulator = document.querySelector("#top-table-container");
 const reload = document.querySelector("#reload-btn");
 const configurationChoice = document.querySelector("#select-configuration");
 const canvasContainer = document.querySelector("#canvas-container");
 const canvas = document.querySelector("#canvas-output-video");
 
-// right part
-const viewGoScenarios = document.querySelector("#go-scenarios");
+// RIGHT PART
+const viewGoScenarios = document.querySelector("#robots-go-scenarios");
 const viewArrowControls = document.querySelector("#arrow-controls");
 
 // viewGoScenarios
 const goBtn = document.querySelector("#go-btn");
 const selectScenarios = document.querySelector("#select-scenarios");
+const selectRobots = document.querySelector("#select-curent-robot");
 
 // viewArrowControls
 const btnForward = document.querySelector("#btn-forward");
@@ -68,10 +69,11 @@ function createOrder(left, right, duration) {
 
 window.addEventListener("load", () => {
 
-    // Loader
-    setTimeout(() => {
-        loader.style.display = "none";
-    }, 1500);
+    findRobots();
+
+    selectRobots.addEventListener("change", (event) => {
+        // TODO
+    });
 
     // Reload the simulation
     reload.addEventListener("click", () => {
@@ -157,6 +159,11 @@ window.addEventListener("load", () => {
             console.log("Camera : (" + x + ", " + y + ")");
         }
     });
+
+    // Loader
+    setTimeout(() => {
+        loader.style.display = "none";
+    }, 1000);
 });
 
 // To show a view
@@ -232,11 +239,26 @@ function loadSimulator(configurationName) {
     table.run();
 }
 
+function findRobots() {
+    socket.emit("get-robots");
+}
+
+socket.on("robots-list", function (robots) {
+    if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
+        selectRobots.innerHTML = "";
+        robots.forEach(function (robot) {
+            let option = document.createElement("option");
+            option.text = robot.name;
+            selectRobots.appendChild(option);
+        });
+    }
+});
+
 socket.on('connect', function () {
     console.log("Connected to server with ID : ", socket.id);
 
     socket.on("motor", function (order) {
-        table.sendRobotOrder(order); //Send order to simulator
+        table.sendRobotOrder(order); // Send order to simulator
     });
 
     socket.on("ask-identity", function () {

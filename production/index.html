@@ -29,14 +29,14 @@
         <div class="displayNone" id="top-table-container">
             <button id="reload-btn">Recharger</button>
             <select name="scenarios" id="select-configuration">
-                <option value="Random" class="option-scenarios" selected>Random</option>
-                <option value="Billard" class="option-scenarios">Billard</option>
-                <option value="Foot" class="option-scenarios">Foot</option>
-                <option value="Facile" class="option-scenarios">Facile</option>
+                <option value="Random" class="option" selected>Random</option>
+                <option value="Billard" class="option">Billard</option>
+                <option value="Foot" class="option">Foot</option>
+                <option value="Facile" class="option">Facile</option>
             </select>
         </div>
         <div id="canvas-container">
-<!--            <video autoplay loop muted id="canvas-input-video" width="700" height="400" src="./video/aruco.mp4"></video>-->
+            <!--            <video autoplay loop muted id="canvas-input-video" width="700" height="400" src="./video/aruco.mp4"></video>-->
             <canvas class="displayFlex" id="canvas-output-video"></canvas>
         </div>
     </div>
@@ -81,14 +81,23 @@
             </datalist>
         </div>
 
-        <div class="part displayFlex" id="go-scenarios">
+        <div class="part displayFlex" id="robots-go-scenarios">
+            <div class="div-choice">
+                <p class="text-up-to-select">Robots disponibles :</p>
+                <select name="robots" id="select-curent-robot">
+                    <!-- here some robots which are available to control (added with javascript) -->
+                    <option value="default" class="option">Aucun robot disponible</option>
+                </select>
+            </div>
+
             <button id="go-btn">GO</button>
-            <div id="div-scenarios">
-                <p id="text-scenarios">Scénarios :</p>
+
+            <div class="div-choice">
+                <p class="text-up-to-select">Scénarios :</p>
                 <select name="scenarios" id="select-scenarios">
-                    <option value="default" class="option-scenarios">Choissez un scénario</option>
-                    <option value="Billard" class="option-scenarios">Billard</option>
-                    <option value="Autre" class="option-scenarios">Autre</option>
+                    <option value="default" class="option">Choissez un scénario</option>
+                    <option value="Billard" class="option">Billard</option>
+                    <option value="Autre" class="option">Autre</option>
                 </select>
             </div>
         </div>
