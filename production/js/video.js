@@ -87,10 +87,12 @@ function processVideo(video, canvas, ctx) {
 
                 let corners = arucos.slice(0,4);
                 let [topLeft, topRight, bottomRight, bottomLeft] = corners;
-                let robotAruco = arucos[4];
+                let robotsArucos = arucos.slice(4, arucos.length);
 
-                console.log(robotAruco);
-
+                //print every robot position
+                for(let i = 0; i < robotsArucos.length; i++){
+                    console.log(robotsArucos[i]);
+                }
 
                 const markersVector = new cv.MatVector();
                 const mv = new cv.Mat(corners.length, 1, cv.CV_32SC2);
