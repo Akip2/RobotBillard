@@ -201,7 +201,9 @@ unsigned long messageTimestamp = 0;
 void loop() {
   socketIO.loop();
 
-  if ((millis() - timeLastOrder) < motorDuration) {
+  uint64_t now = millis();
+
+  if ((now - timeLastOrder) < motorDuration) {
     leftMotor->run(leftMotorDirection);
     rightMotor->run(rightMotorDirection);
     leftMotor->setSpeed(leftMotorSpeed);
@@ -211,7 +213,7 @@ void loop() {
     rightMotor->run(RELEASE);
   }
 
-  uint64_t now = millis();
+  
 
   if (now - messageTimestamp > 2000) {
     messageTimestamp = now;

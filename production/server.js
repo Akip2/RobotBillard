@@ -55,6 +55,28 @@ io.sockets.on("connection", function (socket) {
         }
     });
 
+    // socket.on("motor", function (val) {
+    //     console.log("motor" + JSON.stringify(val));
+    //
+    //     let ipRobot = val.ipRobot;
+    //     console.log(ipRobot)
+    //     console.log("val avant");
+    //     console.log(val);
+    //     delete val.ipRobot;
+    //     console.log("val apres");
+    //     console.log(val);
+    //
+    //     if (simulatorMode) {
+    //         socket.emit("motor", val); // We send the request back to the simulator
+    //     } else {
+    //         robotSockets.forEach(robotSocket => {
+    //             if (robotSocket.handshake.address === ipRobot) {
+    //                 robotSocket.emit("motor", val);
+    //             }
+    //         })
+    //     }
+    // });
+
     socket.on("is-interface", function (mode) { // We learn that the socket is the interface
         robotSockets.splice(robotSockets.indexOf(socket), 1);
         simulatorMode = (mode === "simulator");
@@ -82,10 +104,14 @@ console.log(`Server is running on localhost:${port}`);
 function updateRobotsList(socket) {
     let robots = [];
 
+    console.log(socket.handshake.address);
+
+    // We check if the robot has already been listed, if not, we add it to the robots list
     robotSockets.forEach(robotSocket => {
-        robots.push({
-            name: `Robot ${robotSocket.id}`
-        });
+        let adresseIp = robotSocket.handshake.address;
+        if (!robots.includes(adresseIp)) {
+            robots.push(adresseIp);
+        }
     })
 
     socket.emit("robots-list", robots);

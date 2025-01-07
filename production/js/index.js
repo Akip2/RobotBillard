@@ -49,6 +49,7 @@ const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
 let curentConfig = "Random";
+// let curentRobot;
 let vue = null;
 let table = null;
 let camera = null;
@@ -65,7 +66,7 @@ window.addEventListener("load", () => {
     // socket.emit('get-robots');
 
     selectRobots.addEventListener("change", (event) => {
-        // TODO
+        // curentRobot = event.target.value;
     });
 
     // Reload the simulation
@@ -89,16 +90,16 @@ window.addEventListener("load", () => {
         speedDroit = cursorRightMotor.value;
     });
     btnForward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, speedDroit, duration));
+        socket.emit('motor', createOrder(speedGauche, speedDroit, duration/*, curentRobot*/));
     });
     btnBackward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration));
+        socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration/*, curentRobot*/));
     });
     btnTurnRight.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration));
+        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration/*, curentRobot*/));
     });
     btnTurnLeft.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration));
+        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration/*, curentRobot*/));
     });
 
     // Change curent view
@@ -255,11 +256,9 @@ function loadSimulator(configurationName) {
 socket.on("robots-list", function (robots) {
     selectRobots.innerHTML = "";
     if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
-        console.log("ni null ni vide");
         robots.forEach(function (robot) {
-            console.log(robot)
             let option = document.createElement("option");
-            option.text = robot.name;
+            option.text = robot;
             selectRobots.appendChild(option);
         });
     } else {
@@ -270,6 +269,7 @@ socket.on("robots-list", function (robots) {
 });
 
 socket.on('connect', function () {
+
     console.log("Connected to server with ID : ", socket.id);
 
     socket.on("motor", function (order) {
