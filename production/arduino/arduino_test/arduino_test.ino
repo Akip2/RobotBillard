@@ -48,7 +48,7 @@ int motorDuration = 0;
 
 bool changeMotors = false;
 
-int nbOrder = 0;
+int timeLastOrder = 0;
 
 /*
   Handles what happens when an event is received
@@ -78,8 +78,6 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
       name_event = String(doc[0]);
 
       if (name_event == "motor") {
-
-        nbOrder = nbOrder + 1;
 
         int left = doc[1]["left"];
         int right = doc[1]["right"];
@@ -125,6 +123,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
 
         motorDuration = duration;
         changeMotors = true;
+        timeLastOrder = millis();
       }
       break;
     case sIOtype_ACK:
@@ -202,23 +201,14 @@ unsigned long messageTimestamp = 0;
 void loop() {
   socketIO.loop();
 
-  // Motors are changed here
-  if (changeMotors || ) {
-
+  if ((millis() - timeLastOrder) < motorDuration) {
     leftMotor->run(leftMotorDirection);
     rightMotor->run(rightMotorDirection);
     leftMotor->setSpeed(leftMotorSpeed);
     rightMotor->setSpeed(rightMotorSpeed);
-
-    int i = 0;
-    USE_SERIAL.printf("nborder before: %u\n", oldNbOrder);
-
-    delay(motorDuration);
-
+  } else {
     leftMotor->run(RELEASE);
     rightMotor->run(RELEASE);
-
-    changeMotors = false;
   }
 
   uint64_t now = millis();
