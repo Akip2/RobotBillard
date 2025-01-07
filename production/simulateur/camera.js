@@ -1,5 +1,5 @@
-import {simulatorCameraFPS, ballRadius} from "./params.js";
-import {detectCircles, drawDetectedCircles, preProcess} from "../js/video-functions.js";
+import {ballRadius, simulatorCameraFPS} from "./params.js";
+import {detectCircles, preProcess} from "../js/video-functions.js";
 
 class Camera {
     constructor(canvasContainer, vue) {
@@ -41,6 +41,7 @@ class Camera {
 
             this.ballsPositions = ballsDetected;
             this.vue.drawDetectedCircles(this.ballsPositions);
+
         } catch
             (err) {
             console.error(err);
