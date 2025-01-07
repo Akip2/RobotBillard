@@ -2,6 +2,7 @@ import {detectAndDrawArucos, detectCircles, drawDetectedCircles, HEIGHT, preProc
 import {calculateBallSize, distanceBetweenPoints} from "./brain.js";
 
 let stillContinue = true;
+let robots = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("canvas-output-video");
@@ -79,11 +80,11 @@ function processVideo(video, canvas, ctx) {
 
                 let corners = arucos.slice(0, 4);
                 let [topLeft, topRight, bottomRight, bottomLeft] = corners;
-                let robotsArucos = arucos.slice(4, arucos.length);
+                robots = arucos.slice(4, arucos.length);
 
                 //print every robot position
-                for (let i = 0; i < robotsArucos.length; i++) {
-                    console.log(robotsArucos[i]);
+                for (let i = 0; i < robots.length; i++) {
+                    console.log(robots[i]);
                 }
 
                 const markersVector = new cv.MatVector();
@@ -142,4 +143,12 @@ function processVideo(video, canvas, ctx) {
 
 export function setSillContinue(boolean) {
     stillContinue = boolean;
+}
+
+export function getRobots(){
+    return robots;
+}
+
+export function getRobot(index){
+    return robots[index];
 }
