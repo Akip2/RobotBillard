@@ -48,6 +48,7 @@ const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
 let curentConfig = "Random";
+let curentRobot;
 let vue = null;
 let table = null;
 let currentView = "camera";
@@ -62,7 +63,7 @@ window.addEventListener("load", () => {
     // socket.emit('get-robots');
 
     selectRobots.addEventListener("change", (event) => {
-        // TODO
+        curentRobot = event.target.value;
     });
 
     // Reload the simulation
@@ -86,16 +87,16 @@ window.addEventListener("load", () => {
         speedDroit = cursorRightMotor.value;
     });
     btnForward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, speedDroit, duration));
+        socket.emit('motor', createOrder(speedGauche, speedDroit, duration, curentRobot));
     });
     btnBackward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration));
+        socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration, curentRobot));
     });
     btnTurnRight.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration));
+        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration, curentRobot));
     });
     btnTurnLeft.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration));
+        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration, curentRobot));
     });
 
     // Change curent view
@@ -262,8 +263,6 @@ socket.on("robots-list", function (robots) {
 });
 
 socket.on('connect', function () {
-    console.log("Connected to server with ID : ", socket.id);
-
     socket.on("motor", function (order) {
         table.sendRobotOrder(order); // Send order to simulator
     });
