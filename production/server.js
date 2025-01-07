@@ -46,11 +46,21 @@ io.sockets.on("connection", function (socket) {
     socket.on("motor", function (val) {
         console.log("motor" + JSON.stringify(val));
 
+        let ipRobot = val.ipRobot;
+        console.log(ipRobot)
+        console.log("val avant");
+        console.log(val);
+        delete val.ipRobot;
+        console.log("val apres");
+        console.log(val);
+
         if (simulatorMode) {
             socket.emit("motor", val); // We send the request back to the simulator
         } else {
             robotSockets.forEach(robotSocket => {
-                robotSocket.emit("motor", val); // We send the request to each robot
+                if (robotSocket.handshake.address === ipRobot) {
+                    robotSocket.emit("motor", val);
+                }
             })
         }
     });
