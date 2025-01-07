@@ -42,7 +42,7 @@ export function drawAndGetDirectionOfAruco(frame, cornersOfAruco) {
     cv.line(frame, bottomCenter, topCenter, new cv.Scalar(0, 255, 0), 2);
     cv.rectangle(frame, topCenter, topCenter, new cv.Scalar(255, 0, 0), 15);
 
-    return angle.toFixed(2);
+    return angle;
 }
 
 export function detectAndDrawArucos(frame) {

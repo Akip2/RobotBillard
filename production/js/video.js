@@ -84,7 +84,7 @@ function processVideo(video, canvas, ctx) {
 
                 //print every robot position
                 for (let i = 0; i < robots.length; i++) {
-                    console.log(robots[i]);
+                    // console.log(robots[i]);
                 }
 
                 const markersVector = new cv.MatVector();
