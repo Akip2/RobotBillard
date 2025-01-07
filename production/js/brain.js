@@ -80,15 +80,15 @@ export function calculateBallSize(tableLength) {
     return (tableLength * ballRealSize) / tableRealSize;
 }
 
-export function createOrder(left, right, duration, ipRobot) {
-    console.log("bien ici : ");
-    console.log(ipRobot)
+export function createOrder(left, right, duration/*, ipRobot*/) {
+    // console.log("bien ici : ");
+    // console.log(ipRobot)
     return {
         left: left,
         right: right,
         duration: duration,
         // time: Date.now()
         time: performance.now(),
-        ipRobot: ipRobot,
+        // ipRobot: ipRobot,
     };
 }
