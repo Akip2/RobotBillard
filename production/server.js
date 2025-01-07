@@ -34,6 +34,8 @@ io.sockets.on("connection", function (socket) {
     if (!socketIds.includes(socket.id)) {
         robotSockets.push(socket); // We assume the connecting socket is a robot
         socketIds.push(socket.id);
+
+        updateRobotsList(socket)
     }
 
     socket.on('event_name', function (val) {
@@ -65,18 +67,21 @@ io.sockets.on("connection", function (socket) {
     socket.on("disconnect", function () {
         if (robotSockets.includes(socket)) { // The disconnecting socket is a robot
             robotSockets.splice(robotSockets.indexOf(socket), 1);
+
+            updateRobotsList(socket);
         }
 
         console.log("Socket disconnected");
     });
 
-    socket.on("get-robots", function () {
-        console.log("serveur : get-robots");
-        const robots = robotSockets.map(robotSocket => ({
-            name: `Robot ${robotSocket.id.substring(0, 5)}`
-        }));
-        socket.emit("robots-list", robots);
-    });
 });
 
 console.log(`Server is running on localhost:${port}`);
+
+
+function updateRobotsList(socket) {
+    const robots = robotSockets.map(robotSocket => ({
+        name: `Robot ${robotSocket.id.substring(0, 5)}`
+    }));
+    socket.emit("robots-list", robots);
+}

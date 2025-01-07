@@ -59,8 +59,6 @@ let duration = 1000;
 
 window.addEventListener("load", () => {
 
-    findRobots();
-
     selectRobots.addEventListener("change", (event) => {
         // TODO
     });
@@ -243,10 +241,6 @@ function loadSimulator(configurationName) {
 
     colController.createEvent(vue.engine);
     table.run();
-}
-
-function findRobots() {
-    socket.emit("get-robots");
 }
 
 socket.on("robots-list", function (robots) {
