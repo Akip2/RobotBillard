@@ -87,16 +87,16 @@ window.addEventListener("load", () => {
         speedDroit = cursorRightMotor.value;
     });
     btnForward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, speedDroit, duration, curentRobot));
+        socket.emit('motor', createOrder(speedGauche, speedDroit, duration/*, curentRobot*/));
     });
     btnBackward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration, curentRobot));
+        socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration/*, curentRobot*/));
     });
     btnTurnRight.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration, curentRobot));
+        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration/*, curentRobot*/));
     });
     btnTurnLeft.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration, curentRobot));
+        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration/*, curentRobot*/));
     });
 
     // Change curent view
