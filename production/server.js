@@ -85,7 +85,7 @@ function updateRobotsList(socket) {
     console.log(socket.handshake.address);
 
     robotSockets.forEach(robotSocket => {
-        if (!robots.contains(`Robot ${robotSocket.handshake.address}`)) {
+        if (!robots.includes(`Robot ${robotSocket.handshake.address}`)) {
             robots.push({
                 name: `Robot ${robotSocket.handshake.address}`
             });
