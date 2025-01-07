@@ -82,11 +82,11 @@ console.log(`Server is running on localhost:${port}`);
 function updateRobotsList(socket) {
     let robots = [];
 
-    console.log(socket.conn.remoteAddress);
+    console.log(socket.handshake.address);
 
     robotSockets.forEach(robotSocket => {
         robots.push({
-            name: `Robot ${robotSocket.remoteAddress}`
+            name: `Robot ${robotSocket.handshake.address}`
         });
     })
 
