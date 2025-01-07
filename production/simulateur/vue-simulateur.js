@@ -1,5 +1,5 @@
 import {Body, Composite, Engine, Mouse, MouseConstraint, Render, Runner, World,} from "./global.js";
-import {height, width} from "./params.js";
+import {height, width, ballRadius} from "./params.js";
 
 class VueSimulateur {
     constructor(canvasContainer) {
@@ -55,6 +55,14 @@ class VueSimulateur {
     run() {
         Render.run(this.render);
         Runner.run(this.runner, this.engine);
+
+        this.overlay = document.createElement("canvas");
+        this.overlay.width = width;
+        this.overlay.height = height;
+        this.overlay.style.pointerEvents="none";
+        this.overlay.style.backgroundImage = "none";
+
+        this.canvasContainer.appendChild(this.overlay);
     }
 
     setup(table) {
@@ -89,6 +97,19 @@ class VueSimulateur {
         this.render.context = null;
 
         Composite.clear(this.engine.world, false);
+    }
+
+    drawDetectedCircles(ballsPositions) {
+        const ctx = this.overlay.getContext("2d");
+        ctx.clearRect(0, 0, this.overlay.width, this.overlay.height);
+
+        ballsPositions.forEach((ballPosition) => {
+            ctx.fillStyle = "yellow";
+
+            ctx.beginPath();
+            ctx.arc(ballPosition.x, ballPosition.y, ballRadius, 0, 2 * Math.PI);
+            ctx.stroke()
+        })
     }
 }
 

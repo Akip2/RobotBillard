@@ -225,7 +225,7 @@ function loadSimulator(configurationName) {
     }
 
     vue = new VueSimulateur(canvasContainer);
-    camera = new Camera(canvasContainer);
+    camera = new Camera(canvasContainer, vue);
 
     curentConfig = configurationName;
 

@@ -2,10 +2,10 @@ import {simulatorCameraFPS, ballRadius} from "./params.js";
 import {detectCircles, drawDetectedCircles, preProcess} from "../js/video-functions.js";
 
 class Camera {
-    constructor(canvasContainer) {
+    constructor(canvasContainer, vue) {
         this.canvasContainer = canvasContainer;
-        this.ballsPosition = [];
-
+        this.ballsPositions = [];
+        this.vue = vue;
         this.analysisInterval = null;
     }
 
@@ -27,16 +27,9 @@ class Camera {
             let preProcessedImg = preProcess(imgData);
 
             let circles = detectCircles(preProcessedImg, ballRadius);
-
-            /*
-            let finalImage = new cv.Mat();
-            drawDetectedCircles(finalImage, circles, mv, true);
-            cv.imshow(canvas, finalImage);
-            */
-
             let ballsDetected = [];
 
-            for (let i = 0; i < circles.cols; ++i) {
+            for (let i = 0; i < circles.cols; i++) {
                 let circle = circles.data32F.slice(i * 3, (i + 1) * 3);
                 let center = new cv.Point(circle[0], circle[1]);
 
@@ -46,9 +39,8 @@ class Camera {
             preProcessedImg.delete();
             circles.delete();
 
-            console.log(ballsDetected);
-            this.ballsPosition = ballsDetected;
-
+            this.ballsPositions = ballsDetected;
+            this.vue.drawDetectedCircles(this.ballsPositions);
         } catch
             (err) {
             console.error(err);
@@ -56,7 +48,7 @@ class Camera {
     }
 
     getBallsPositions(){
-        return this.ballsPosition;
+        return this.ballsPositions;
     }
 }
 
