@@ -263,6 +263,9 @@ socket.on("robots-list", function (robots) {
 });
 
 socket.on('connect', function () {
+
+    console.log("Connected to server with ID : ", socket.id);
+
     socket.on("motor", function (order) {
         table.sendRobotOrder(order); // Send order to simulator
     });
