@@ -145,5 +145,6 @@ export function getRealRobots() {
 }
 
 export function getRealRobot(index) {
+    console.log(robots)
     return robots[index];
 }

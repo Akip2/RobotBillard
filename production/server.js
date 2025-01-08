@@ -34,6 +34,10 @@ io.sockets.on("connection", function (socket) {
     if (!socketIps.includes(socket.handshake.address)) {
         robotSockets.push(socket); // We assume the connecting socket is a robot
         socketIps.push(socket.handshake.address);
+    } else { //Socket with this ip already exists, we replace it with the new one
+        let index = socketIps.indexOf(socket.handshake.address);
+        robotSockets[index] = socket
+        console.log("Socket replaced: " + socket.handshake.address);
     }
 
     // updateRobotsList(socket);
@@ -86,14 +90,16 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on("disconnect", function () {
+        console.log("Socket disconnected : ", socket.handshake.address);
         if (socketIps.includes(socket.handshake.address)) { // The disconnecting socket is a robot
-            console.log("ici non");
-            const removed = robotSockets.splice(robotSockets.indexOf(socket), 1);
+            let index = socketIps.indexOf(socket.handshake.address);
+            console.log(index);
+            const removed = robotSockets.splice(index, 1);
+            socketIps.splice(index, 1);
+
             console.log("retiré : ");
             console.log(removed);
-            console.log("Socket disconnected : ", socket.handshake.address);
         }
-        console.log("ici oui");
         updateRobotsList(socket);
     });
 });
