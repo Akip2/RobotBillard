@@ -10,7 +10,9 @@
 
 <div id="loader-container">
     <div class="loader">
-        <div class="inner-circle"></div>
+        <div class="inner-circle">
+            <img src="img/ball8.png">
+        </div>
     </div>
 </div>
 
@@ -26,14 +28,20 @@
 <main>
     <!-- Left part which contains canvas and buttons to change view -->
     <div class="part displayFlex" id="left-part">
-        <div class="displayNone" id="top-table-container">
-            <button id="reload-btn">Recharger</button>
-            <select name="scenarios" id="select-configuration">
+        <div id="top-table-container">
+            <button id="reload-btn" class="displayNone">Recharger</button>
+            <select name="scenarios" id="select-configuration" class="select-top-table-container displayNone">
                 <option value="Random" class="option" selected>Random</option>
                 <option value="Billard" class="option">Billard</option>
                 <option value="Foot" class="option">Foot</option>
                 <option value="Facile" class="option">Facile</option>
             </select>
+            <div>
+                <select name="robots" id="select-robot" class="select-top-table-container displayFlex">
+                    <!-- here some robots which are available to control (added with javascript) -->
+                    <option value="default" class="option">Aucun robot disponible</option>
+                </select>
+            </div>
         </div>
         <div id="canvas-container">
             <!--            <input type="number" id="tmp-1" min="10" max="300" step="10" value="100">-->
@@ -84,14 +92,6 @@
         </div>
 
         <div class="part displayFlex" id="robots-go-scenarios">
-            <div class="div-choice">
-                <p class="text-up-to-select">Robots disponibles :</p>
-                <select name="robots" id="select-curent-robot">
-                    <!-- here some robots which are available to control (added with javascript) -->
-                    <option value="default" class="option">Aucun robot disponible</option>
-                </select>
-            </div>
-
             <button id="go-btn">GO</button>
 
             <div class="div-choice">
@@ -103,7 +103,6 @@
                 </select>
             </div>
         </div>
-
     </div>
 </main>
 

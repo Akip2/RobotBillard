@@ -28,6 +28,7 @@ const rightPart = document.querySelector("#right-part");
 const topTableSimulator = document.querySelector("#top-table-container");
 const reload = document.querySelector("#reload-btn");
 const configurationChoice = document.querySelector("#select-configuration");
+const robotChoice = document.querySelector("#select-robot");
 const canvasContainer = document.querySelector("#canvas-container");
 const canvas = document.querySelector("#canvas-output-video");
 
@@ -38,7 +39,7 @@ const viewArrowControls = document.querySelector("#arrow-controls");
 // viewGoScenarios
 const goBtn = document.querySelector("#go-btn");
 const selectScenarios = document.querySelector("#select-scenarios");
-const selectRobots = document.querySelector("#select-curent-robot");
+const selectRobots = document.querySelector("#select-robot");
 
 // viewArrowControls
 const btnForward = document.querySelector("#btn-forward");
@@ -125,23 +126,26 @@ window.addEventListener("load", () => {
             case "camera":
                 showCanvas();
                 tryAdd(viewGoScenarios);
-                tryRemove(viewArrowControls)
-                hide(topTableSimulator);
+                tryRemove(viewArrowControls);
+                tryRemove(reload);
+                tryRemove(configurationChoice);
                 setStillContinue(true);
                 break;
             case "simulator":
                 hide(canvas);
                 loadSimulator();
                 tryAdd(viewGoScenarios);
-                tryAdd(viewArrowControls)
-                show(topTableSimulator);
+                tryAdd(viewArrowControls);
+                tryAdd(reload);
+                tryAdd(configurationChoice);
                 setStillContinue(false);
                 break;
             case "manual":
                 showCanvas();
                 tryRemove(viewGoScenarios);
-                tryAdd(viewArrowControls)
-                hide(topTableSimulator);
+                tryAdd(viewArrowControls);
+                tryRemove(reload);
+                tryRemove(configurationChoice);
                 setStillContinue(true);
                 break;
             default:
@@ -178,7 +182,7 @@ window.addEventListener("load", () => {
     // Loader
     setTimeout(() => {
         loader.style.display = "none";
-    }, 1000);
+    }, 1500);
 });
 
 // To show a view
@@ -288,30 +292,35 @@ export function getRobot(index) {
     return getRealRobot(index);
 }
 
-socket.on("robots-list", function (robots) {
-    selectRobots.innerHTML = "";
-    if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
-        robots.forEach(function (robot) {
-            let option = document.createElement("option");
-            option.text = robot;
-            selectRobots.appendChild(option);
-        });
-    } else {
-        let option = document.createElement("option");
-        option.text = "Aucun robot disponible";
-        selectRobots.appendChild(option);
-    }
-});
+function addRobot(robotName) {
+    let option = document.createElement("option");
+    option.text = robotName;
+    selectRobots.appendChild(option);
+}
+
 
 socket.on('connect', function () {
 
     console.log("Connected to server with ID : ", socket.id);
 
     socket.on("motor", function (order) {
+        console.log("simulator : motor order");
         table.sendRobotOrder(order); // Send order to simulator
     });
 
     socket.on("ask-identity", function () {
         socket.emit("is-interface", currentView);
+    });
+
+    socket.on("robots-list", function (robots) {
+        console.log("navigateur : socket on robot-list");
+        selectRobots.innerHTML = "";
+        if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
+            robots.forEach(function (robot) {
+                addRobot(robot);
+            });
+        } else {
+            addRobot("Aucun robot disponible");
+        }
     });
 });
