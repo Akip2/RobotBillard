@@ -10,6 +10,7 @@ import FootConfig from "../simulateur/configurations/foot-config.js";
 
 import {getRealRobot, getRealRobots, setStillContinue} from "./video.js";
 import {createOrder, moveRobotTo} from "./brain.js";
+import {startTestScenario} from "./scenarios/testScenario.js";
 
 const socket = io(); // Connection to server
 
@@ -56,6 +57,8 @@ let camera = null;
 
 let currentView = "camera";
 
+let currentScenario = null;
+
 let speedGauche = 130;
 let speedDroit = 130;
 
@@ -64,6 +67,18 @@ let duration = 1000;
 window.addEventListener("load", () => {
 
     // socket.emit('get-robots');
+
+    selectScenarios.addEventListener("change", (event) => {
+        currentScenario = event.target.value;
+    });
+
+    goBtn.addEventListener("click", () => {
+        switch (currentScenario) {
+            case "Billard":
+                startTestScenario(socket, 0);
+                break;
+        }
+    });
 
     selectRobots.addEventListener("change", (event) => {
         // curentRobot = event.target.value;

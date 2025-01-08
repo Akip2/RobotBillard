@@ -39,6 +39,8 @@ export function moveRobotTo(socket, index, x, y) {
         targetAngle += 360;
     }
 
+    console.log(x, y)
+
     // Step 1 : turn
     let turnInterval = setInterval(() => {
         let robotAngle = getRobot(index).orientation % 360;
