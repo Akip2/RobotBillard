@@ -37,7 +37,11 @@ export function drawAndGetDirectionOfAruco(frame, cornersOfAruco) {
         (bottomRightCornerOfAruco[1] + bottomLeftCornerOfAruco[1]) / 2
     );
 
-    let angle = Math.atan2(bottomCenter.y - topCenter.y, topCenter.x - bottomCenter.x) / Math.PI;
+    let angle = Math.atan2(bottomCenter.y - topCenter.y, topCenter.x - bottomCenter.x) * (180 / Math.PI);
+
+    if (angle < 0) {
+        angle += 360;
+    }
 
     cv.line(frame, bottomCenter, topCenter, new cv.Scalar(0, 255, 0), 2);
     cv.rectangle(frame, topCenter, topCenter, new cv.Scalar(255, 0, 0), 15);

@@ -1,4 +1,4 @@
-import {getRobot} from "./video.js";
+import {getRobot} from "./index.js";
 
 export function moveRobotForward(socket, distance, time = 3000) {
     // dist = 0,6245 * puissance - 11,66;
@@ -21,19 +21,48 @@ export function moveRobotForward(socket, distance, time = 3000) {
     socket.emit('motor', createOrder(realSpeed, realSpeed, duration));
 }
 
-export function turnRobot(socket, radianAngle) {
-    // let time = (1330 / 2) * Math.abs(radianAngle / Math.PI);
-    let time = 580 * Math.abs(radianAngle / Math.PI);
+export function turnRobot(socket, angle) {
+    let time = (1330 / 2) * (Math.abs(angle * (Math.PI / 180)) / Math.PI);
 
-    // console.log(Math.abs(radianAngle / Math.PI));
-    // console.log(time);
-
-    if (radianAngle < 0) {
-        socket.emit('motor', createOrder(-255, 255, time));
-        // socket.emit('motor', createOrder(-128, 128, time));
+    if (angle > 180) {
+        socket.emit('motor', createOrder(-128, 128, time));
     } else {
-        socket.emit('motor', createOrder(255, -255, time));
+        socket.emit('motor', createOrder(128, -128, time));
     }
+}
+
+export function moveRobotTo(socket, index, x, y) {
+    let robotPosition = getRobot(index).position;
+    let targetAngle = Math.atan2(y - robotPosition.y, x - robotPosition.x) * (180 / Math.PI);
+
+    if (targetAngle < 0) {
+        targetAngle += 360;
+    }
+
+    // Step 1 : turn
+    let turnInterval = setInterval(() => {
+        let robotAngle = getRobot(index).orientation % 360;
+        let delta = Math.abs(targetAngle - robotAngle);
+
+        if (delta > 10) {
+            turnRobot(socket, 15);
+        }/* else if (delta < -10) {
+            turnRobot(socket, 180 + 15);
+        } */ else {
+            // Step 2 : move forward
+            let forwardInterval = setInterval(() => {
+                robotPosition = getRobot(index).position;
+                let distance = distanceBetweenPoints(robotPosition, {x: x, y: y}) / (calculateBallSize(460) / 4.5)
+
+                if (distance > 20) {
+                    moveRobotForward(socket, 5);
+                } else {
+                    clearInterval(forwardInterval);
+                }
+            }, 100);
+            clearInterval(turnInterval);
+        }
+    }, 100);
 }
 
 export function turnRobotInCircle(socket, radius, angle) {
@@ -43,23 +72,7 @@ export function turnRobotInCircle(socket, radius, angle) {
     let speedRight = 128;
     let time = 2300;
 
-    // TODO
-
     socket.emit('motor', createOrder(speedLeft, speedRight, time));
-}
-
-export function moveRobotTo(socket, x, y) {
-    let robot = getRobot(0);
-    let robotAngle = robot.orientation;
-
-    let distance = distanceBetweenPoints(robot.position, {x: x, y: y}) / (calculateBallSize(460) / 4.5);
-    let angle = robotAngle + Math.atan2(robot.position.y - y, x - robot.position.x);
-
-    // console.log(distance)
-    // console.log(angle)
-
-    turnRobot(socket, angle);
-    moveRobotForward(socket, distance);
 }
 
 export function distanceBetweenPoints(p1, p2) {

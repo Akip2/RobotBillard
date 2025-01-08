@@ -8,7 +8,7 @@ import BillardConfig from "../simulateur/configurations/billard-config.js";
 import EasyConfig from "../simulateur/configurations/easy-config.js";
 import FootConfig from "../simulateur/configurations/foot-config.js";
 
-import {setStillContinue} from "./video.js";
+import {getRealRobot, getRealRobots, setStillContinue} from "./video.js";
 import {createOrder, moveRobotTo} from "./brain.js";
 
 const socket = io(); // Connection to server
@@ -72,6 +72,8 @@ window.addEventListener("load", () => {
 
     // Reload the simulation
     reload.addEventListener("click", () => {
+        camera.stop();
+        vue.clearSimulation();
         loadSimulator(curentConfig);
     });
 
@@ -153,25 +155,14 @@ window.addEventListener("load", () => {
         if (isSimulator) {
             // Get the position of a click on the simulator
             console.log("Simulator : (" + x + ", " + y + ")");
-            // moveRobotForward(socket, 100, 3000);
-            // turnRobot(socket, Math.PI);
-            // moveRobotForward(socket, 100, 3000);
-            // turnRobot(socket, Math.PI / 2);
+            // turnRobot(socket, 90)
+            // moveRobotForward(socket, 50);
+            moveRobotTo(socket, 0, x, y);
+            // turnRobotInCircle(socket, 10, 360);
         } else {
             // Get the position of a click on the camera
             console.log("Camera : (" + x + ", " + y + ")");
-
-            //TODO
-            //parseFloat(document.getElementById("tmp-1").value)
-            // turnRobot(socket, Math.PI / parseFloat(document.getElementById("tmp-1").value));
-
-            // moveRobotForward(socket, 50, 1000);
-            // turnRobot(socket, Math.PI);
-            // moveRobotForward(socket, 50, 1000);
-            // turnRobot(socket, Math.PI / 2);
-
-            // turnRobotInCircle(socket, 0,0,0);
-            moveRobotTo(socket, x, y);
+            moveRobotTo(socket, 0, x, y);
         }
     });
 
@@ -213,6 +204,9 @@ function showCanvas() {
     if (canvas.classList.contains("displayNone")) {
         let potentialCanvas = document.querySelector("#canvas-simulateur");
         if (potentialCanvas != null) {
+            canvasContainer.classList.remove("simulator-container");
+            camera.stop();
+            vue.clearSimulation();
             hide(potentialCanvas);
             show(canvas);
         }
@@ -220,16 +214,9 @@ function showCanvas() {
 }
 
 function loadSimulator(configurationName) {
-    if (vue !== null) {
-        vue.clearSimulation();
-    }
-
-    if(camera !== null){
-        camera.stop();
-    }
-
+    canvasContainer.classList.add("simulator-container");
     vue = new VueSimulateur(canvasContainer);
-    camera = new Camera(canvasContainer);
+    camera = new Camera(canvasContainer, vue);
 
     curentConfig = configurationName;
 
@@ -255,6 +242,27 @@ function loadSimulator(configurationName) {
 
     colController.createEvent(vue.engine);
     table.run();
+}
+
+export function getRobots() {
+    if (currentView === "simulator") {
+        return table.robots;
+    }
+    return getRealRobots();
+}
+
+export function getRobot(index) {
+    if (currentView === "simulator") {
+        return {
+            position:
+                {
+                    x: table.robots[index].body.position.x,
+                    y: table.robots[index].body.position.y
+                },
+            orientation: table.robots[index].body.angle * (180 / Math.PI)
+        };
+    }
+    return getRealRobot(index);
 }
 
 socket.on("robots-list", function (robots) {
