@@ -40,6 +40,7 @@ const viewArrowControls = document.querySelector("#arrow-controls");
 const goBtn = document.querySelector("#go-btn");
 const selectScenarios = document.querySelector("#select-scenarios");
 const selectRobots = document.querySelector("#select-robot");
+const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 
 // viewArrowControls
 const btnForward = document.querySelector("#btn-forward");
@@ -50,7 +51,7 @@ const cursorLeftMotor = document.querySelector("#cursor-left-motor");
 const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
-let currentRobotIp = null;
+let currentRobotId = null;
 let vue = null;
 let table = null;
 let camera = null;
@@ -82,8 +83,13 @@ window.addEventListener("load", () => {
     });
 
     selectRobots.addEventListener("change", (event) => {
-        currentRobotIp = event.target.value;
+        currentRobotId = event.target.value;
     });
+
+    selectRobotsSimulator.addEventListener("change", (event) => {
+        let optionName = event.target.value;
+        currentRobotId = optionName[optionName.length - 1];
+    })
 
     // Reload the simulation
     reload.addEventListener("click", () => {
@@ -106,16 +112,16 @@ window.addEventListener("load", () => {
         speedDroit = cursorRightMotor.value;
     });
     btnForward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, speedDroit, duration, currentRobotIp));
+        socket.emit('motor', createOrder(speedGauche, speedDroit, duration, currentRobotId));
     });
     btnBackward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration, currentRobotIp));
+        socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration, currentRobotId));
     });
     btnTurnRight.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration, currentRobotIp));
+        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration, currentRobotId));
     });
     btnTurnLeft.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration, currentRobotIp));
+        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration, currentRobotId));
     });
 
     // Change curent view
@@ -124,15 +130,20 @@ window.addEventListener("load", () => {
         currentView = event.target.id;
         switch (currentView) {
             case "camera":
+                hide(selectRobotsSimulator);
+                show(selectRobots);
                 showCanvas();
                 tryAdd(viewGoScenarios);
                 tryRemove(viewArrowControls);
                 tryRemove(reload);
                 tryRemove(configurationChoice);
                 setStillContinue(true);
+                currentRobotId = selectRobots.firstChild.innerText;
                 break;
             case "simulator":
                 hide(canvas);
+                show(selectRobotsSimulator);
+                hide(selectRobots);
                 loadSimulator(currentConfig);
                 tryAdd(viewGoScenarios);
                 tryAdd(viewArrowControls);
@@ -141,12 +152,15 @@ window.addEventListener("load", () => {
                 setStillContinue(false);
                 break;
             case "manual":
+                hide(selectRobotsSimulator);
+                show(selectRobots);
                 showCanvas();
                 tryRemove(viewGoScenarios);
                 tryAdd(viewArrowControls);
                 tryRemove(reload);
                 tryRemove(configurationChoice);
                 setStillContinue(true);
+                currentRobotId = selectRobots.firstChild.innerText;
                 break;
             default:
                 console.log("Erreur : vue inconnue");
@@ -170,7 +184,7 @@ window.addEventListener("load", () => {
             console.log("Simulator : (" + x + ", " + y + ")");
             // turnRobot(socket, 90)
             // moveRobotForward(socket, 50);
-            moveRobotTo(socket, currentRobotIp, x, y);
+            moveRobotTo(socket, currentRobotId, x, y);
             // turnRobotInCircle(socket, 10, 360);
         } else {
             // Get the position of a click on the camera
@@ -270,13 +284,26 @@ function loadSimulator(configurationName) {
 
     colController.createEvent(vue.engine);
     table.run();
+
+    selectRobotsSimulator.innerHTML="";
+
+    for(let i = 0; i < table.getRobots().length; i++) {
+        let option = document.createElement("option");
+        option.text = "Robot n°"+i;
+
+        selectRobotsSimulator.appendChild(option);
+    }
+
+    currentRobotId = 0;
 }
 
 export function getRobots() {
     if (currentView === "simulator") {
-        return table.robots;
+        return table.getRobots();
     }
-    return getRealRobots();
+    else {
+        return getRealRobots();
+    }
 }
 
 export function getRobot(index) {
@@ -308,7 +335,7 @@ socket.on('connect', function () {
 
     socket.on("motor", function (order) {
         console.log("simulator : motor order");
-        table.sendRobotOrder(order); // Send order to simulator
+        table.sendRobotOrder(order, order.ipRobot); // Send order to simulator
     });
 
     socket.on("ask-identity", function () {
@@ -323,8 +350,8 @@ socket.on('connect', function () {
                 addRobot(robot);
             });
 
-            if (currentRobotIp === null) {
-                currentRobotIp = robots[0];
+            if (currentRobotId === null) {
+                currentRobotId = robots[0];
             }
         } else {
             addRobot("Aucun robot disponible");

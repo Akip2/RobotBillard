@@ -37,13 +37,17 @@ class Table {
         return this.balls;
     }
 
+    getRobots() {
+        return this.robots;
+    }
+
     run() {
         this.vue.setup(this);
         this.vue.run();
         this.camera.start();
     }
 
-    sendRobotOrder(order, id = 0){
+    sendRobotOrder(order, id) {
         this.robots[id].executeOrder(order);
     }
 }

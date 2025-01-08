@@ -40,31 +40,16 @@ io.sockets.on("connection", function (socket) {
         console.log("Socket replaced: " + socket.handshake.address);
     }
 
-    // updateRobotsList(socket);
-
-    /*
-        socket.on("motor", function (val) {
-            console.log("motor" + JSON.stringify(val));
-
-            if (simulatorMode) {
-                socket.emit("motor", val); // We send the request back to the simulator
-            } else {
-                robotSockets.forEach(robotSocket => {
-                    robotSocket.emit("motor", val); // We send the request to each robot
-                })
-            }
-        });
-        */
-
     socket.on("motor", function (val) {
         console.log("motor" + JSON.stringify(val));
 
         let ipRobot = val.ipRobot;
-        delete val.ipRobot;
 
         if (simulatorMode) {
             socket.emit("motor", val); // We send the request back to the simulator
         } else {
+            delete val.ipRobot;
+            
             let i = 0;
             let found = false;
             let robotSocket;
