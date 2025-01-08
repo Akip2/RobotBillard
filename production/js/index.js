@@ -50,7 +50,7 @@ const cursorLeftMotor = document.querySelector("#cursor-left-motor");
 const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
-// let curentRobot;
+let currentRobotIp = null;
 let vue = null;
 let table = null;
 let camera = null;
@@ -82,7 +82,7 @@ window.addEventListener("load", () => {
     });
 
     selectRobots.addEventListener("change", (event) => {
-        // curentRobot = event.target.value;
+        currentRobotIp = event.target.value;
     });
 
     // Reload the simulation
@@ -106,16 +106,16 @@ window.addEventListener("load", () => {
         speedDroit = cursorRightMotor.value;
     });
     btnForward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, speedDroit, duration/*, curentRobot*/));
+        socket.emit('motor', createOrder(speedGauche, speedDroit, duration, currentRobotIp));
     });
     btnBackward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration/*, curentRobot*/));
+        socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration, currentRobotIp));
     });
     btnTurnRight.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration/*, curentRobot*/));
+        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration, currentRobotIp));
     });
     btnTurnLeft.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration/*, curentRobot*/));
+        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration, currentRobotIp));
     });
 
     // Change curent view
@@ -170,7 +170,7 @@ window.addEventListener("load", () => {
             console.log("Simulator : (" + x + ", " + y + ")");
             // turnRobot(socket, 90)
             // moveRobotForward(socket, 50);
-            moveRobotTo(socket, 0, x, y);
+            moveRobotTo(socket, currentRobotIp, x, y);
             // turnRobotInCircle(socket, 10, 360);
         } else {
             // Get the position of a click on the camera
@@ -322,6 +322,10 @@ socket.on('connect', function () {
             robots.forEach(function (robot) {
                 addRobot(robot);
             });
+
+            if (currentRobotIp === null) {
+                currentRobotIp = robots[0];
+            }
         } else {
             addRobot("Aucun robot disponible");
         }
