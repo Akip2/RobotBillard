@@ -10,7 +10,7 @@ import FootConfig from "../simulateur/configurations/foot-config.js";
 
 import {getRealRobot, getRealRobots, setStillContinue} from "./video.js";
 import {createOrder, moveRobotTo} from "./brain.js";
-import vueSimulateur from "../simulateur/vue-simulateur.js";
+import {startTestScenario} from "./scenarios/testScenario.js";
 
 const socket = io(); // Connection to server
 
@@ -50,13 +50,15 @@ const cursorLeftMotor = document.querySelector("#cursor-left-motor");
 const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
-let curentConfig = "Random";
 // let curentRobot;
 let vue = null;
 let table = null;
 let camera = null;
 
 let currentView = "camera";
+let currentConfig = "Billard";
+let currentScenario = "default";
+
 
 let speedGauche = 130;
 let speedDroit = 130;
@@ -67,13 +69,25 @@ window.addEventListener("load", () => {
 
     // socket.emit('get-robots');
 
+    selectScenarios.addEventListener("change", (event) => {
+        currentScenario = event.target.value;
+    });
+
+    goBtn.addEventListener("click", () => {
+        switch (currentScenario) {
+            case "default":
+                startTestScenario(socket, 0);
+                break;
+        }
+    });
+
     selectRobots.addEventListener("change", (event) => {
         // curentRobot = event.target.value;
     });
 
     // Reload the simulation
     reload.addEventListener("click", () => {
-        loadSimulator(curentConfig);
+        loadSimulator(currentConfig);
     });
 
     // Execution time of the motors
@@ -98,10 +112,10 @@ window.addEventListener("load", () => {
         socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration/*, curentRobot*/));
     });
     btnTurnRight.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration/*, curentRobot*/));
+        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration/*, curentRobot*/));
     });
     btnTurnLeft.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration/*, curentRobot*/));
+        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration/*, curentRobot*/));
     });
 
     // Change curent view
@@ -119,7 +133,7 @@ window.addEventListener("load", () => {
                 break;
             case "simulator":
                 hide(canvas);
-                loadSimulator();
+                loadSimulator(currentConfig);
                 tryAdd(viewGoScenarios);
                 tryAdd(viewArrowControls);
                 tryAdd(reload);
@@ -162,6 +176,7 @@ window.addEventListener("load", () => {
             // Get the position of a click on the camera
             console.log("Camera : (" + x + ", " + y + ")");
             moveRobotTo(socket, 0, x, y);
+            // moveRobotForward(socket, 70);
         }
     });
 
@@ -206,11 +221,11 @@ function showCanvas() {
             canvasContainer.classList.remove("simulator-container");
             hide(potentialCanvas);
 
-            if(camera !== null){
+            if (camera !== null) {
                 camera.stop();
             }
 
-            if(vue !== null){
+            if (vue !== null) {
                 vue.clearSimulation();
             }
 
@@ -220,10 +235,10 @@ function showCanvas() {
 }
 
 function loadSimulator(configurationName) {
-    if(camera !== null && camera.isRunning) {
+    if (camera !== null && camera.isRunning) {
         camera.stop();
     }
-    if(vue !== null && vue.isRunning) {
+    if (vue !== null && vue.isRunning) {
         vue.clearSimulation();
     }
 
@@ -231,7 +246,7 @@ function loadSimulator(configurationName) {
     vue = new VueSimulateur(canvasContainer);
     camera = new Camera(canvasContainer, vue);
 
-    curentConfig = configurationName;
+    currentConfig = configurationName;
 
     switch (configurationName) {
         case "Random":
@@ -247,7 +262,7 @@ function loadSimulator(configurationName) {
             table = new EasyConfig(vue, camera);
             break;
         default:
-            curentConfig = "Random";
+            currentConfig = "Random";
             table = new RandomConfig(vue, camera);
     }
 
@@ -275,6 +290,8 @@ export function getRobot(index) {
             orientation: table.robots[index].body.angle * (180 / Math.PI)
         };
     }
+
+    // console.log(getRealRobot(index));
     return getRealRobot(index);
 }
 
