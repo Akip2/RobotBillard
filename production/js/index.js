@@ -138,6 +138,8 @@ window.addEventListener("load", () => {
 
     // Choose a configuration for the simulator
     configurationChoice.addEventListener("change", (event) => {
+        camera.stop();
+        vue.clearSimulation();
         loadSimulator(event.target.value);
     });
 
