@@ -7,10 +7,13 @@ class Camera {
         this.ballsPositions = [];
         this.vue = vue;
         this.analysisInterval = null;
+
+        this.isRunning = false;
     }
 
     start() {
         this.canvas = this.canvasContainer.querySelector("#canvas-simulateur");
+        this.isRunning = true;
 
         this.analysisInterval = setInterval(() => {
             this.analyze();
@@ -18,6 +21,7 @@ class Camera {
     }
 
     stop() {
+        this.isRunning = false;
         clearInterval(this.analysisInterval);
     }
 
@@ -38,6 +42,7 @@ class Camera {
 
             preProcessedImg.delete();
             circles.delete();
+            imgData.delete();
 
             this.ballsPositions = ballsDetected;
             this.vue.drawDetectedCircles(this.ballsPositions);
