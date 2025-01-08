@@ -50,15 +50,15 @@ const cursorLeftMotor = document.querySelector("#cursor-left-motor");
 const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
-let curentConfig = "Random";
 // let curentRobot;
 let vue = null;
 let table = null;
 let camera = null;
 
 let currentView = "camera";
+let currentConfig = "Billard";
+let currentScenario = "default";
 
-let currentScenario = null;
 
 let speedGauche = 130;
 let speedDroit = 130;
@@ -75,7 +75,7 @@ window.addEventListener("load", () => {
 
     goBtn.addEventListener("click", () => {
         switch (currentScenario) {
-            case "Billard":
+            case "default":
                 startTestScenario(socket, 0);
                 break;
         }
@@ -87,7 +87,7 @@ window.addEventListener("load", () => {
 
     // Reload the simulation
     reload.addEventListener("click", () => {
-        loadSimulator(curentConfig);
+        loadSimulator(currentConfig);
     });
 
     // Execution time of the motors
@@ -133,7 +133,7 @@ window.addEventListener("load", () => {
                 break;
             case "simulator":
                 hide(canvas);
-                loadSimulator();
+                loadSimulator(currentConfig);
                 tryAdd(viewGoScenarios);
                 tryAdd(viewArrowControls);
                 tryAdd(reload);
@@ -220,11 +220,11 @@ function showCanvas() {
             canvasContainer.classList.remove("simulator-container");
             hide(potentialCanvas);
 
-            if(camera !== null){
+            if (camera !== null) {
                 camera.stop();
             }
 
-            if(vue !== null){
+            if (vue !== null) {
                 vue.clearSimulation();
             }
 
@@ -234,10 +234,10 @@ function showCanvas() {
 }
 
 function loadSimulator(configurationName) {
-    if(camera !== null && camera.isRunning) {
+    if (camera !== null && camera.isRunning) {
         camera.stop();
     }
-    if(vue !== null && vue.isRunning) {
+    if (vue !== null && vue.isRunning) {
         vue.clearSimulation();
     }
 
@@ -245,7 +245,7 @@ function loadSimulator(configurationName) {
     vue = new VueSimulateur(canvasContainer);
     camera = new Camera(canvasContainer, vue);
 
-    curentConfig = configurationName;
+    currentConfig = configurationName;
 
     switch (configurationName) {
         case "Random":
@@ -261,7 +261,7 @@ function loadSimulator(configurationName) {
             table = new EasyConfig(vue, camera);
             break;
         default:
-            curentConfig = "Random";
+            currentConfig = "Random";
             table = new RandomConfig(vue, camera);
     }
 

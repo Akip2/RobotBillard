@@ -1,11 +1,15 @@
-import {moveRobotTo} from "../brain.js";
+import {isRobotNear, moveRobotTo} from "../brain.js";
 import {getRobot} from "../index.js";
 
 export function startTestScenario(socket, index) {
     let robotPosition = getRobot(index).position;
-    let targetPosition = {x: Math.round(robotPosition.x + 50), y: Math.round(robotPosition.y)};
 
-    moveRobotTo(socket, index, targetPosition.x, targetPosition.y);
+    moveRobotTo(socket, index, robotPosition.x + 100, robotPosition.y);
 
-
+    let check = setInterval(() => {
+        if (isRobotNear(index, robotPosition.x + 100, robotPosition.y, 20)) {
+            clearInterval(check);
+            moveRobotTo(socket, index, robotPosition.x - 50, robotPosition.y);
+        }
+    }, 100);
 }
