@@ -230,7 +230,7 @@ function loadSimulator(configurationName) {
     curentConfig = configurationName;
 
     switch (configurationName) {
-        case "Ramdom":
+        case "Random":
             table = new RandomConfig(vue, camera);
             break;
         case "Billard":
