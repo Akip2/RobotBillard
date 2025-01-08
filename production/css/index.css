@@ -56,15 +56,7 @@ main {
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    background: linear-gradient(0deg, #FFFFFF 50%, #FF5C35 100%);
     animation: spin 1s linear infinite;
-}
-
-.inner-circle {
-    width: 90%;
-    height: 90%;
-    background-color: white;
-    border-radius: 50%;
 }
 
 @keyframes spin {
@@ -142,7 +134,7 @@ header {
 }
 
 canvas {
-    background-image: url('../img/img.png');
+    background-image: url('../img/table.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -158,7 +150,12 @@ canvas {
     cursor: grabbing;
 }
 
-#select-configuration {
+#top-table-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.select-top-table-container {
     background-color: lightgray;
     border: none;
     padding: 0.5em;
@@ -184,8 +181,13 @@ canvas {
     background-color: darkgray;
 }
 
+#canvas-output-video {
+    width: 600px;
+    height: 400px;
+}
 
-/* LEFT PART : GO and SCENARIOS */
+
+/* RIGHT PART : GO and SCENARIOS */
 
 
 #robots-go-scenarios {
@@ -218,7 +220,7 @@ canvas {
 }
 
 #go-btn:hover {
-    margin: 2rem 1rem 1rem 1rem;
+    margin: 2rem 0 1rem 0;
 
     width: 11rem;
     height: 11rem;
