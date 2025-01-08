@@ -1,8 +1,6 @@
 import {getRobot} from "./index.js";
 
 export function moveRobotForward(socket, robotIp, distance, time = 3000) {
-    // dist = 0,6245 * puissance - 11,66;
-
     let duration = time;
     let speedFor3Sec = (distance + 11.66) / 0.6;
     let realSpeed = Math.round(speedFor3Sec * (3000 / duration));
@@ -15,67 +13,60 @@ export function moveRobotForward(socket, robotIp, distance, time = 3000) {
         }
         realSpeed = Math.round(speedFor3Sec * (3000 / duration));
     }
-    console.log(duration + " ms")
-    console.log(realSpeed + " / 255");
+    // console.log(duration + " ms")
+    // console.log(realSpeed + " / 255");
 
     socket.emit('motor', createOrder(realSpeed, realSpeed, duration, robotIp));
 }
 
-export function turnRobot(socket, robotIp, angle) {
+export function turnRobot(socket, robotIp, direction) {
+    let angle = 15;
     let time = (1330 / 2) * (Math.abs(angle * (Math.PI / 180)) / Math.PI);
 
-    if (angle > 180) {
+    if (direction === "Right") {
+        socket.emit('motor', createOrder(128, -128, time, robotIp));
+    } else if (direction === "Left") {
         socket.emit('motor', createOrder(-128, 128, time, robotIp));
     } else {
-        socket.emit('motor', createOrder(128, -128, time, robotIp));
+        socket.emit('motor', createOrder(128, 128, time, robotIp)); // forward
     }
 }
 
 export function moveRobotTo(socket, robotIp, x, y) {
-    let robot = getRobot(0);
-    let robotPosition = robot.position;
-    let targetAngle = Math.atan2(y - robotPosition.y, x - robotPosition.x) * (180 / Math.PI);
+    let robotPosition = getRobot(0).position;
+    let targetAngle = -Math.atan2(y - robotPosition.y, x - robotPosition.x) * (180 / Math.PI);
 
-    if (targetAngle < 0) {
-        targetAngle += 360;
-    }
+    targetAngle = targetAngle < 0 ? targetAngle + 360 : targetAngle;
 
     // Step 1 : turn
     let turnInterval = setInterval(() => {
-        robot = getRobot(0);
+        let robotAngle = -getRobot(0).orientation % 360;
+        let delta = targetAngle - robotAngle;
 
-        if (robot !== undefined) {
-            let robotAngle = robot.orientation % 360;
-            let delta = Math.abs(targetAngle - robotAngle);
+        if ((delta <= 180) && (delta >= 10)) {
+            turnRobot(socket, robotIp, "Left");
+        } else if ((delta <= 360) && (delta >= 190)) {
+            turnRobot(socket, robotIp, "Right");
+        } else if ((delta > -180) && (delta <= -10)) {
+            turnRobot(socket, robotIp, "Right");
+        } else if ((delta > -360) && (delta <= -190)) {
+            turnRobot(socket, robotIp, "Left");
+        } else {
+            // Step 2 : move forward
+            let forwardInterval = setInterval(() => {
+                robotPosition = getRobot(index).position;
 
-            if (delta > 20) {
-                turnRobot(socket, robotIp, 10);
-            }/* else if (delta < -10) {
-                turnRobot(socket, 180 + 15);
-            } */ else {
-                // Step 2 : move forward
-                let forwardInterval = setInterval(() => {
-                    robot = getRobot(0);
+                if (robotPosition !== undefined) {
+                    let distance = distanceBetweenPoints(robotPosition, {x: x, y: y}) / (calculateBallSize(460) / 4.5)
 
-                    if (robot !== undefined) {
-                        robotPosition = robot.position;
-                        // robotAngle = robot.orientation % 360;
-                        // delta = Math.abs(targetAngle - robotAngle);
-
-                        let distance = distanceBetweenPoints(robotPosition, {
-                            x: x,
-                            y: y
-                        }) / (calculateBallSize(460) / 4.5)
-
-                        if (distance > 20/* && delta < 15*/) {
-                            moveRobotForward(socket, robotIp, 5);
-                        } else {
-                            clearInterval(forwardInterval);
-                        }
+                    if (distance > 20) {
+                        moveRobotForward(socket, robotIp, 5);
+                    } else {
+                        clearInterval(forwardInterval);
                     }
-                }, 100);
-                clearInterval(turnInterval);
-            }
+                }
+            }, 100);
+            clearInterval(turnInterval);
         }
     }, 100);
 }
@@ -116,13 +107,10 @@ export function calculateBallSize(tableLength) {
 }
 
 export function createOrder(left, right, duration, ipRobot) {
-    // console.log("bien ici : ");
-    // console.log(ipRobot)
     return {
         left: left,
         right: right,
         duration: duration,
-        // time: Date.now()
         time: performance.now(),
         ipRobot: ipRobot
     };
