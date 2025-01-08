@@ -15,8 +15,8 @@ export function moveRobotForward(socket, distance, time = 3000) {
         }
         realSpeed = Math.round(speedFor3Sec * (3000 / duration));
     }
-    // console.log(duration + " ms")
-    // console.log(realSpeed + " / 255");
+    console.log(duration + " ms")
+    console.log(realSpeed + " / 255");
 
     socket.emit('motor', createOrder(realSpeed, realSpeed, duration));
 }
@@ -43,7 +43,7 @@ export function moveRobotTo(socket, index, x, y) {
     console.log(getRobot((index)));
     let robotPosition = getRobot(index).position;
     let targetAngle = -Math.atan2(y - robotPosition.y, x - robotPosition.x) * (180 / Math.PI);
-    
+
     targetAngle = targetAngle < 0 ? targetAngle + 360 : targetAngle;
 
     // Step 1 : turn
@@ -90,10 +90,15 @@ export function turnRobotInCircle(socket, radius, angle) {
 }
 
 export function isRobotNear(index, x, y, deltaMax) {
-    let robotPosition = getRobot(index).position;
-    let delta = distanceBetweenPoints(robotPosition, {x: x, y: y});
+    let robot = getRobot(index);
 
-    return delta < deltaMax;
+    if (robot !== undefined) {
+        let robotPosition = robot.position;
+        let delta = distanceBetweenPoints(robotPosition, {x: x, y: y});
+
+        return delta < deltaMax;
+    }
+    return false; // Good idea ?
 }
 
 export function distanceBetweenPoints(p1, p2) {

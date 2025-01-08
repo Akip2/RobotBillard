@@ -112,10 +112,10 @@ window.addEventListener("load", () => {
         socket.emit('motor', createOrder(-speedGauche, -speedDroit, duration/*, curentRobot*/));
     });
     btnTurnRight.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration/*, curentRobot*/));
+        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration/*, curentRobot*/));
     });
     btnTurnLeft.addEventListener("click", () => {
-        socket.emit('motor', createOrder(speedGauche, -speedDroit, duration/*, curentRobot*/));
+        socket.emit('motor', createOrder(-speedGauche, speedDroit, duration/*, curentRobot*/));
     });
 
     // Change curent view
@@ -176,6 +176,7 @@ window.addEventListener("load", () => {
             // Get the position of a click on the camera
             console.log("Camera : (" + x + ", " + y + ")");
             moveRobotTo(socket, 0, x, y);
+            // moveRobotForward(socket, 70);
         }
     });
 
