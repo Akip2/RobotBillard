@@ -46,19 +46,22 @@ export function moveRobotTo(socket, index, x, y) {
         let delta = Math.abs(targetAngle - robotAngle);
 
         if (delta > 10) {
-            turnRobot(socket, 15);
+            turnRobot(socket, 10);
         }/* else if (delta < -10) {
             turnRobot(socket, 180 + 15);
         } */ else {
             // Step 2 : move forward
             let forwardInterval = setInterval(() => {
                 robotPosition = getRobot(index).position;
-                let distance = distanceBetweenPoints(robotPosition, {x: x, y: y}) / (calculateBallSize(460) / 4.5)
 
-                if (distance > 20) {
-                    moveRobotForward(socket, 5);
-                } else {
-                    clearInterval(forwardInterval);
+                if (robotPosition !== undefined) {
+                    let distance = distanceBetweenPoints(robotPosition, {x: x, y: y}) / (calculateBallSize(460) / 4.5)
+
+                    if (distance > 20) {
+                        moveRobotForward(socket, 5);
+                    } else {
+                        clearInterval(forwardInterval);
+                    }
                 }
             }, 100);
             clearInterval(turnInterval);
@@ -74,6 +77,13 @@ export function turnRobotInCircle(socket, radius, angle) {
     let time = 2300;
 
     socket.emit('motor', createOrder(speedLeft, speedRight, time));
+}
+
+export function isRobotNear(index, x, y, deltaMax) {
+    let robotPosition = getRobot(index).position;
+    let delta = distanceBetweenPoints(robotPosition, {x: x, y: y});
+
+    return delta < deltaMax;
 }
 
 export function distanceBetweenPoints(p1, p2) {

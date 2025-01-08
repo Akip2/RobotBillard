@@ -10,6 +10,7 @@ import FootConfig from "../simulateur/configurations/foot-config.js";
 
 import {getRealRobot, getRealRobots, setStillContinue} from "./video.js";
 import {createOrder, moveRobotTo} from "./brain.js";
+import {startTestScenario} from "./scenarios/testScenario.js";
 
 const socket = io(); // Connection to server
 
@@ -49,13 +50,15 @@ const cursorLeftMotor = document.querySelector("#cursor-left-motor");
 const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
-let curentConfig = "Random";
 // let curentRobot;
 let vue = null;
 let table = null;
 let camera = null;
 
 let currentView = "camera";
+let currentConfig = "Billard";
+let currentScenario = "default";
+
 
 let speedGauche = 130;
 let speedDroit = 130;
@@ -66,13 +69,25 @@ window.addEventListener("load", () => {
 
     // socket.emit('get-robots');
 
+    selectScenarios.addEventListener("change", (event) => {
+        currentScenario = event.target.value;
+    });
+
+    goBtn.addEventListener("click", () => {
+        switch (currentScenario) {
+            case "default":
+                startTestScenario(socket, 0);
+                break;
+        }
+    });
+
     selectRobots.addEventListener("change", (event) => {
         // curentRobot = event.target.value;
     });
 
     // Reload the simulation
     reload.addEventListener("click", () => {
-        loadSimulator(curentConfig);
+        loadSimulator(currentConfig);
     });
 
     // Execution time of the motors
@@ -118,7 +133,7 @@ window.addEventListener("load", () => {
                 break;
             case "simulator":
                 hide(canvas);
-                loadSimulator();
+                loadSimulator(currentConfig);
                 tryAdd(viewGoScenarios);
                 tryAdd(viewArrowControls);
                 tryAdd(reload);
@@ -230,7 +245,7 @@ function loadSimulator(configurationName) {
     vue = new VueSimulateur(canvasContainer);
     camera = new Camera(canvasContainer, vue);
 
-    curentConfig = configurationName;
+    currentConfig = configurationName;
 
     switch (configurationName) {
         case "Random":
@@ -246,7 +261,7 @@ function loadSimulator(configurationName) {
             table = new EasyConfig(vue, camera);
             break;
         default:
-            curentConfig = "Random";
+            currentConfig = "Random";
             table = new RandomConfig(vue, camera);
     }
 
