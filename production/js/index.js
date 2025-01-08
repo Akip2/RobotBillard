@@ -189,8 +189,7 @@ window.addEventListener("load", () => {
         } else {
             // Get the position of a click on the camera
             console.log("Camera : (" + x + ", " + y + ")");
-            moveRobotTo(socket, 0, x, y);
-            // moveRobotForward(socket, 70);
+            moveRobotTo(socket, currentRobotIp, x, y);
         }
     });
 
@@ -314,11 +313,9 @@ export function getRobot(index) {
                     x: table.robots[index].body.position.x,
                     y: table.robots[index].body.position.y
                 },
-            orientation: table.robots[index].body.angle * (180 / Math.PI)
+            orientation: (Math.abs(table.robots[index].body.angle) * (180 / Math.PI)) % 360
         };
     }
-
-    // console.log(getRealRobot(index));
     return getRealRobot(index);
 }
 
@@ -330,7 +327,6 @@ function addRobot(robotName) {
 
 
 socket.on('connect', function () {
-
     console.log("Connected to server with ID : ", socket.id);
 
     socket.on("motor", function (order) {

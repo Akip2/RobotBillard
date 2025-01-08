@@ -84,6 +84,7 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("disconnect", function () {
         console.log("Socket disconnected : ", socket.handshake.address);
+
         if (socketIps.includes(socket.handshake.address)) { // The disconnecting socket is a robot
             let index = socketIps.indexOf(socket.handshake.address);
             console.log(index);
