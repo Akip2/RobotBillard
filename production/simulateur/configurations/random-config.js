@@ -63,7 +63,7 @@ class RandomConfig extends Table {
         );
         let ballBlack = new Ball(
             ballRadius,
-            "black",
+            "rgb(17,17,17)",
             (Math.random() * (width - holeRadius * 2)) + holeRadius,
             Math.random() * (height - holeRadius * 2) + holeRadius
         );
