@@ -38,6 +38,7 @@ class Camera {
 
             preProcessedImg.delete();
             circles.delete();
+            imgData.delete();
 
             this.ballsPositions = ballsDetected;
             this.vue.drawDetectedCircles(this.ballsPositions);
