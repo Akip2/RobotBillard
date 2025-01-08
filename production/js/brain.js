@@ -32,6 +32,7 @@ export function turnRobot(socket, angle) {
 }
 
 export function moveRobotTo(socket, index, x, y) {
+    console.log(getRobot((index)));
     let robotPosition = getRobot(index).position;
     let targetAngle = Math.atan2(y - robotPosition.y, x - robotPosition.x) * (180 / Math.PI);
 

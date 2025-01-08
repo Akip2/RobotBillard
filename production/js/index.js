@@ -10,7 +10,6 @@ import FootConfig from "../simulateur/configurations/foot-config.js";
 
 import {getRealRobot, getRealRobots, setStillContinue} from "./video.js";
 import {createOrder, moveRobotTo} from "./brain.js";
-import vueSimulateur from "../simulateur/vue-simulateur.js";
 
 const socket = io(); // Connection to server
 
@@ -206,11 +205,11 @@ function showCanvas() {
             canvasContainer.classList.remove("simulator-container");
             hide(potentialCanvas);
 
-            if(camera !== null){
+            if (camera !== null) {
                 camera.stop();
             }
 
-            if(vue !== null){
+            if (vue !== null) {
                 vue.clearSimulation();
             }
 
@@ -220,10 +219,10 @@ function showCanvas() {
 }
 
 function loadSimulator(configurationName) {
-    if(camera !== null && camera.isRunning) {
+    if (camera !== null && camera.isRunning) {
         camera.stop();
     }
-    if(vue !== null && vue.isRunning) {
+    if (vue !== null && vue.isRunning) {
         vue.clearSimulation();
     }
 
@@ -275,6 +274,8 @@ export function getRobot(index) {
             orientation: table.robots[index].body.angle * (180 / Math.PI)
         };
     }
+
+    // console.log(getRealRobot(index));
     return getRealRobot(index);
 }
 
