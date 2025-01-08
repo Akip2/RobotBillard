@@ -95,6 +95,7 @@ class VueSimulateur {
         this.render.canvas.remove();
         this.render.canvas = null;
         this.render.context = null;
+        this.overlay.remove();
 
         Composite.clear(this.engine.world, false);
     }

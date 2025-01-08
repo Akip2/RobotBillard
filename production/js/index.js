@@ -71,6 +71,8 @@ window.addEventListener("load", () => {
 
     // Reload the simulation
     reload.addEventListener("click", () => {
+        camera.stop();
+        vue.clearSimulation();
         loadSimulator(curentConfig);
     });
 
@@ -198,6 +200,9 @@ function showCanvas() {
     if (canvas.classList.contains("displayNone")) {
         let potentialCanvas = document.querySelector("#canvas-simulateur");
         if (potentialCanvas != null) {
+            canvasContainer.classList.remove("simulator-container");
+            camera.stop();
+            vue.clearSimulation();
             hide(potentialCanvas);
             show(canvas);
         }
@@ -205,14 +210,7 @@ function showCanvas() {
 }
 
 function loadSimulator(configurationName) {
-    if (vue !== null) {
-        vue.clearSimulation();
-    }
-
-    if (camera !== null) {
-        camera.stop();
-    }
-
+    canvasContainer.classList.add("simulator-container");
     vue = new VueSimulateur(canvasContainer);
     camera = new Camera(canvasContainer, vue);
 

@@ -126,18 +126,15 @@ header {
 
 /* LEFT PART */
 
-/*
-.simulatorContainer {
-    position: relative;
-    height: 306px;
-    width: 563px;
-}
- */
 
-#canvas-container {
+.simulator-container {
     position: relative;
     height: 306px;
     width: 563px;
+
+    canvas {
+        position: absolute;
+    }
 }
 
 #left-part {
@@ -150,7 +147,7 @@ canvas {
     background-position: center;
     background-repeat: no-repeat;
 
-    position: absolute;
+    /*position: absolute;*/
 }
 
 #canvas-simulateur:hover {
