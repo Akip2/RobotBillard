@@ -7,6 +7,8 @@ class VueSimulateur {
 
         this.createEngine();
         this.createMouse();
+
+        this.isRunning = false;
     }
 
     createEngine() {
@@ -53,6 +55,7 @@ class VueSimulateur {
     }
 
     run() {
+        this.isRunning = true;
         Render.run(this.render);
         Runner.run(this.runner, this.engine);
 
@@ -88,6 +91,7 @@ class VueSimulateur {
     }
 
     clearSimulation() {
+        this.isRunning = false;
         World.clear(this.engine.world);
         Engine.clear(this.engine);
         Render.stop(this.render);

@@ -10,6 +10,7 @@ import FootConfig from "../simulateur/configurations/foot-config.js";
 
 import {getRealRobot, getRealRobots, setStillContinue} from "./video.js";
 import {createOrder, moveRobotTo} from "./brain.js";
+import vueSimulateur from "../simulateur/vue-simulateur.js";
 
 const socket = io(); // Connection to server
 
@@ -71,8 +72,6 @@ window.addEventListener("load", () => {
 
     // Reload the simulation
     reload.addEventListener("click", () => {
-        camera.stop();
-        vue.clearSimulation();
         loadSimulator(curentConfig);
     });
 
@@ -138,8 +137,6 @@ window.addEventListener("load", () => {
 
     // Choose a configuration for the simulator
     configurationChoice.addEventListener("change", (event) => {
-        camera.stop();
-        vue.clearSimulation();
         loadSimulator(event.target.value);
     });
 
@@ -203,15 +200,29 @@ function showCanvas() {
         let potentialCanvas = document.querySelector("#canvas-simulateur");
         if (potentialCanvas != null) {
             canvasContainer.classList.remove("simulator-container");
-            camera.stop();
-            vue.clearSimulation();
             hide(potentialCanvas);
+
+            if(camera !== null){
+                camera.stop();
+            }
+
+            if(vue !== null){
+                vue.clearSimulation();
+            }
+
             show(canvas);
         }
     }
 }
 
 function loadSimulator(configurationName) {
+    if(camera !== null && camera.isRunning) {
+        camera.stop();
+    }
+    if(vue !== null && vue.isRunning) {
+        vue.clearSimulation();
+    }
+
     canvasContainer.classList.add("simulator-container");
     vue = new VueSimulateur(canvasContainer);
     camera = new Camera(canvasContainer, vue);
