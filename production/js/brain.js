@@ -1,6 +1,6 @@
 import {getRobot} from "./index.js";
 
-export function moveRobotForward(socket, distance, time = 3000) {
+export function moveRobotForward(socket, robotIp, distance, time = 3000) {
     // dist = 0,6245 * puissance - 11,66;
 
     let duration = time;
@@ -18,21 +18,21 @@ export function moveRobotForward(socket, distance, time = 3000) {
     console.log(duration + " ms")
     console.log(realSpeed + " / 255");
 
-    socket.emit('motor', createOrder(realSpeed, realSpeed, duration));
+    socket.emit('motor', createOrder(realSpeed, realSpeed, duration, robotIp));
 }
 
-export function turnRobot(socket, angle) {
+export function turnRobot(socket, robotIp, angle) {
     let time = (1330 / 2) * (Math.abs(angle * (Math.PI / 180)) / Math.PI);
 
     if (angle > 180) {
-        socket.emit('motor', createOrder(-128, 128, time));
+        socket.emit('motor', createOrder(-128, 128, time, robotIp));
     } else {
-        socket.emit('motor', createOrder(128, -128, time));
+        socket.emit('motor', createOrder(128, -128, time, robotIp));
     }
 }
 
-export function moveRobotTo(socket, index, x, y) {
-    let robot = getRobot(index);
+export function moveRobotTo(socket, robotIp, x, y) {
+    let robot = getRobot(0);
     let robotPosition = robot.position;
     let targetAngle = Math.atan2(y - robotPosition.y, x - robotPosition.x) * (180 / Math.PI);
 
@@ -42,20 +42,20 @@ export function moveRobotTo(socket, index, x, y) {
 
     // Step 1 : turn
     let turnInterval = setInterval(() => {
-        robot = getRobot(index);
+        robot = getRobot(0);
 
         if (robot !== undefined) {
             let robotAngle = robot.orientation % 360;
             let delta = Math.abs(targetAngle - robotAngle);
 
             if (delta > 20) {
-                turnRobot(socket, 10);
+                turnRobot(socket, robotIp, 10);
             }/* else if (delta < -10) {
                 turnRobot(socket, 180 + 15);
             } */ else {
                 // Step 2 : move forward
                 let forwardInterval = setInterval(() => {
-                    robot = getRobot(index);
+                    robot = getRobot(0);
 
                     if (robot !== undefined) {
                         robotPosition = robot.position;
@@ -68,7 +68,7 @@ export function moveRobotTo(socket, index, x, y) {
                         }) / (calculateBallSize(460) / 4.5)
 
                         if (distance > 20/* && delta < 15*/) {
-                            moveRobotForward(socket, 5);
+                            moveRobotForward(socket, robotIp, 5);
                         } else {
                             clearInterval(forwardInterval);
                         }
@@ -80,18 +80,18 @@ export function moveRobotTo(socket, index, x, y) {
     }, 100);
 }
 
-export function turnRobotInCircle(socket, radius, angle) {
+export function turnRobotInCircle(socket, robotIp, radius, angle) {
     // if radius = 21
     // divide time by angle or something similar
     let speedLeft = 255;
     let speedRight = 128;
     let time = 2300;
 
-    socket.emit('motor', createOrder(speedLeft, speedRight, time));
+    socket.emit('motor', createOrder(speedLeft, speedRight, time, robotIp));
 }
 
-export function isRobotNear(index, x, y, deltaMax) {
-    let robot = getRobot(index);
+export function isRobotNear(robotIp, x, y, deltaMax) {
+    let robot = getRobot(0);
 
     if (robot !== undefined) {
         let robotPosition = robot.position;

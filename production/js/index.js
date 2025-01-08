@@ -170,7 +170,7 @@ window.addEventListener("load", () => {
             console.log("Simulator : (" + x + ", " + y + ")");
             // turnRobot(socket, 90)
             // moveRobotForward(socket, 50);
-            moveRobotTo(socket, 0, x, y);
+            moveRobotTo(socket, currentRobotIp, x, y);
             // turnRobotInCircle(socket, 10, 360);
         } else {
             // Get the position of a click on the camera
