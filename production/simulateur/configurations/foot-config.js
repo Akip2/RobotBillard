@@ -12,7 +12,7 @@ import {
 import Ball from "../objects/ball.js";
 
 class FootConfig extends Table {
-    constructor(vue, camera) {
+    constructor(vue) {
         const robots = [];
         const balls = [];
 
@@ -24,7 +24,7 @@ class FootConfig extends Table {
         let robot2 = new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width / 1.1666, height / 2, Math.PI); // right robot
         robots.push(robot1, robot2);
 
-        super(robots, balls, vue, camera);
+        super(robots, balls, vue);
     }
 }
 

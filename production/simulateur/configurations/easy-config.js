@@ -12,7 +12,7 @@ import {
 import Ball from "../objects/ball.js";
 
 class EasyConfig extends Table {
-    constructor(vue, camera) {
+    constructor(vue) {
         const robots = [new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width / 3, height / 2)];
         const balls = [];
 
@@ -64,7 +64,7 @@ class EasyConfig extends Table {
 
         balls.push(topLeftBall, topMiddleBall, topRightBall, bottomLeftBall, bottomMiddleBall, bottomRightBall);
 
-        super(robots, balls, vue, camera);
+        super(robots, balls, vue);
     }
 }
 

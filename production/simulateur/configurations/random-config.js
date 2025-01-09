@@ -14,7 +14,7 @@ import {
 import Ball from "../objects/ball.js";
 
 class RandomConfig extends Table {
-    constructor(vue, camera) {
+    constructor(vue) {
         let randomWidth = Math.random() * width;
         let randomHeight = Math.random() * height;
         const robots = [new Robot(
@@ -70,7 +70,7 @@ class RandomConfig extends Table {
 
         balls.push(ballWhite, ballBlack);
 
-        super(robots, balls, vue, camera);
+        super(robots, balls, vue);
     }
 }
 
