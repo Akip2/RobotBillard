@@ -330,7 +330,6 @@ socket.on('connect', function () {
     console.log("Connected to server with ID : ", socket.id);
 
     socket.on("motor", function (order) {
-        console.log("simulator : motor order");
         table.sendRobotOrder(order, order.ipRobot); // Send order to simulator
     });
 
