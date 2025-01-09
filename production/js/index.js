@@ -189,7 +189,7 @@ window.addEventListener("load", () => {
         } else {
             // Get the position of a click on the camera
             console.log("Camera : (" + x + ", " + y + ")");
-            moveRobotTo(socket, currentRobotIp, x, y);
+            moveRobotTo(socket, currentRobotId, x, y);
         }
     });
 
@@ -284,11 +284,11 @@ function loadSimulator(configurationName) {
     colController.createEvent(vue.engine);
     table.run();
 
-    selectRobotsSimulator.innerHTML="";
+    selectRobotsSimulator.innerHTML = "";
 
-    for(let i = 0; i < table.getRobots().length; i++) {
+    for (let i = 0; i < table.getRobots().length; i++) {
         let option = document.createElement("option");
-        option.text = "Robot n°"+i;
+        option.text = "Robot n°" + i;
 
         selectRobotsSimulator.appendChild(option);
     }
@@ -299,8 +299,7 @@ function loadSimulator(configurationName) {
 export function getRobots() {
     if (currentView === "simulator") {
         return table.getRobots();
-    }
-    else {
+    } else {
         return getRealRobots();
     }
 }
