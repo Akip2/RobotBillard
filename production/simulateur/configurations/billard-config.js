@@ -13,7 +13,7 @@ import {
 import Ball from "../objects/ball.js";
 
 class BillardConfig extends Table {
-    constructor(vue, camera) {
+    constructor(vue) {
         const robots = [new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width/3, height/2)];
 
         const balls = [];
@@ -39,7 +39,7 @@ class BillardConfig extends Table {
             x += ballRadius * 2 - 3;
         }
 
-        super(robots, balls, vue, camera);
+        super(robots, balls, vue);
     }
 }
 

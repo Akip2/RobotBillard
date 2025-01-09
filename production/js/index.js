@@ -88,7 +88,7 @@ window.addEventListener("load", () => {
 
     selectRobotsSimulator.addEventListener("change", (event) => {
         let optionName = event.target.value;
-        currentRobotId = optionName[optionName.length - 1];
+        currentRobotId = optionName[optionName.length - 1] - 1;
     })
 
     // Reload the simulation
@@ -257,39 +257,40 @@ function loadSimulator(configurationName) {
 
     canvasContainer.classList.add("simulator-container");
     vue = new VueSimulateur(canvasContainer);
-    camera = new Camera(canvasContainer, vue);
 
     currentConfig = configurationName;
 
     switch (configurationName) {
         case "Random":
-            table = new RandomConfig(vue, camera);
+            table = new RandomConfig(vue);
             break;
         case "Billard":
-            table = new BillardConfig(vue, camera);
+            table = new BillardConfig(vue);
             break;
         case "Foot":
-            table = new FootConfig(vue, camera);
+            table = new FootConfig(vue);
             break;
         case "Facile":
-            table = new EasyConfig(vue, camera);
+            table = new EasyConfig(vue);
             break;
         default:
             currentConfig = "Random";
-            table = new RandomConfig(vue, camera);
+            table = new RandomConfig(vue);
     }
 
     let colController = new CollisionController(table);
 
     colController.createEvent(vue.engine);
+
+    camera = new Camera(canvasContainer, table);
     table.run();
+    camera.start();
 
     selectRobotsSimulator.innerHTML = "";
 
     for (let i = 0; i < table.getRobots().length; i++) {
         let option = document.createElement("option");
-        option.text = "Robot n°" + i;
-
+        option.text = "Robot n°" + (i + 1);
         selectRobotsSimulator.appendChild(option);
     }
 
