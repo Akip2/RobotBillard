@@ -1,5 +1,7 @@
 import {getRobot} from "./index.js";
 
+let currentInterval = null;
+
 /**
  *
  * @param socket
@@ -43,6 +45,10 @@ export function turnRobot(socket, robotIp, direction) {
 }
 
 export function moveRobotTo(socket, robotIp, x, y) {
+    if(currentInterval !== null){
+        clearInterval(currentInterval);
+    }
+
     let robot = getRobot(0);
 
     if (robot !== undefined) {
@@ -52,7 +58,8 @@ export function moveRobotTo(socket, robotIp, x, y) {
         targetAngle = targetAngle < 0 ? targetAngle + 360 : targetAngle;
         console.log("==========")
         // Step 1 : turn
-        let turnInterval = setInterval(() => {
+
+        currentInterval = setInterval(() => {
             robot = getRobot(0);
 
             if (robot !== undefined) {
@@ -67,8 +74,8 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
                 if ((delta <= limit) && (delta >= -limit)) {
                     // Step 2 : move forward
-                    clearInterval(turnInterval);
-                    let forwardInterval = setInterval(() => {
+                    clearInterval(currentInterval);
+                    currentInterval = setInterval(() => {
                         robot = getRobot(0);
 
                         if (robot !== undefined) {
@@ -82,7 +89,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
                             if (distance > 25) {
                                 moveRobotForward(socket, robotIp, 5);
                             } else {
-                                clearInterval(forwardInterval);
+                                clearInterval(currentInterval);
                             }
                         }
                     }, 100);
