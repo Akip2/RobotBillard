@@ -88,7 +88,7 @@ window.addEventListener("load", () => {
 
     selectRobotsSimulator.addEventListener("change", (event) => {
         let optionName = event.target.value;
-        currentRobotId = optionName[optionName.length - 1];
+        currentRobotId = optionName[optionName.length - 1] - 1;
     })
 
     // Reload the simulation
@@ -288,7 +288,7 @@ function loadSimulator(configurationName) {
 
     for(let i = 0; i < table.getRobots().length; i++) {
         let option = document.createElement("option");
-        option.text = "Robot n°"+i;
+        option.text = "Robot n°"+ (i + 1);
 
         selectRobotsSimulator.appendChild(option);
     }
