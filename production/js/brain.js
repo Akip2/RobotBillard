@@ -32,7 +32,7 @@ export function moveRobotForward(socket, robotIp, distance, time = 3000) {
 
 export function turnRobot(socket, robotIp, direction) {
     // We know how much time we need to turn in a certain angle at 128 power
-    let angle = 10;
+    let angle = 5;
     let time = (1330 / 2) * (Math.abs(angle * (Math.PI / 180)) / Math.PI);
 
     if (direction === "Left") {
@@ -79,7 +79,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
                                 y: y
                             }) / (calculateBallSize(460) / 4.5)
 
-                            if (distance > 20) {
+                            if (distance > 25) {
                                 moveRobotForward(socket, robotIp, 5);
                             } else {
                                 clearInterval(forwardInterval);
