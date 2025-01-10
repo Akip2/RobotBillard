@@ -8,8 +8,8 @@ export function startTestScenario(socket, index) {
 
     let check = setInterval(() => {
         if (isRobotNear(index, robotPosition.x + 100, robotPosition.y, 20)) {
-            clearInterval(check);
             moveRobotTo(socket, index, robotPosition.x - 50, robotPosition.y);
+            clearInterval(check);
         }
     }, 100);
 }
