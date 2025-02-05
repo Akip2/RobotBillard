@@ -158,6 +158,10 @@ header {
     flex-direction: row;
 }
 
+.canvas-video {
+    padding: 1rem;
+}
+
 .simulator-container {
     position: relative;
     height: 306px;
@@ -173,7 +177,6 @@ header {
 }
 
 canvas {
-    background-image: url('../img/table.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

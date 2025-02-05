@@ -6,6 +6,7 @@ let robots = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("canvas-output-video");
+    const canvasBrut = document.getElementById("canvas-output-video-brut"); // Vidéo brute
     const ctx = canvas.getContext("2d");
 
     // Access camera
@@ -14,10 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
         navigator.mediaDevices.getUserMedia({
             video: {
                 width: {
-                    ideal: 350
+                    ideal: 350 * 1.3
                 },
                 height: {
-                    ideal: 200
+                    ideal: 200 * 1.3
                 }
             }
         })
@@ -43,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // When video is ready, start processing
                 video.addEventListener("loadeddata", () => {
                     // Launch the loop of video processing
-                    processVideo(video, canvas, ctx);
+                    processVideo(video, canvas, canvasBrut, ctx);
                 });
             })
             .catch((error) => {
@@ -54,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-function processVideo(video, canvas, ctx) {
+function processVideo(video, canvas, canvasBrut, ctx) {
     let delay;
     const FPS = 30;
     const frame = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
@@ -63,6 +64,9 @@ function processVideo(video, canvas, ctx) {
         if (stillContinue) {
             try {
                 let begin = Date.now();
+
+                // frame brut
+                cv.imshow(canvasBrut, frame);
 
                 // Capture the frame of the video in a temporary canvas
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -145,6 +149,5 @@ export function getRealRobots() {
 }
 
 export function getRealRobot(index) {
-    // console.log(robots)
     return robots[index];
 }
