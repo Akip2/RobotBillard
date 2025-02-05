@@ -124,8 +124,7 @@ export function detectCircles(frame, ballRadius = 10) {
     return circles;
 }
 
-export function drawDetectedCircles(frame, circles, mv, isPerimeterFound = false) {
-
+export function drawDetectedCircles(frame, circles, mv, robots, isPerimeterFound = false) {
     ballsPositions = [];
     holesPositions = [];
 
@@ -144,7 +143,31 @@ export function drawDetectedCircles(frame, circles, mv, isPerimeterFound = false
                 if (result < 38 && holesPositions.length < 6) {
                     perimeterColor = [128, 128, 128, 255] // color of holes
                 } else {
-                    perimeterColor = [0, 255, 0, 255] // color of balls inside the table (green)
+                    let i = 0;
+                    let isOnAruco = false;
+
+                    while (i < robots.length && !isOnAruco) {
+                        let robotPosition = robots[i].position;
+
+                        let dist = Math.sqrt(
+                            Math.pow(robotPosition.x - center.x, 2)
+                            +
+                            Math.pow(robotPosition.y - center.y, 2)
+                        );
+
+                        console.log(robotPosition);
+
+                        if (dist <= circle[2] * 5) {
+                            isOnAruco = true;
+                        }
+                        i++;
+                    }
+
+                    if (isOnAruco) {
+                        perimeterColor = [255, 0, 0, 255]; // color of balls detected on aruco (gray)
+                    } else {
+                        perimeterColor = [0, 255, 0, 255]; // color of balls on robot aruco (red)
+                    }
                     ballsPositions.push(center);
                 }
             } else {

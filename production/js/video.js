@@ -116,7 +116,7 @@ function processVideo(video, canvas, canvasBrut, ctx) {
 
                 // Detect and draw the circles
                 let circles = detectCircles(preProcessedFrame, ballRadius);
-                drawDetectedCircles(finalImage, circles, mv, isPerimeterFound);
+                drawDetectedCircles(finalImage, circles, mv, robots, isPerimeterFound);
 
                 // Draw the final result in the canvas
                 cv.imshow(canvas, finalImage);
