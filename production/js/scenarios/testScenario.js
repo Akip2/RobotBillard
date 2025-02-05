@@ -2,7 +2,7 @@ import {isRobotNear, moveRobotTo} from "../brain.js";
 import {getRobot} from "../index.js";
 
 export function startTestScenario(socket, index) {
-    let robotPosition = getRobot(index).position;
+    let robotPosition = getRobot(0).position;
 
     moveRobotTo(socket, index, robotPosition.x + 100, robotPosition.y);
 

@@ -1,5 +1,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+NZ:wght@100..400&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
+@media (max-width: 600px) {
+    * {
+        background-color: darkslategray;
+    }
+
+    #titre {
+        display: none;
+    }
+
+    #grid-btns {
+        display: block;
+    }
+
+    #camera {
+        display: none;
+    }
+
+    #robots-go-scenarios {
+        display: none;
+    }
+
+    #left-part {
+        display: none;
+    }
+
+    #input-duration {
+        background-color: white;
+    }
+
+    canvas {
+        display: none;
+    }
+
+    footer {
+        display: none;
+    }
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -56,7 +94,7 @@ main {
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
