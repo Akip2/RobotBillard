@@ -134,7 +134,7 @@ export function drawDetectedCircles(frame, circles, mv, isPerimeterFound = false
         let center = new cv.Point(circle[0], circle[1]);
         let perimeterColor = [0, 0, 255, 255]; // color when no table is detected
 
-        // Detect which ones are inside the table or not and add the inside one in the atribute
+        // Detect which ones are inside the table or not and add the inside one in the attribute
         if (isPerimeterFound) {
             let result = cv.pointPolygonTest(mv, center, true);
 
@@ -148,7 +148,7 @@ export function drawDetectedCircles(frame, circles, mv, isPerimeterFound = false
                     ballsPositions.push(center);
                 }
             } else {
-                perimeterColor = [255, 0, 0, 255] // color of balls outsite the table (red)
+                perimeterColor = [255, 0, 0, 255] // color of balls outside the table (red)
             }
         }
 
