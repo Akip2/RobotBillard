@@ -11,14 +11,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Access camera
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+
+        let factor = 1.3;
+
         // Use this code when you want to use an external camera, to change ratio of the empty one
         navigator.mediaDevices.getUserMedia({
             video: {
                 width: {
-                    ideal: 350 * 1.3
+                    ideal: 350 * factor
                 },
                 height: {
-                    ideal: 200 * 1.3
+                    ideal: 200 * factor
                 }
             }
         })
