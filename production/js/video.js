@@ -1,4 +1,4 @@
-import {detectAndDrawArucos, detectCircles, drawDetectedCircles, HEIGHT, preProcess, WIDTH} from "./video-functions.js";
+import {detectAndDrawArucos, detectCircles, drawDetectedCircles, preProcess} from "./video-functions.js";
 import {calculateBallSize, distanceBetweenPoints} from "./brain.js";
 
 let stillContinue = true;
@@ -14,10 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
         navigator.mediaDevices.getUserMedia({
             video: {
                 width: {
-                    ideal: WIDTH
+                    ideal: 350
                 },
                 height: {
-                    ideal: HEIGHT
+                    ideal: 200
                 }
             }
         })
