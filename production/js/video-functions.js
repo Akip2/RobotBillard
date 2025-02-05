@@ -180,7 +180,7 @@ export function drawDetectedCircles(frame, circles, mv, robots, isPerimeterFound
     }
 }
 
-export function getBallsPositions() {
+export function getRealBalls() {
     return ballsPositions;
 }
 

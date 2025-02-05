@@ -11,6 +11,8 @@ import FootConfig from "../simulateur/configurations/foot-config.js";
 import {getRealRobot, getRealRobots, setStillContinue} from "./video.js";
 import {createOrder, moveRobotTo} from "./brain.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
+import {startBillardScenario} from "./scenarios/billardScenario.js";
+import {getRealBalls} from "./video-functions.js";
 
 const socket = io(); // Connection to server
 
@@ -76,6 +78,9 @@ window.addEventListener("load", () => {
 
     goBtn.addEventListener("click", () => {
         switch (currentScenario) {
+            case "Billard":
+                startBillardScenario(socket, 0);
+                break;
             case "default":
                 startTestScenario(socket, 0);
                 break;
@@ -182,10 +187,8 @@ window.addEventListener("load", () => {
         if (isSimulator) {
             // Get the position of a click on the simulator
             console.log("Simulator : (" + x + ", " + y + ")");
-            // turnRobot(socket, 90)
-            // moveRobotForward(socket, 50);
             moveRobotTo(socket, currentRobotId, x, y);
-            // turnRobotInCircle(socket, 10, 360);
+            // turnRobotInCircle(socket, 0);
         } else {
             // Get the position of a click on the camera
             console.log("Camera : (" + x + ", " + y + ")");
@@ -317,6 +320,21 @@ export function getRobot(index) {
         };
     }
     return getRealRobot(index);
+}
+
+export function getBalls() {
+    if (currentView === "simulator") {
+        let balls = [];
+
+        for (const ball of table.getBalls()) {
+            balls.push({
+                x: ball.body.position.x,
+                y: ball.body.position.y
+            });
+        }
+        return balls;
+    }
+    return getRealBalls();
 }
 
 function addRobot(robotName) {
