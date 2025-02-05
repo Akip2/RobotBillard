@@ -5,6 +5,7 @@ class Hole extends SimulationObject {
     constructor(radius, x = 0, y = 0) {
         const body = Bodies.circle(x, y, radius, {
             isStatic: true,
+            isSensor: true,
 
             collisionFilter: {
                 category: COLLISION_FILTERS.HOLE,
