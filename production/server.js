@@ -45,11 +45,15 @@ io.sockets.on("connection", function (socket) {
 
         let ipRobot = val.ipRobot;
 
+        if (ipRobot === -1) {
+            socket.broadcast.emit("motor", val);
+        }
+
         if (simulatorMode) {
             socket.emit("motor", val); // We send the request back to the simulator
         } else {
             delete val.ipRobot;
-            
+
             let i = 0;
             let found = false;
             let robotSocket;
