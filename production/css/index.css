@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+NZ:wght@100..400&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 * {
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
     font-family: 'Rubik', sans-serif;
 }
 
@@ -15,11 +15,11 @@ body {
     min-height: 100%;
 }
 
-button:hover{
+button:hover {
     cursor: pointer;
 }
 
-select:hover{
+select:hover {
     cursor: pointer;
 }
 
@@ -56,22 +56,14 @@ main {
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    background: linear-gradient(0deg, #FFFFFF 50%, #FF5C35 100%);
     animation: spin 1s linear infinite;
-}
-
-.inner-circle {
-    width: 90%;
-    height: 90%;
-    background-color: white;
-    border-radius: 50%;
 }
 
 @keyframes spin {
     from {
         transform: rotate(0);
     }
-    to{
+    to {
         transform: rotate(360deg);
     }
 }
@@ -100,13 +92,13 @@ header {
 }
 
 /* first button of the list (set the radius for its left angles) */
-#views-list>*:first-child {
+#views-list > *:first-child {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
 
 /* last button of the list (set the radius for its right angles) */
-#views-list>*:last-child {
+#views-list > *:last-child {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
@@ -127,8 +119,14 @@ header {
 /* LEFT PART */
 
 
-#canvas-container {
-    height: fit-content;
+.simulator-container {
+    position: relative;
+    height: 306px;
+    width: 563px;
+
+    canvas {
+        position: absolute;
+    }
 }
 
 #left-part {
@@ -136,7 +134,7 @@ header {
 }
 
 canvas {
-    background-image: url('../img/img.png');
+    background-image: url('../img/table.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -150,7 +148,12 @@ canvas {
     cursor: grabbing;
 }
 
-#select-configuration {
+#top-table-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.select-top-table-container {
     background-color: lightgray;
     border: none;
     padding: 0.5em;
@@ -177,16 +180,24 @@ canvas {
 }
 
 
-/* LEFT PART : GO and SCENARIOS */
+/* RIGHT PART */
 
 
-#go-scenarios {
-    flex-direction: column;
-    align-items: center;
+#right-part > * {
+    margin: 0 1rem 0 1rem;
 }
 
-#div-scenarios {
-    margin-top: 3rem; /* distance from the button GO */
+
+/* RIGHT PART : GO and SCENARIOS */
+
+
+#robots-go-scenarios {
+    flex-direction: column;
+    /*align-items: center;*/
+    justify-content: space-evenly;
+}
+
+.div-choice {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -197,7 +208,6 @@ canvas {
     border-radius: 100%;
     width: 10rem;
     height: 10rem;
-    margin: 1rem;
 
     /* text */
     font-size: 3rem;
@@ -211,24 +221,16 @@ canvas {
 }
 
 #go-btn:hover {
-    margin: 0.5rem;
-
-    width: 11rem;
-    height: 11rem;
-    translate: -5px -5px;
+    transform: scale(1.1) translate(-5px, -5px);
     box-shadow: 20px 20px 10px 1px grey;
 }
 
 #go-btn:active {
-    margin: 1rem;
-
-    width: 10rem;
-    height: 10rem;
-    translate: 10px 10px;
+    transform: scale(0.9) translate(10px, 10px);
     box-shadow: 3px 3px 5px 1px grey;
 }
 
-#text-scenarios {
+.text-up-to-select {
     font-size: 1.5rem;
     padding: 1rem;
 }
@@ -251,13 +253,13 @@ select {
     background: lightgrey;
 }
 
-.option-scenarios {
+.option {
     background-color: #F0F0F0;
 
     transition: all ease 0.2s;
 }
 
-.option-scenarios:hover {
+.option:hover {
     background-color: lightgrey;
 }
 
@@ -321,7 +323,7 @@ select {
 }
 
 #fleche:hover svg path,
-#fleche:active svg path{
+#fleche:active svg path {
     fill: green;
 }
 
@@ -409,10 +411,10 @@ footer {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.displayNone{
+.displayNone {
     display: none;
 }
 
-.displayFlex{
+.displayFlex {
     display: flex;
 }

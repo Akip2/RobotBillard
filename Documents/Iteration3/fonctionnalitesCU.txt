@@ -1,0 +1,11 @@
+Fonctionnalités et cas d'utilisations développés :
+	- Déplacer les robots à partir d'un clic sur le canvas : FROGER Corentin (60%) et PIERROT Nathan (40%)
+	- Lancer un scénario simple dans le simulateur : FROGER Corentin (100%)
+	- Envoyer des ordres différents à différents robots : FONTANEZ Antoine (40%), FROGER Corentin (20%) et PIERROT Nathan (40%)
+	- Utiliser la détection de cercles dans le simulateur : FONTANEZ Antoine (100%)
+	- Exécuter un ordre (le robot) pendant un certain temps ou jusqu'à la réception d'un nouvel ordre : PIERROT Nathan (100%)
+	- Ajuster la vitesse du robot du simulateur à la vitesse du robot réel : FONTANEZ Antoine (100%)
+	- Différencier les arucos des angles du billard de ceux des robots : FONTANEZ Antoine (100%)
+	- Obtenir et afficher la direction dans laquelle un ArUco est orienté : FROGER Corentin (100%)
+	- Exclure les cercles détectés en dehors de la table (ils ne correspondent pas à des boules) : FROGER Corentin (100%)
+	- Différencier les boules de billard des trous de la table : FROGER Corentin (20%) et PIERROT Nathan (80%)

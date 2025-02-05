@@ -59,7 +59,7 @@ class Wheel extends SimulationObject {
     }
 
     setSpeed(speed, duration=1000) {
-        this.speed = speed/3;
+        this.speed = speed/4.25;
         let delta=0;
 
         clearInterval(this.movingInterval);

@@ -22,6 +22,8 @@ const robotHeight = 38;
 const wheelHeight = robotHeight/18;
 const wheelWidth = robotWidth/1.6;
 
+const simulatorCameraFPS = 20;
+
 export {
     ballRadius,
     ballColors,
@@ -33,4 +35,5 @@ export {
     robotHeight,
     wheelWidth,
     wheelHeight,
+    simulatorCameraFPS
 }

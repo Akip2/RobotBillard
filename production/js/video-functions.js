@@ -1,6 +1,15 @@
 export const WIDTH = 700;
 export const HEIGHT = 400;
 
+//ids of the aruco placed at the corners of the table
+const topLeftId = 757;
+const topRightId = 1;
+const bottomLeftId = 157;
+const bottomRightId = 10;
+
+let ballsPositions = [];
+let holesPositions = [];
+
 export function preProcess(frame) {
     // let blurred = new cv.Mat();
     let gray = new cv.Mat();
@@ -28,12 +37,16 @@ export function drawAndGetDirectionOfAruco(frame, cornersOfAruco) {
         (bottomRightCornerOfAruco[1] + bottomLeftCornerOfAruco[1]) / 2
     );
 
-    let angle = Math.atan2(bottomCenter.y - topCenter.y, topCenter.x - bottomCenter.x) / Math.PI;
+    let angle = Math.atan2(bottomCenter.y - topCenter.y, topCenter.x - bottomCenter.x) * (180 / Math.PI);
+
+    if (angle < 0) {
+        angle += 360;
+    }
 
     cv.line(frame, bottomCenter, topCenter, new cv.Scalar(0, 255, 0), 2);
     cv.rectangle(frame, topCenter, topCenter, new cv.Scalar(255, 0, 0), 15);
 
-    return angle.toFixed(2);
+    return angle;
 }
 
 export function detectAndDrawArucos(frame) {
@@ -48,8 +61,8 @@ export function detectAndDrawArucos(frame) {
     detector.detectMarkers(frame, ArucoCorners, ArucoIds);
     cv.drawDetectedMarkers(frame, ArucoCorners, ArucoIds);
 
-    // Deduce the corners, and the size of the table
-    let topLeftCornerOfArucos = [];
+    let robotsArucos = [];
+    let topLeft, topRight, bottomLeft, bottomRight;
 
     for (let i = 0; i < ArucoIds.rows; i++) {
         let ArucoId = ArucoIds.data32S[i];
@@ -58,45 +71,85 @@ export function detectAndDrawArucos(frame) {
         // id 0 aruco can be detected too easily, causes problems
         if (ArucoId !== 0) {
             let topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
-            topLeftCornerOfArucos.push(topLeftCornerOfAruco);
+            let x = topLeftCornerOfAruco[0];
+            let y = topLeftCornerOfAruco[1];
 
-            console.log(drawAndGetDirectionOfAruco(frame, cornersOfAruco) + "π");
+            let point = new cv.Point(x, y);
+
+            switch (ArucoId) {
+                case topLeftId:
+                    topLeft = point;
+                    break;
+                case topRightId:
+                    topRight = point;
+                    break;
+                case bottomLeftId:
+                    bottomLeft = point;
+                    break;
+                case bottomRightId:
+                    bottomRight = point
+                    break;
+                default:
+                    let orientation = drawAndGetDirectionOfAruco(frame, cornersOfAruco);
+                    let robotData = {
+                        position: point,
+                        orientation: orientation,
+                    }
+
+                    robotsArucos.push(robotData);
+            }
         }
     }
-    return sortCorners(topLeftCornerOfArucos);
+
+    let corners = [topLeft, topRight, bottomRight, bottomLeft];
+    return corners.concat(robotsArucos);
 }
 
-export function detectCircles(frame, ballDiameter = 10) {
+export function detectCircles(frame, ballRadius = 10) {
     let circles = new cv.Mat();
 
-    let margin = (20 / 100) * ballDiameter; // + or - 20% of expected size
-    let minDiameter = ballDiameter - margin;
-    let maxDiameter = ballDiameter + margin;
+    let margin = (20 / 100) * ballRadius; // + or - 20% of expected size
+    let minRadius = ballRadius - margin;
+    let maxRadius = ballRadius + margin;
 
     cv.HoughCircles(frame, circles, cv.HOUGH_GRADIENT,
         2,              // resolution : 1 = default resolution, 2 = resolution divided by 2
         15,             // distance between circles
         100,            // the lower it is, the more circles are detected (including false ones)
         30,             //
-        minDiameter,    // minimum diameter of circles
-        maxDiameter     // maximum diameter of circles
+        minRadius,    // minimum diameter of circles
+        maxRadius     // maximum diameter of circles
     );
 
     return circles;
 }
 
 export function drawDetectedCircles(frame, circles, mv, isPerimeterFound = false) {
+
+    ballsPositions = [];
+    holesPositions = [];
+
     for (let i = 0; i < circles.cols; ++i) {
         let circle = circles.data32F.slice(i * 3, (i + 1) * 3);
         let center = new cv.Point(circle[0], circle[1]);
-        let perimeterColor = [0, 0, 255, 255];
+        let perimeterColor = [0, 0, 255, 255]; // color when no table is detected
 
-        // Detect which ones are inside the table or not
+        // Detect which ones are inside the table or not and add the inside one in the atribute
         if (isPerimeterFound) {
-            let result = cv.pointPolygonTest(mv, center, false);
+            let result = cv.pointPolygonTest(mv, center, true);
 
-            // Change the color if inside or outside circle
-            result >= 0 ? perimeterColor = [0, 255, 0, 255] : perimeterColor = [255, 0, 0, 255]
+            // Change the color if inside or outside circle and differentiate balls from holes
+            if (result >= 0) {
+                // if the center of the detected circle is too close from the site of the table it may be a hole
+                if (result < 38 && holesPositions.length < 6) {
+                    perimeterColor = [128, 128, 128, 255] // color of holes
+                } else {
+                    perimeterColor = [0, 255, 0, 255] // color of balls inside the table (green)
+                    ballsPositions.push(center);
+                }
+            } else {
+                perimeterColor = [255, 0, 0, 255] // color of balls outsite the table (red)
+            }
         }
 
         cv.circle(frame, center, circle[2], perimeterColor, 3);
@@ -104,42 +157,10 @@ export function drawDetectedCircles(frame, circles, mv, isPerimeterFound = false
     }
 }
 
-export function sortCorners(corners) {
-    let topLeft, topRight, bottomLeft, bottomRight;
-
-    for (let i = 0; i < corners.length; i++) {
-        let x = corners[i][0];
-        let y = corners[i][1];
-
-        const isTop = y > 0 && y < HEIGHT / 2;
-        const isBottom = y > HEIGHT / 2 && y < HEIGHT;
-        const isLeft = x > 0 && x < WIDTH / 2;
-        const isRight = x > WIDTH / 2 && x < WIDTH;
-
-        // Separate the table into 4 areas
-        if (isTop && isLeft) {
-            topLeft = new cv.Point(x, y);
-        } else if (isTop && isRight) {
-            topRight = new cv.Point(x, y);
-        } else if (isBottom && isRight) {
-            bottomRight = new cv.Point(x, y);
-        } else if (isBottom && isLeft) {
-            bottomLeft = new cv.Point(x, y);
-        }
-    }
-
-    return [topLeft, topRight, bottomRight, bottomLeft];
+export function getBallsPositions() {
+    return ballsPositions;
 }
 
-export function distanceBetweenPoints(p1, p2) {
-    return Math.sqrt(
-        Math.pow(p1.x - p1.y, 2) + Math.pow(p2.x - p2.y, 2)
-    );
-}
-
-export function calculateBallSize(tableLength) {
-    let ballRealSize = 4.5;
-    let tableRealSize = 118.5;
-
-    return (tableLength * ballRealSize) / tableRealSize;
+export function getHolesPositions() {
+    return holesPositions;
 }

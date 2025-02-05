@@ -32,8 +32,8 @@ SocketIOclient socketIO;
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Motors
-Adafruit_DCMotor* leftMotor = AFMS.getMotor(1);
-Adafruit_DCMotor* rightMotor = AFMS.getMotor(2);
+Adafruit_DCMotor* leftMotor = AFMS.getMotor(2);
+Adafruit_DCMotor* rightMotor = AFMS.getMotor(1);
 
 // === Robot variables =======================================================================
 
@@ -47,6 +47,8 @@ int rightMotorSpeed = 0;
 int motorDuration = 0;
 
 bool changeMotors = false;
+
+int timeLastOrder = 0;
 
 /*
   Handles what happens when an event is received
@@ -76,6 +78,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
       name_event = String(doc[0]);
 
       if (name_event == "motor") {
+
         int left = doc[1]["left"];
         int right = doc[1]["right"];
         int duration = doc[1]["duration"];
@@ -120,6 +123,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
 
         motorDuration = duration;
         changeMotors = true;
+        timeLastOrder = millis();
       }
       break;
     case sIOtype_ACK:
@@ -197,19 +201,14 @@ unsigned long messageTimestamp = 0;
 void loop() {
   socketIO.loop();
 
-  // Motors are changed here
-  if (changeMotors) {
+  if ((millis() - timeLastOrder) < motorDuration) {
     leftMotor->run(leftMotorDirection);
     rightMotor->run(rightMotorDirection);
     leftMotor->setSpeed(leftMotorSpeed);
     rightMotor->setSpeed(rightMotorSpeed);
-
-    delay(motorDuration);
-
+  } else {
     leftMotor->run(RELEASE);
     rightMotor->run(RELEASE);
-
-    changeMotors = false;
   }
 
   uint64_t now = millis();

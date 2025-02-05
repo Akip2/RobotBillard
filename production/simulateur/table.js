@@ -7,6 +7,7 @@ class Table {
         this.robots = robots;
         this.balls = balls;
         this.vue = vue;
+        this.ballsDetected = [];
 
         this.walls = [
             new Wall(wallSize, height, 2.5, height / 2),
@@ -36,13 +37,26 @@ class Table {
         return this.balls;
     }
 
+    getRobots() {
+        return this.robots;
+    }
+
     run() {
         this.vue.setup(this);
         this.vue.run();
     }
 
-    sendRobotOrder(order, id = 0){
+    sendRobotOrder(order, id) {
         this.robots[id].executeOrder(order);
+    }
+
+    updateDetectedCircles(ballsDetected) {
+        this.ballsDetected = ballsDetected;
+        this.vue.drawDetectedCircles(ballsDetected);
+    }
+
+    getBallsDetected(){
+        return this.ballsDetected;
     }
 }
 

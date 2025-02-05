@@ -1,15 +1,8 @@
-import {
-    calculateBallSize,
-    detectAndDrawArucos,
-    detectCircles,
-    distanceBetweenPoints,
-    drawDetectedCircles,
-    HEIGHT,
-    preProcess,
-    WIDTH
-} from "./video-functions.js";
+import {detectAndDrawArucos, detectCircles, drawDetectedCircles, HEIGHT, preProcess, WIDTH} from "./video-functions.js";
+import {calculateBallSize, distanceBetweenPoints} from "./brain.js";
 
 let stillContinue = true;
+let robots = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("canvas-output-video");
@@ -29,33 +22,33 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         })
 
-        // To use a prerecorded video instead
-        // .then((stream) => {
-        //     // Create a virtual video to get the frames of the camera stream
-        //     const video = document.getElementById("canvas-input-video");
-        //     video.play();
-        //
-        //     // Launch the loop of video processing
-        //     processVideo(video, canvas, ctx);
-        // })
+            // To use a prerecorded video instead
+            // .then((stream) => {
+            //     // Create a virtual video to get the frames of the camera stream
+            //     const video = document.getElementById("canvas-input-video");
+            //     video.play();
+            //
+            //     // Launch the loop of video processing
+            //     processVideo(video, canvas, ctx);
+            // })
 
-        // To use the PC webcam
-        navigator.mediaDevices.getUserMedia({video: true})
-        .then((stream) => {
-            // Create a virtual video to get the frames of the camera stream
-            const video = document.createElement("video");
-            video.srcObject = stream;
-            video.play();
+            // To use the PC webcam
+            // navigator.mediaDevices.getUserMedia({video: true})
+            .then((stream) => {
+                // Create a virtual video to get the frames of the camera stream
+                const video = document.createElement("video");
+                video.srcObject = stream;
+                video.play();
 
-            // When video is ready, start processing
-            video.addEventListener("loadeddata", () => {
-                // Launch the loop of video processing
-                processVideo(video, canvas, ctx);
+                // When video is ready, start processing
+                video.addEventListener("loadeddata", () => {
+                    // Launch the loop of video processing
+                    processVideo(video, canvas, ctx);
+                });
+            })
+            .catch((error) => {
+                console.log("Camera access error :", error);
             });
-        })
-        .catch((error) => {
-            console.log("Camera access error :", error);
-        });
     } else {
         console.log("getUserMedia isn't supported by your browser.");
     }
@@ -83,13 +76,16 @@ function processVideo(video, canvas, ctx) {
                 cv.cvtColor(frame, finalImage, cv.COLOR_RGBA2RGB);
 
                 // AruCo detection
-                let corners = detectAndDrawArucos(finalImage);
+                let arucos = detectAndDrawArucos(finalImage);
+
+                let corners = arucos.slice(0, 4);
                 let [topLeft, topRight, bottomRight, bottomLeft] = corners;
+                robots = arucos.slice(4, arucos.length);
 
                 const markersVector = new cv.MatVector();
                 const mv = new cv.Mat(corners.length, 1, cv.CV_32SC2);
 
-                let ballDiameter = 10;
+                let ballRadius = 10;
                 let isPerimeterFound = false;
 
                 // If the 4 table corners are detected, draw them and lines between them
@@ -110,12 +106,12 @@ function processVideo(video, canvas, ctx) {
                     cv.polylines(finalImage, markersVector, true, new cv.Scalar(0, 255, 0), 4);
 
                     // We can deduce some parameters as well
-                    ballDiameter = calculateBallSize(distanceBetweenPoints(topLeft, bottomLeft));
+                    ballRadius = calculateBallSize(distanceBetweenPoints(topLeft, bottomLeft));
                     isPerimeterFound = true;
                 }
 
                 // Detect and draw the circles
-                let circles = detectCircles(preProcessedFrame, ballDiameter);
+                let circles = detectCircles(preProcessedFrame, ballRadius);
                 drawDetectedCircles(finalImage, circles, mv, isPerimeterFound);
 
                 // Draw the final result in the canvas
@@ -140,6 +136,15 @@ function processVideo(video, canvas, ctx) {
     processFrame();
 }
 
-export function setSillContinue(boolean) {
+export function setStillContinue(boolean) {
     stillContinue = boolean;
+}
+
+export function getRealRobots() {
+    return robots;
+}
+
+export function getRealRobot(index) {
+    // console.log(robots)
+    return robots[index];
 }
