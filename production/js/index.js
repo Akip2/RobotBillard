@@ -310,13 +310,22 @@ export function getRobots() {
 
 export function getRobot(index) {
     if (currentView === "simulator") {
+        let angle = table.robots[index].body.angle;
+
+        if (angle > 0) {
+            angle = 360 - ((Math.abs(table.robots[index].body.angle) * (180 / Math.PI)) % 360);
+        } else {
+            angle = (Math.abs(table.robots[index].body.angle) * (180 / Math.PI)) % 360;
+        }
+
         return {
             position:
                 {
                     x: table.robots[index].body.position.x,
                     y: table.robots[index].body.position.y
                 },
-            orientation: (Math.abs(table.robots[index].body.angle) * (180 / Math.PI)) % 360
+            // orientation: (Math.abs(table.robots[index].body.angle) * (180 / Math.PI)) % 360
+            orientation: angle
         };
     }
     return getRealRobot(index);
@@ -324,15 +333,7 @@ export function getRobot(index) {
 
 export function getBalls() {
     if (currentView === "simulator") {
-        let balls = [];
-
-        for (const ball of table.getBalls()) {
-            balls.push({
-                x: ball.body.position.x,
-                y: ball.body.position.y
-            });
-        }
-        return balls;
+        return table.getBallsDetected();
     }
     return getRealBalls();
 }

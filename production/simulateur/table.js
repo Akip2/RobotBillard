@@ -47,7 +47,13 @@ class Table {
     }
 
     sendRobotOrder(order, id) {
-        this.robots[id].executeOrder(order);
+        if (id === -1) {
+            for (const robot of this.robots) {
+                robot.executeOrder(order);
+            }
+        } else {
+            this.robots[id].executeOrder(order);
+        }
     }
 
     updateDetectedCircles(ballsDetected) {
