@@ -69,7 +69,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
             if (angleDifference < -180) {
                 angleDifference += 360;
-            }/* else {
+            }/* else if (angleDifference > 180)  {
                 angleDifference -= 360;
             }*/
 

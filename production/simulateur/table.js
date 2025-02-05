@@ -1,5 +1,5 @@
 import Wall from "./objects/wall.js";
-import {width, height, holeRadius, wallSize} from "./params.js";
+import {height, holeRadius, wallSize, width} from "./params.js";
 import Hole from "./objects/hole.js";
 
 class Table {
@@ -55,7 +55,7 @@ class Table {
         this.vue.drawDetectedCircles(ballsDetected);
     }
 
-    getBallsDetected(){
+    getBallsDetected() {
         return this.ballsDetected;
     }
 }

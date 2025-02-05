@@ -44,8 +44,7 @@ class Camera {
             imgData.delete();
 
             this.table.updateDetectedCircles(ballsDetected);
-        } catch
-            (err) {
+        } catch (err) {
             console.error(err);
         }
     }
