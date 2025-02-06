@@ -102,9 +102,6 @@ io.sockets.on("connection", function (socket) {
     });
 });
 
-console.log(`Server is running on localhost:${port}`);
-
-
 function updateRobotsList(socket) {
     let robots = [];
 
@@ -121,3 +118,5 @@ function updateRobotsList(socket) {
     socket.emit("robots-list", robots);
     console.log("apres le emit de updateRobotsList");
 }
+
+console.log(`Server is running on http://localhost:${port}`);

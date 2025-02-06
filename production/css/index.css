@@ -222,7 +222,7 @@ canvas {
     background-color: darkgray;
 }
 
-.checkbox {
+.param {
     background-color: lightgray;
     border: none;
     padding: 0.5em;
@@ -236,7 +236,6 @@ canvas {
 .input-checkbox {
     width: 2rem;
 }
-
 
 /* RIGHT PART */
 
