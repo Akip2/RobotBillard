@@ -1,4 +1,4 @@
-import {simulatorSpeed} from "./index.js";
+import {simulatorSpeed} from "./events/parameters.js";
 import {getRobot} from "./elements-manager.js";
 
 let currentInterval = null;

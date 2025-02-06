@@ -11,7 +11,7 @@ import {canvasContainer, reload, selectRobots} from "./index-init.js";
 import {socket} from "../index.js";
 import Camera from "../../simulateur/camera.js";
 
-let vue = null;
+export let vue = null;
 let camera = null;
 export let table = null;
 export let currentView = "camera";

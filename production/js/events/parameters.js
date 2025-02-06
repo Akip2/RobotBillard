@@ -1,4 +1,5 @@
 import {loadSimulator} from "./view-manager.js";
+import {vue} from "./view-manager.js";
 
 const speedSlider = document.querySelector("#sim-speed");
 const selectScenarios = document.querySelector("#select-scenarios");
@@ -28,6 +29,7 @@ window.addEventListener("load", () => {
 
     speedSlider.addEventListener("change", (event) => {
         simulatorSpeed = event.target.value;
+        vue.changeSpeed();
     })
 
     selectRobotsSimulator.addEventListener("change", (event) => {

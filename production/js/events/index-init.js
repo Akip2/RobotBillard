@@ -13,6 +13,7 @@ import {
     duration,
     leftSpeed,
     rightSpeed,
+    simulatorSpeed,
     setAfficherDessins,
     setCurrentScenario,
     setDuration,
@@ -31,7 +32,6 @@ export const affichage = document.querySelector("#checkbox-affichage");
 export const selectRobots = document.querySelector("#select-robot");
 const goBtn = document.querySelector("#go-btn");
 const selectScenarios = document.querySelector("#select-scenarios");
-const speedSlider = document.querySelector("#sim-speed");
 
 // viewArrowControls
 const btnForward = document.querySelector("#btn-forward");
@@ -80,16 +80,16 @@ window.addEventListener("load", () => {
         setRightSpeed(cursorRightMotor.value);
     });
     btnForward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(leftSpeed, rightSpeed, duration, currentRobotId));
+        socket.emit('motor', createOrder(leftSpeed, rightSpeed, duration/simulatorSpeed, currentRobotId));
     });
     btnBackward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-leftSpeed, -rightSpeed, duration, currentRobotId));
+        socket.emit('motor', createOrder(-leftSpeed, -rightSpeed, duration/simulatorSpeed, currentRobotId));
     });
     btnTurnRight.addEventListener("click", () => {
-        socket.emit('motor', createOrder(leftSpeed, -rightSpeed, duration, currentRobotId));
+        socket.emit('motor', createOrder(leftSpeed, -rightSpeed, duration/simulatorSpeed, currentRobotId));
     });
     btnTurnLeft.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-leftSpeed, rightSpeed, duration, currentRobotId));
+        socket.emit('motor', createOrder(-leftSpeed, rightSpeed, duration/simulatorSpeed, currentRobotId));
     });
 
     canvasContainer.addEventListener("click", (event) => {
