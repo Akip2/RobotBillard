@@ -1,6 +1,6 @@
 // Ce fichier contient : récupération et ajout d'évènements des éléments du DOM
 
-import {startBillardScenario} from "../scenarios/billardScenario.js";
+import {startBillardScenario} from "../scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "../scenarios/testScenario.js";
 import {createOrder, moveRobotTo} from "../brain.js";
 import {socket} from "../index.js";
@@ -23,34 +23,24 @@ import {
 // loader
 const loader = document.querySelector("#loader-container");
 
-// LEFT PART
 export const reload = document.querySelector("#reload-btn");
-export const configurationChoice = document.querySelector("#select-configuration");
 export const canvasContainer = document.querySelector("#canvas-container");
-export const videoBrut = document.querySelector("#canvas-output-video-brut");
-export const videoDessin = document.querySelector("#canvas-output-video");
 export const affichage = document.querySelector("#checkbox-affichage");
 
-// RIGHT PART
-export const viewGoScenarios = document.querySelector("#robots-go-scenarios");
-export const viewArrowControls = document.querySelector("#arrow-controls");
-
 // viewGoScenarios
-export const goBtn = document.querySelector("#go-btn");
-export const selectScenarios = document.querySelector("#select-scenarios");
 export const selectRobots = document.querySelector("#select-robot");
-export const selectRobotsSimulator = document.querySelector("#select-robot-sim");
-export const speedContainer = document.querySelector("#speed-container");
+const goBtn = document.querySelector("#go-btn");
+const selectScenarios = document.querySelector("#select-scenarios");
 const speedSlider = document.querySelector("#sim-speed");
 
 // viewArrowControls
-export const btnForward = document.querySelector("#btn-forward");
-export const btnBackward = document.querySelector("#btn-backward");
-export const btnTurnLeft = document.querySelector("#btn-turn-left");
-export const btnTurnRight = document.querySelector("#btn-turn-right");
-export const cursorLeftMotor = document.querySelector("#cursor-left-motor");
-export const cursorRightMotor = document.querySelector("#cursor-right-motor");
-export const inputDuration = document.querySelector("#input-duration");
+const btnForward = document.querySelector("#btn-forward");
+const btnBackward = document.querySelector("#btn-backward");
+const btnTurnLeft = document.querySelector("#btn-turn-left");
+const btnTurnRight = document.querySelector("#btn-turn-right");
+const cursorLeftMotor = document.querySelector("#cursor-left-motor");
+const cursorRightMotor = document.querySelector("#cursor-right-motor");
+const inputDuration = document.querySelector("#input-duration");
 
 window.addEventListener("load", () => {
 

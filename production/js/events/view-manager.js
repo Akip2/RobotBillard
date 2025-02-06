@@ -7,26 +7,26 @@ import EasyConfig from "../../simulateur/configurations/easy-config.js";
 import CollisionController from "../../simulateur/collision-controller.js";
 import {setStillContinue} from "../video/video.js";
 import {afficherDessins, currentConfig, setCurrentConfig, setCurrentRobotId} from "./parameters.js";
-import {
-    canvasContainer,
-    configurationChoice,
-    reload,
-    selectRobots,
-    selectRobotsSimulator,
-    speedContainer,
-    videoBrut,
-    videoDessin,
-    viewArrowControls,
-    viewGoScenarios
-} from "./index-init.js";
+import {canvasContainer, reload, selectRobots} from "./index-init.js";
 import {socket} from "../index.js";
 import Camera from "../../simulateur/camera.js";
 
-export let vue = null;
+let vue = null;
+let camera = null;
 export let table = null;
-export let camera = null;
 export let currentView = "camera";
 
+// RIGHT PART
+const viewGoScenarios = document.querySelector("#robots-go-scenarios");
+const viewArrowControls = document.querySelector("#arrow-controls");
+
+// LEFT PART
+const configurationChoice = document.querySelector("#select-configuration");
+const videoBrut = document.querySelector("#canvas-output-video-brut");
+const videoDessin = document.querySelector("#canvas-output-video");
+
+const selectRobotsSimulator = document.querySelector("#select-robot-sim");
+const speedContainer = document.querySelector("#speed-container");
 const viewsList = document.querySelector("#views-list");
 
 export function init() {

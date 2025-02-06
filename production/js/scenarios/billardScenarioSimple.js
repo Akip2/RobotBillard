@@ -1,7 +1,6 @@
 import {distanceBetweenPoints, moveRobotTo} from "../brain.js";
 import {getBalls, getRobot} from "../elements-manager.js";
 
-
 /**
  * méthode qui permet de lancer une simulation de partie de billard
  * socket et la connexion qui permet de communiquer avec le robot
