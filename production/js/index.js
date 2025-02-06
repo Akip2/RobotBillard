@@ -345,7 +345,15 @@ export function getRobot(index) {
 
 export function getBalls() {
     if (currentView === "simulator") {
-        return table.getBallsDetected();
+        let balls = [];
+
+        for (const ball of table.getBallsDetected()) {
+            balls.push({
+                x: ball.x,
+                y: ball.y
+            });
+        }
+        return balls;
     }
     return getRealBalls();
 }
