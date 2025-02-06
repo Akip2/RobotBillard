@@ -32,7 +32,9 @@ const reload = document.querySelector("#reload-btn");
 const configurationChoice = document.querySelector("#select-configuration");
 const robotChoice = document.querySelector("#select-robot");
 const canvasContainer = document.querySelector("#canvas-container");
-const canvas = document.querySelector("#canvas-output-video");
+const videoBrut = document.querySelector("#canvas-output-video-brut");
+const videoDessin = document.querySelector("#canvas-output-video");
+const affichage = document.querySelector("#checkbox-affichage");
 
 // RIGHT PART
 const viewGoScenarios = document.querySelector("#robots-go-scenarios");
@@ -146,7 +148,7 @@ window.addEventListener("load", () => {
                 currentRobotId = selectRobots.firstChild.innerText;
                 break;
             case "simulator":
-                hide(canvas);
+                hide(videoBrut);
                 show(selectRobotsSimulator);
                 hide(selectRobots);
                 loadSimulator(currentConfig);
@@ -196,6 +198,16 @@ window.addEventListener("load", () => {
         }
     });
 
+    affichage.addEventListener("change", function () {
+        if (affichage.checked) {
+            tryRemove(videoBrut);
+            tryAdd(videoDessin);
+        } else {
+            tryAdd(videoBrut);
+            tryRemove(videoDessin);
+        }
+    });
+
     // Loader
     setTimeout(() => {
         loader.style.display = "none";
@@ -231,7 +243,7 @@ function tryRemove(element) {
 }
 
 function showCanvas() {
-    if (canvas.classList.contains("displayNone")) {
+    if (videoBrut.classList.contains("displayNone")) {
         let potentialCanvas = document.querySelector("#canvas-simulateur");
         if (potentialCanvas != null) {
             canvasContainer.classList.remove("simulator-container");
@@ -245,7 +257,7 @@ function showCanvas() {
                 vue.clearSimulation();
             }
 
-            show(canvas);
+            show(videoBrut);
         }
     }
 }
@@ -342,6 +354,10 @@ function addRobot(robotName) {
     let option = document.createElement("option");
     option.text = robotName;
     selectRobots.appendChild(option);
+}
+
+function afficherDessins() {
+
 }
 
 

@@ -221,6 +221,21 @@ canvas {
     background-color: darkgray;
 }
 
+.checkbox {
+    background-color: lightgray;
+    border: none;
+    padding: 0.5em;
+    margin: 0.8em;
+    justify-content: center;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    box-shadow: 3px 3px 5px 1px #a8a8a8;
+}
+
+.input-checkbox {
+    width: 2rem;
+}
+
 
 /* RIGHT PART */
 

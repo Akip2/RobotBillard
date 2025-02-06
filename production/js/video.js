@@ -18,10 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
         navigator.mediaDevices.getUserMedia({
             video: {
                 width: {
-                    ideal: 350 * factor
+                    // ideal: 350 * factor
+                    ideal: 700
                 },
                 height: {
-                    ideal: 200 * factor
+                    // ideal: 200 * factor
+                    ideal: 400
                 }
             }
         })
