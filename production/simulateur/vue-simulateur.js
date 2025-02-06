@@ -1,8 +1,6 @@
 import {Body, Composite, Engine, Mouse, MouseConstraint, Render, Runner, World,} from "./global.js";
-import {ballRadius, height, width} from "./params.js";
-import {simulatorSpeed} from "../js/index.js";
-
-import {afficherDessins} from "../js/index.js";
+import {ballRadius, height, simulatorFPS, width} from "./params.js";
+import {afficherDessins, simulatorSpeed} from "../js/index.js";
 
 class VueSimulateur {
     constructor(canvasContainer) {
@@ -17,9 +15,7 @@ class VueSimulateur {
     createEngine() {
         this.engine = Engine.create();
         this.engine.gravity.y = 0;
-        this.engine.timing.timeScale = simulatorSpeed;
 
-        this.runner = Runner.create();
         this.render = Render.create({
             element: this.canvasContainer,
             engine: this.engine,
@@ -61,7 +57,8 @@ class VueSimulateur {
     run() {
         this.isRunning = true;
         Render.run(this.render);
-        Runner.run(this.runner, this.engine);
+
+        this.updateLoop = this.createUpdateLoop(0);
 
         this.overlay = document.createElement("canvas");
         this.overlay.width = width;
@@ -70,6 +67,12 @@ class VueSimulateur {
         this.overlay.style.backgroundImage = "none";
 
         this.canvasContainer.appendChild(this.overlay);
+    }
+
+    createUpdateLoop(speed) {
+        return setInterval(() => {
+            Engine.update(this.engine, speed*(1000 / simulatorFPS));
+        }, 1000 / (simulatorFPS));
     }
 
     setup(table) {
@@ -99,11 +102,11 @@ class VueSimulateur {
         World.clear(this.engine.world);
         Engine.clear(this.engine);
         Render.stop(this.render);
-        Runner.stop(this.runner);
         this.render.canvas.remove();
         this.render.canvas = null;
         this.render.context = null;
         this.overlay.remove();
+        clearInterval(this.updateLoop);
 
         Composite.clear(this.engine.world, false);
     }
@@ -132,8 +135,9 @@ class VueSimulateur {
         }
     }
 
-    updateSpeed() {
-        this.engine.timing.timeScale = simulatorSpeed;
+    changeSpeed() {
+        clearInterval(this.updateLoop);
+        this.updateLoop = this.createUpdateLoop(simulatorSpeed);
     }
 }
 

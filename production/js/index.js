@@ -93,8 +93,8 @@ window.addEventListener("load", () => {
     });
 
     speedSlider.addEventListener("change", (event) => {
-        simulatorSpeed = 1/event.target.value;
-        vue.updateSpeed();
+        simulatorSpeed = event.target.value;
+        vue.changeSpeed();
     })
 
     selectRobotsSimulator.addEventListener("change", (event) => {
