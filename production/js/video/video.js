@@ -1,5 +1,6 @@
 import {detectAndDrawArucos, detectCircles, drawDetectedCircles, preProcess} from "./video-functions.js";
-import {calculateBallSize, distanceBetweenPoints} from "./brain.js";
+import {calculateBallSize, distanceBetweenPoints} from "../brain.js";
+import {defaultBallRadius, FPS, HEIGHT, WIDTH} from "./video-parameters.js";
 
 let stillContinue = true;
 let robots = [];
@@ -12,18 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Access camera
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
-        let factor = 1.3;
-
         // Use this code when you want to use an external camera, to change ratio of the empty one
         navigator.mediaDevices.getUserMedia({
             video: {
                 width: {
-                    // ideal: 350 * factor
-                    ideal: 700
+                    ideal: WIDTH
                 },
                 height: {
-                    // ideal: 200 * factor
-                    ideal: 400
+                    ideal: HEIGHT
                 }
             }
         })
@@ -62,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function processVideo(video, canvas, canvasBrut, ctx) {
     let delay;
-    const FPS = 30;
     const frame = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
 
     function processFrame() {
@@ -94,7 +90,7 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                 const markersVector = new cv.MatVector();
                 const mv = new cv.Mat(corners.length, 1, cv.CV_32SC2);
 
-                let ballRadius = 10;
+                let ballRadius = defaultBallRadius;
                 let isPerimeterFound = false;
 
                 // If the 4 table corners are detected, draw them and lines between them
@@ -147,10 +143,6 @@ function processVideo(video, canvas, canvasBrut, ctx) {
 
 export function setStillContinue(boolean) {
     stillContinue = boolean;
-}
-
-export function getRealRobots() {
-    return robots;
 }
 
 export function getRealRobot(index) {
