@@ -93,7 +93,7 @@ window.addEventListener("load", () => {
     });
 
     speedSlider.addEventListener("change", (event) => {
-        simulatorSpeed = event.target.value;
+        simulatorSpeed = 1/event.target.value;
         vue.updateSpeed();
     })
 
