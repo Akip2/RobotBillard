@@ -163,9 +163,10 @@ header {
 }
 
 .simulator-container {
-    position: relative;
+    align-self: center;
     height: 306px;
     width: 563px;
+    padding-top: 1rem;
 
     canvas {
         position: absolute;

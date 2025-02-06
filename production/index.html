@@ -52,13 +52,14 @@
                 </select>
             </div>
 
-            <div class="param displayNone">
+            <div class="param">
                 <label for="checkbox-affichage">Affichage</label>
                 <input type="checkbox" id="checkbox-affichage" class="input-checkbox" name="affichage"/>
             </div>
 
-            <div id="speed-container" class="param">
-                <input type="range" id="sim-speed" min="0" max="5" value="1" oninput="this.nextElementSibling.value = this.value">
+            <div id="speed-container" class="param displayNone">
+                <input type="range" id="sim-speed" min="0" max="5" value="1"
+                       oninput="this.nextElementSibling.value = this.value">
                 <output>1</output>
             </div>
         </div>
