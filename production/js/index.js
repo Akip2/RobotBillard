@@ -73,6 +73,9 @@ let speedDroit = 130;
 
 let duration = 1000;
 
+export let simulatorSpeed = 1;
+
+
 window.addEventListener("load", () => {
 
     // socket.emit('get-robots');
@@ -95,6 +98,11 @@ window.addEventListener("load", () => {
     selectRobots.addEventListener("change", (event) => {
         currentRobotId = event.target.value;
     });
+
+    speedSlider.addEventListener("change", (event) => {
+        simulatorSpeed = event.target.value;
+        vue.updateSpeed();
+    })
 
     selectRobotsSimulator.addEventListener("change", (event) => {
         let optionName = event.target.value;

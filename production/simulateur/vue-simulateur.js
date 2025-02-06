@@ -1,5 +1,6 @@
 import {Body, Composite, Engine, Mouse, MouseConstraint, Render, Runner, World,} from "./global.js";
 import {ballRadius, height, width} from "./params.js";
+import {simulatorSpeed} from "../js/index.js";
 
 class VueSimulateur {
     constructor(canvasContainer) {
@@ -14,6 +15,7 @@ class VueSimulateur {
     createEngine() {
         this.engine = Engine.create();
         this.engine.gravity.y = 0;
+        this.engine.timing.timeScale = simulatorSpeed;
 
         this.runner = Runner.create();
         this.render = Render.create({
@@ -123,6 +125,10 @@ class VueSimulateur {
             ctx.stroke();
             ctx.closePath();
         });
+    }
+
+    updateSpeed() {
+        this.engine.timing.timeScale = simulatorSpeed;
     }
 }
 
