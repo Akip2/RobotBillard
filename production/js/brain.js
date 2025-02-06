@@ -29,12 +29,16 @@ export function moveRobotStraightLine(socket, robotIp, distance, direction = 1) 
 
 export function turnRobot(socket, robotIp, angle, direction) {
     // We know how much time we need to turn in a certain angle at 128 power
-    let duration = (1330 / 2) * (Math.abs(angle * (Math.PI / 180)) / Math.PI);
+
+    // let duration = (1330 / 2) * (Math.abs(angle * (Math.PI / 180)) / Math.PI);
+    // console.log("ANGLE : "+Math.abs(angle * (Math.PI / 180)));
+
+    let speed = 128 * Math.abs(angle * (Math.PI / 180));
 
     if (direction === "Left") {
-        socket.emit('motor', createOrder(-128, 128, duration, robotIp));
+        socket.emit('motor', createOrder(-speed, speed, 100, robotIp));
     } else { // Right
-        socket.emit('motor', createOrder(128, -128, duration, robotIp));
+        socket.emit('motor', createOrder(speed, -speed, 100, robotIp));
     }
 }
 
@@ -45,7 +49,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
     let direction = "Left";
     let angleThreshold = 22.5;
-    let distanceThreshold = 15;
+    let distanceThreshold = 10;
 
     currentInterval = setInterval(() => {
         let robot = getRobot(0);
@@ -69,7 +73,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
             if (angleDifference < -180) {
                 angleDifference += 360;
-            } else if (angleDifference > 180)  {
+            } else if (angleDifference > 180) {
                 angleDifference -= 360;
             }
 
@@ -78,7 +82,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
             console.log(angleDifference)
 
             // turnRobot(socket, robotIp, angleDifference, direction);
-
+            //
             // if ((angleDifference <= angleThreshold) && (angleDifference >= -angleThreshold)) {
             //     distanceDifference > distanceThreshold ? moveRobotStraightLine(socket, robotIp, distanceDifference) : clearInterval(currentInterval);
             // }

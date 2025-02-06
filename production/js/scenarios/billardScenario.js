@@ -1,10 +1,15 @@
 import {getBalls, getRobot} from "../index.js";
-import {moveRobotTo} from "../brain.js";
+import {distanceBetweenPoints, moveRobotTo} from "../brain.js";
 
 
-// méthode qui permet de lancer une simulation de partie de billard
-// socket et la connexion qui permet de communiquer avec le robot
-// index est d'index du robot à faire bouger (dans le tableau de robot)
+/**
+ * méthode qui permet de lancer une simulation de partie de billard
+ * socket et la connexion qui permet de communiquer avec le robot
+ * index est d'index du robot à faire bouger (dans le tableau de robot)
+ * @param socket
+ * @param index
+ * @returns {Promise<void>}
+ */
 export async function startBillardScenario(socket, index) {
     let balls = getBalls();
     let robot = getRobot(index);
@@ -15,7 +20,6 @@ export async function startBillardScenario(socket, index) {
         robot = getRobot(index);
         ballToPush = getNearestBall(balls, robot.position);
 
-        console.log(balls);
         console.log(ballToPush)
 
         moveRobotTo(socket, index, ballToPush.x, ballToPush.y);
@@ -24,25 +28,24 @@ export async function startBillardScenario(socket, index) {
     }
 }
 
-function isEmpty(tab) {
-    return tab.length === 0;
-}
-
 function getNearestBall(balls, robotPosition) {
     let nearestBall = balls[0];
-    let minDistance = Math.abs(nearestBall.x - robotPosition.x) + Math.abs(nearestBall.y - robotPosition.y);
+    let minDistance = distanceBetweenPoints(nearestBall, robotPosition);
 
     for (let i = 1; i < balls.length; i++) {
-        let distance = Math.abs(balls[i].x - robotPosition.x) + Math.abs(balls[i].y - robotPosition.y);
+        let distance = distanceBetweenPoints(balls[i], robotPosition);
         if (distance < minDistance) {
             nearestBall = balls[i];
             minDistance = distance;
         }
     }
-
     return nearestBall;
 }
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function isEmpty(tab) {
+    return tab.length === 0;
 }
