@@ -45,6 +45,9 @@ const goBtn = document.querySelector("#go-btn");
 const selectScenarios = document.querySelector("#select-scenarios");
 const selectRobots = document.querySelector("#select-robot");
 const selectRobotsSimulator = document.querySelector("#select-robot-sim");
+const speedContainer = document.querySelector("#speed-container");
+const speedSlider = document.querySelector("#sim-speed");
+
 
 // viewArrowControls
 const btnForward = document.querySelector("#btn-forward");
@@ -138,6 +141,7 @@ window.addEventListener("load", () => {
         switch (currentView) {
             case "camera":
                 hide(selectRobotsSimulator);
+                hide(speedContainer);
                 show(selectRobots);
                 showCanvas();
                 tryAdd(viewGoScenarios);
@@ -149,6 +153,7 @@ window.addEventListener("load", () => {
                 break;
             case "simulator":
                 hide(videoBrut);
+                show(speedContainer);
                 show(selectRobotsSimulator);
                 hide(selectRobots);
                 loadSimulator(currentConfig);
@@ -160,6 +165,7 @@ window.addEventListener("load", () => {
                 break;
             case "manual":
                 hide(selectRobotsSimulator);
+                hide(speedContainer);
                 show(selectRobots);
                 showCanvas();
                 tryRemove(viewGoScenarios);
