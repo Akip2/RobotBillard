@@ -29,7 +29,7 @@
     <!-- Left part which contains canvas and buttons to change view -->
     <div class="part displayFlex" id="left-part">
         <div id="top-table-container">
-            <div class="checkbox">
+            <div class="param">
                 <label for="checkbox-allRobots">Broadcast</label>
                 <input type="checkbox" id="checkbox-allRobots" class="input-checkbox" name="allRobots"/>
             </div>
@@ -52,9 +52,14 @@
                 </select>
             </div>
 
-            <div class="checkbox">
+            <div class="param">
                 <label for="checkbox-affichage">Affichage</label>
                 <input type="checkbox" id="checkbox-affichage" class="input-checkbox" name="affichage"/>
+            </div>
+
+            <div id="speed-container" class="param">
+                <input type="range" id="sim-speed" min="0" max="5" value="1" oninput="this.nextElementSibling.value = this.value">
+                <output>1</output>
             </div>
         </div>
         <div id="canvas-container">
@@ -66,12 +71,9 @@
         </div>
     </div>
 
-
     <!-- Right part which contains different views (one or more) -->
     <div class="part displayFlex" id="right-part">
-
         <div class="part displayNone" id="arrow-controls">
-
             <input type="range" class="cursor-motor" id="cursor-left-motor" min="0" max="255" list="steps">
 
             <div id="grid-btns">
