@@ -337,8 +337,8 @@ export function getBalls() {
 
         for (const ball of table.getBallsDetected()) {
             balls.push({
-                x: ball.body.position.x,
-                y: ball.body.position.y
+                x: ball.x,
+                y: ball.y
             });
         }
         return balls;
