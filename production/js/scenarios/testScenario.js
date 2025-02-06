@@ -1,5 +1,5 @@
 import {isRobotNear, moveRobotTo} from "../brain.js";
-import {getRobot} from "../index.js";
+import {getRobot} from "../elements-manager.js";
 
 export function startTestScenario(socket, index) {
     let robotPosition = getRobot(0).position;

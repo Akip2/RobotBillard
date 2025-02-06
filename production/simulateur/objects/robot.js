@@ -1,7 +1,6 @@
 import {Bodies, Body} from "../global.js";
 import SimulationObject from "./simulation-object.js";
 import {Wheel, WHEEL_SIDE} from "./wheel.js";
-import {simulatorSpeed} from "../../js/index.js";
 
 class Robot extends SimulationObject {
     constructor(width, height, wheelWidth, wheelHeight, x = 0, y = 0, angle = 0) {

@@ -1,5 +1,5 @@
 import {ballRadius, simulatorCameraFPS} from "./params.js";
-import {detectCircles, preProcess} from "../js/video-functions.js";
+import {detectCircles, preProcess} from "../js/video/video-functions.js";
 
 class Camera {
     constructor(canvasContainer, table) {
