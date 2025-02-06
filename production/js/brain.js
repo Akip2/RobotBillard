@@ -69,18 +69,28 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
             if (angleDifference < -180) {
                 angleDifference += 360;
-            }/* else if (angleDifference > 180)  {
+            } else if (angleDifference > 180)  {
                 angleDifference -= 360;
-            }*/
+            }
 
             angleDifference > 0 ? direction = "Left" : direction = "Right";
 
             console.log(angleDifference)
 
-            turnRobot(socket, robotIp, angleDifference, direction);
+            // turnRobot(socket, robotIp, angleDifference, direction);
+
+            // if ((angleDifference <= angleThreshold) && (angleDifference >= -angleThreshold)) {
+            //     distanceDifference > distanceThreshold ? moveRobotStraightLine(socket, robotIp, distanceDifference) : clearInterval(currentInterval);
+            // }
 
             if ((angleDifference <= angleThreshold) && (angleDifference >= -angleThreshold)) {
-                distanceDifference > distanceThreshold ? moveRobotStraightLine(socket, robotIp, distanceDifference) : clearInterval(currentInterval);
+                if (direction === "Left") {
+                    socket.emit('motor', createOrder(128 * angleDifference * (Math.PI / 180), 255, 100, robotIp));
+                } else {
+                    socket.emit('motor', createOrder(255, 128 * angleDifference * (Math.PI / 180), 100, robotIp));
+                }
+            } else {
+                turnRobot(socket, robotIp, angleDifference, direction);
             }
         }
     }, 100);
@@ -122,6 +132,12 @@ export function calculateBallSize(tableLength) {
 }
 
 export function createOrder(left, right, duration, ipRobot) {
+    let broadcastToAll = document.getElementById("checkbox-allRobots").checked;
+
+    if (broadcastToAll) {
+        ipRobot = -1;
+    }
+
     return {
         left: left,
         right: right,

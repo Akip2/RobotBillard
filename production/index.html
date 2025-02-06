@@ -29,6 +29,9 @@
     <!-- Left part which contains canvas and buttons to change view -->
     <div class="part displayFlex" id="left-part">
         <div id="top-table-container">
+            <label for="checkbox-allRobots">broadcast</label>
+            <input type="checkbox" id="checkbox-allRobots" name="allRobots"/>
+
             <button id="reload-btn" class="displayNone">Recharger</button>
             <select name="scenarios" id="select-configuration" class="select-top-table-container displayNone">
                 <option value="Random" class="option">Random</option>
@@ -51,8 +54,8 @@
             <!--            <input type="number" id="tmp-1" min="10" max="300" step="10" value="100">-->
             <!--            <input type="number" id="tmp-2" min="100" max="10000" step="100" value="1000">-->
             <!--                        <video autoplay loop muted id="canvas-input-video" width="700" height="400" src="./video/aruco.mp4"></video>-->
-            <canvas class="canvas-video displayFlex" id="canvas-output-video"></canvas>
             <canvas class="canvas-video displayFlex" id="canvas-output-video-brut"></canvas>
+            <canvas class="canvas-video displayFlex" id="canvas-output-video"></canvas>
         </div>
     </div>
 
@@ -104,7 +107,6 @@
                 <select name="scenarios" id="select-scenarios">
                     <option value="default" class="option">Test</option>
                     <option value="Billard" class="option">Billard</option>
-                    <option value="Autre" class="option">Autre</option>
                 </select>
             </div>
         </div>

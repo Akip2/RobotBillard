@@ -4,11 +4,11 @@ import {getRobot} from "../index.js";
 export function startTestScenario(socket, index) {
     let robotPosition = getRobot(0).position;
 
-    moveRobotTo(socket, index, robotPosition.x + 100, robotPosition.y);
+    moveRobotTo(socket, index, robotPosition.x, robotPosition.y + 100);
 
     let check = setInterval(() => {
-        if (isRobotNear(index, robotPosition.x + 100, robotPosition.y, 20)) {
-            moveRobotTo(socket, index, robotPosition.x - 50, robotPosition.y);
+        if (isRobotNear(index, robotPosition.x, robotPosition.y + 100, 20)) {
+            moveRobotTo(socket, index, robotPosition.x, robotPosition.y - 100);
             clearInterval(check);
         }
     }, 100);
