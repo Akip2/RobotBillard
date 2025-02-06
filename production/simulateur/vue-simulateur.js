@@ -1,6 +1,8 @@
 import {Body, Composite, Engine, Mouse, MouseConstraint, Render, Runner, World,} from "./global.js";
 import {ballRadius, height, width} from "./params.js";
 
+import {afficherDessins} from "../js/index.js";
+
 class VueSimulateur {
     constructor(canvasContainer) {
         this.canvasContainer = canvasContainer;
@@ -108,21 +110,24 @@ class VueSimulateur {
         const ctx = this.overlay.getContext("2d");
         ctx.clearRect(0, 0, this.overlay.width, this.overlay.height);
 
-        ballsPositions.forEach((ballPosition) => {
-            ctx.lineWidth = 4;
+        // si on veut pas tracer les cercles on s'arrête juste apres le nettoyage du canvas
+        if (afficherDessins) {
+            ballsPositions.forEach((ballPosition) => {
+                ctx.lineWidth = 4;
 
-            ctx.beginPath();
-            ctx.strokeStyle = "lime";
-            ctx.arc(ballPosition.x, ballPosition.y, 1, 0, 2 * Math.PI);
-            ctx.stroke();
-            ctx.closePath();
+                ctx.beginPath();
+                ctx.strokeStyle = "lime";
+                ctx.arc(ballPosition.x, ballPosition.y, 1, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.closePath();
 
-            ctx.beginPath();
-            ctx.strokeStyle = "blue";
-            ctx.arc(ballPosition.x, ballPosition.y, ballRadius, 0, 2 * Math.PI);
-            ctx.stroke();
-            ctx.closePath();
-        });
+                ctx.beginPath();
+                ctx.strokeStyle = "blue";
+                ctx.arc(ballPosition.x, ballPosition.y, ballRadius, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.closePath();
+            });
+        }
     }
 }
 

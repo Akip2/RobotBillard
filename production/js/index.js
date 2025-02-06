@@ -22,15 +22,9 @@ const loader = document.querySelector("#loader-container");
 // header
 const viewsList = document.querySelector("#views-list");
 
-// main
-const leftPart = document.querySelector("#left-part");
-const rightPart = document.querySelector("#right-part");
-
 // LEFT PART
-const topTableSimulator = document.querySelector("#top-table-container");
 const reload = document.querySelector("#reload-btn");
 const configurationChoice = document.querySelector("#select-configuration");
-const robotChoice = document.querySelector("#select-robot");
 const canvasContainer = document.querySelector("#canvas-container");
 const videoBrut = document.querySelector("#canvas-output-video-brut");
 const videoDessin = document.querySelector("#canvas-output-video");
@@ -64,6 +58,7 @@ let currentView = "camera";
 let currentConfig = "Billard";
 let currentScenario = "default";
 
+export let afficherDessins = false;
 
 let speedGauche = 130;
 let speedDroit = 130;
@@ -71,8 +66,6 @@ let speedDroit = 130;
 let duration = 1000;
 
 window.addEventListener("load", () => {
-
-    // socket.emit('get-robots');
 
     selectScenarios.addEventListener("change", (event) => {
         currentScenario = event.target.value;
@@ -108,7 +101,6 @@ window.addEventListener("load", () => {
         let durationBeforeTest = inputDuration.value;
         // We check if time is really between 100ms and 10.000ms
         duration = durationBeforeTest < 100 ? 100 : durationBeforeTest > 10000 ? 10000 : durationBeforeTest;
-        console.log(duration);
     });
 
     // Buttons to move robots
@@ -140,6 +132,7 @@ window.addEventListener("load", () => {
                 hide(selectRobotsSimulator);
                 show(selectRobots);
                 showCanvas();
+                afficherDetection(afficherDessins);
                 tryAdd(viewGoScenarios);
                 tryRemove(viewArrowControls);
                 tryRemove(reload);
@@ -149,6 +142,7 @@ window.addEventListener("load", () => {
                 break;
             case "simulator":
                 hide(videoBrut);
+                hide(videoDessin);
                 show(selectRobotsSimulator);
                 hide(selectRobots);
                 loadSimulator(currentConfig);
@@ -162,6 +156,7 @@ window.addEventListener("load", () => {
                 hide(selectRobotsSimulator);
                 show(selectRobots);
                 showCanvas();
+                afficherDetection(afficherDessins);
                 tryRemove(viewGoScenarios);
                 tryAdd(viewArrowControls);
                 tryRemove(reload);
@@ -188,24 +183,20 @@ window.addEventListener("load", () => {
 
         if (isSimulator) {
             // Get the position of a click on the simulator
-            console.log("Simulator : (" + x + ", " + y + ")");
             moveRobotTo(socket, currentRobotId, x, y);
             // turnRobotInCircle(socket, 0);
         } else {
             // Get the position of a click on the camera
-            console.log("Camera : (" + x + ", " + y + ")");
             moveRobotTo(socket, currentRobotId, x, y);
         }
     });
 
     affichage.addEventListener("change", function () {
-        if (affichage.checked) {
-            tryRemove(videoBrut);
-            tryAdd(videoDessin);
-        } else {
-            tryAdd(videoBrut);
-            tryRemove(videoDessin);
+        afficherDessins = affichage.checked;
+        if (currentView !== "simulator") {
+            afficherDetection(afficherDessins);
         }
+        // pour le simulateur, la gestion des dessins est gérée par la classe VueSimulateur (drawDetectedCircles)
     });
 
     // Loader
@@ -364,8 +355,14 @@ function addRobot(robotName) {
     selectRobots.appendChild(option);
 }
 
-function afficherDessins() {
-
+function afficherDetection(boolean) {
+    if (boolean) {
+        tryRemove(videoBrut);
+        tryAdd(videoDessin);
+    } else {
+        tryAdd(videoBrut);
+        tryRemove(videoDessin);
+    }
 }
 
 
