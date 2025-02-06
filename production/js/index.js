@@ -326,7 +326,7 @@ export function getBalls() {
     if (currentView === "simulator") {
         let balls = [];
 
-        for (const ball of table.getBalls()) {
+        for (const ball of table.getBallsDetected()) {
             balls.push({
                 x: ball.body.position.x,
                 y: ball.body.position.y
