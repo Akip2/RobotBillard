@@ -1,5 +1,5 @@
-import {getBalls, getRobot} from "../index.js";
 import {distanceBetweenPoints, moveRobotTo} from "../brain.js";
+import {getBalls, getRobot} from "../elements-manager.js";
 
 
 /**

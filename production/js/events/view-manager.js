@@ -6,7 +6,7 @@ import FootConfig from "../../simulateur/configurations/foot-config.js";
 import EasyConfig from "../../simulateur/configurations/easy-config.js";
 import CollisionController from "../../simulateur/collision-controller.js";
 import {setStillContinue} from "../video/video.js";
-import {afficherDessins, currentConfig, currentRobotId} from "./parameters.js";
+import {afficherDessins, currentConfig, setCurrentConfig, setCurrentRobotId} from "./parameters.js";
 import {
     canvasContainer,
     configurationChoice,
@@ -36,9 +36,9 @@ export function init() {
         currentView = event.target.id;
         switch (currentView) {
             case "camera":
-                tryRemove(selectRobotsSimulator);
-                tryRemove(speedContainer);
-                tryAdd(selectRobots);
+                hide(selectRobotsSimulator);
+                hide(speedContainer);
+                show(selectRobots);
                 showCanvas();
                 afficherDetection(afficherDessins);
                 tryAdd(viewGoScenarios);
@@ -46,14 +46,14 @@ export function init() {
                 tryRemove(reload);
                 tryRemove(configurationChoice);
                 setStillContinue(true);
-                currentRobotId = selectRobots.firstChild.innerText;
+                setCurrentRobotId(selectRobots.firstChild.innerText);
                 break;
             case "simulator":
-                tryRemove(videoBrut);
-                tryRemove(videoDessin);
-                tryAdd(speedContainer);
-                tryAdd(selectRobotsSimulator);
-                tryRemove(selectRobots);
+                hide(videoBrut);
+                hide(videoDessin);
+                show(speedContainer);
+                show(selectRobotsSimulator);
+                hide(selectRobots);
                 loadSimulator(currentConfig);
                 tryAdd(viewGoScenarios);
                 tryAdd(viewArrowControls);
@@ -62,9 +62,9 @@ export function init() {
                 setStillContinue(false);
                 break;
             case "manual":
-                tryRemove(selectRobotsSimulator);
-                tryRemove(speedContainer);
-                tryAdd(selectRobots);
+                hide(selectRobotsSimulator);
+                hide(speedContainer);
+                show(selectRobots);
                 showCanvas();
                 afficherDetection(afficherDessins);
                 tryRemove(viewGoScenarios);
@@ -72,7 +72,7 @@ export function init() {
                 tryRemove(reload);
                 tryRemove(configurationChoice);
                 setStillContinue(true);
-                currentRobotId = selectRobots.firstChild.innerText;
+                setCurrentRobotId(selectRobots.firstChild.innerText);
                 break;
             default:
                 console.log("Erreur : vue inconnue");
@@ -80,6 +80,17 @@ export function init() {
     });
 }
 
+// To show a view
+function show(element) {
+    element.classList.remove("displayNone");
+    element.classList.add("displayFlex");
+}
+
+// To hide a view
+function hide(element) {
+    element.classList.remove("displayFlex");
+    element.classList.add("displayNone");
+}
 
 // Add an element if it's not already displayed
 function tryAdd(element) {
@@ -138,7 +149,7 @@ export function loadSimulator(configurationName) {
     canvasContainer.classList.add("simulator-container");
     vue = new VueSimulateur(canvasContainer);
 
-    currentConfig = configurationName;
+    setCurrentConfig(configurationName);
 
     switch (configurationName) {
         case "Random":
@@ -154,7 +165,7 @@ export function loadSimulator(configurationName) {
             table = new EasyConfig(vue);
             break;
         default:
-            currentConfig = "Random";
+            setCurrentConfig("Random");
             table = new RandomConfig(vue);
     }
 
@@ -174,5 +185,5 @@ export function loadSimulator(configurationName) {
         selectRobotsSimulator.appendChild(option);
     }
 
-    currentRobotId = 0;
+    setCurrentRobotId(0);
 }

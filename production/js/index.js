@@ -1,5 +1,5 @@
 // Billard configurations
-import {currentRobotId} from "./events/parameters.js";
+import {currentRobotId, setCurrentRobotId} from "./events/parameters.js";
 import {currentView, init, table} from "./events/view-manager.js";
 import {selectRobots} from "./events/index-init.js";
 import {addRobot} from "./elements-manager.js";
@@ -30,7 +30,7 @@ socket.on('connect', function () {
             });
 
             if (currentRobotId === null) {
-                currentRobotId = robots[0];
+                setCurrentRobotId(robots[0])
             }
         } else {
             addRobot("Aucun robot disponible");

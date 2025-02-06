@@ -13,9 +13,9 @@ export let currentScenario = "default";
 export let afficherDessins = true;
 export let simulatorSpeed = 1;
 
-export let duration;
-export let leftSpeed;
-export let rightSpeed;
+export let leftSpeed = 130;
+export let rightSpeed = 130;
+export let duration = 1000;
 
 window.addEventListener("load", () => {
     selectScenarios.addEventListener("change", (event) => {
@@ -40,3 +40,31 @@ window.addEventListener("load", () => {
         loadSimulator(event.target.value);
     });
 });
+
+export function setCurrentConfig(config) {
+    currentConfig = config;
+}
+
+export function setCurrentRobotId(id) {
+    currentRobotId = id;
+}
+
+export function setAfficherDessins(affiche) {
+    afficherDessins = affiche;
+}
+
+export function setCurrentScenario(sc) {
+    currentScenario = sc;
+}
+
+export function setDuration(time) {
+    duration = time;
+}
+
+export function setLeftSpeed(speed) {
+    leftSpeed = speed;
+}
+
+export function setRightSpeed(speed) {
+    rightSpeed = speed;
+}

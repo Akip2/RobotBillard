@@ -1,6 +1,6 @@
-import {Body, Composite, Engine, Mouse, MouseConstraint, Render, Runner, World,} from "./global.js";
+import {Body, Composite, Engine, Mouse, MouseConstraint, Render, World,} from "./global.js";
 import {ballRadius, height, simulatorFPS, width} from "./params.js";
-import {afficherDessins, simulatorSpeed} from "../js/index.js";
+import {afficherDessins, simulatorSpeed} from "../js/events/parameters.js";
 
 class VueSimulateur {
     constructor(canvasContainer) {
@@ -71,7 +71,7 @@ class VueSimulateur {
 
     createUpdateLoop(speed) {
         return setInterval(() => {
-            Engine.update(this.engine, speed*(1000 / simulatorFPS));
+            Engine.update(this.engine, speed * (1000 / simulatorFPS));
         }, 1000 / (simulatorFPS));
     }
 

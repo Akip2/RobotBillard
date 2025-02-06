@@ -10,7 +10,7 @@ export const bottomLeftId = 157;
 export const bottomRightId = 10;
 
 // Aruco ids that we don't want to detect (they might get detected too easily)
-export const bannedArucos = [0];
+export const bannedArucos = [0, 252, 1023];
 
 // Parameters for houghCircles method
 export const houghCirclesResolution = 2; // resolution : 1 = default resolution, 2 = resolution divided by 2

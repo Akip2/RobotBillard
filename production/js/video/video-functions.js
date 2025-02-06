@@ -35,19 +35,19 @@ export function preProcess(frame) {
  * @param cornersOfAruco the 4 corners of an aruco that have already been detected
  * @returns {number} the angle (0 - 360) the aruco provided is facing
  */
-export function drawAndGetDirectionOfArucos(frame, cornersOfAruco) {
+export function drawAndGetDirectionOfAruco(frame, cornersOfAruco) {
     let topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
     let topRightCornerOfAruco = cornersOfAruco.data32F.slice(2, 4);
-    let bottomLeftCornerOfAruco = cornersOfAruco.data32F.slice(4, 6);
-    let bottomRightCornerOfAruco = cornersOfAruco.data32F.slice(6, 8);
+    let bottomRightCornerOfAruco = cornersOfAruco.data32F.slice(4, 6);
+    let bottomLeftCornerOfAruco = cornersOfAruco.data32F.slice(6, 8);
 
     let topCenter = new cv.Point(
         (topRightCornerOfAruco[0] + topLeftCornerOfAruco[0]) / 2,
         (topRightCornerOfAruco[1] + topLeftCornerOfAruco[1]) / 2
     );
     let bottomCenter = new cv.Point(
-        (bottomRightCornerOfAruco[0] + bottomLeftCornerOfAruco[0]) / 2,
-        (bottomRightCornerOfAruco[1] + bottomLeftCornerOfAruco[1]) / 2
+        (bottomLeftCornerOfAruco[0] + bottomRightCornerOfAruco[0]) / 2,
+        (bottomLeftCornerOfAruco[1] + bottomRightCornerOfAruco[1]) / 2
     );
 
     let angle = Math.atan2(bottomCenter.y - topCenter.y, topCenter.x - bottomCenter.x) * (180 / Math.PI);
@@ -67,32 +67,32 @@ export function drawAndGetDirectionOfArucos(frame, cornersOfAruco) {
 export function detectAndDrawArucos(frame) {
     const dictionary = cv.getPredefinedDictionary(cv.DICT_ARUCO_ORIGINAL);
 
-    let ArucoIds = new cv.Mat();
-    let ArucoCorners = new cv.MatVector();
+    let arucoIds = new cv.Mat();
+    let arucoCorners = new cv.MatVector();
 
     let detectionParams = new cv.aruco_DetectorParameters();
     let refineParams = new cv.aruco_RefineParameters(10, 3, true);
     let detector = new cv.aruco_ArucoDetector(dictionary, detectionParams, refineParams)
 
-    detector.detectMarkers(frame, ArucoCorners, ArucoIds);
-    cv.drawDetectedMarkers(frame, ArucoCorners, ArucoIds);
+    detector.detectMarkers(frame, arucoCorners, arucoIds);
+    cv.drawDetectedMarkers(frame, arucoCorners, arucoIds);
 
     let robotsArucos = [];
     let topLeftAruco, topRightAruco, bottomLeftAruco, bottomRightAruco;
 
-    for (let i = 0; i < ArucoIds.rows; i++) {
-        let ArucoId = ArucoIds.data32S[i];
-        let cornersOfAruco = ArucoCorners.get(i);
+    for (let i = 0; i < arucoIds.rows; i++) {
+        let arucoId = arucoIds.data32S[i];
+        let cornersOfAruco = arucoCorners.get(i);
 
         // don't detect banned aruco ids
-        if (bannedArucos.includes(ArucoId)) {
+        if (bannedArucos.includes(arucoId)) {
             let topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
             let x = topLeftCornerOfAruco[0];
             let y = topLeftCornerOfAruco[1];
 
             let point = new cv.Point(x, y);
 
-            switch (ArucoId) {
+            switch (arucoId) {
                 case topLeftId:
                     topLeftAruco = point;
                     break;
@@ -106,7 +106,13 @@ export function detectAndDrawArucos(frame) {
                     bottomRightAruco = point
                     break;
                 default:
-                    let orientation = drawAndGetDirectionOfArucos(frame, cornersOfAruco);
+                    let bottomRightCornerOfAruco = cornersOfAruco.data32F.slice(4, 6);
+
+                    // The center of the aruco
+                    point = new cv.Point((topLeftCornerOfAruco[0] + bottomRightCornerOfAruco[0]) / 2,
+                        (topLeftCornerOfAruco[1] + bottomRightCornerOfAruco[1]) / 2)
+
+                    let orientation = drawAndGetDirectionOfAruco(frame, cornersOfAruco);
                     let robotData = {
                         position: point,
                         orientation: orientation,
@@ -187,6 +193,6 @@ export function getRealBalls() {
     return ballsPositions;
 }
 
-export function getHolesPositions() {
+export function getRealHoles() {
     return holesPositions;
 }

@@ -12,7 +12,12 @@ import {
     currentScenario,
     duration,
     leftSpeed,
-    rightSpeed
+    rightSpeed,
+    setAfficherDessins,
+    setCurrentScenario,
+    setDuration,
+    setLeftSpeed,
+    setRightSpeed
 } from "./parameters.js";
 
 // loader
@@ -50,7 +55,7 @@ export const inputDuration = document.querySelector("#input-duration");
 window.addEventListener("load", () => {
 
     selectScenarios.addEventListener("change", (event) => {
-        currentScenario = event.target.value;
+        setCurrentScenario(event.target.value);
     });
 
     goBtn.addEventListener("click", () => {
@@ -73,15 +78,16 @@ window.addEventListener("load", () => {
     inputDuration.addEventListener("input", () => {
         let durationBeforeTest = inputDuration.value;
         // We check if time is really between 100ms and 10.000ms
-        duration = durationBeforeTest < 100 ? 100 : durationBeforeTest > 10000 ? 10000 : durationBeforeTest;
+        let time = durationBeforeTest < 100 ? 100 : durationBeforeTest > 10000 ? 10000 : durationBeforeTest;
+        setDuration(time);
     });
 
     // Buttons to move robots
     cursorLeftMotor.addEventListener("input", () => {
-        leftSpeed = cursorLeftMotor.value;
+        setLeftSpeed(cursorLeftMotor.value);
     });
     cursorRightMotor.addEventListener("input", () => {
-        rightSpeed = cursorRightMotor.value;
+        setRightSpeed(cursorRightMotor.value);
     });
     btnForward.addEventListener("click", () => {
         socket.emit('motor', createOrder(leftSpeed, rightSpeed, duration, currentRobotId));
@@ -114,7 +120,7 @@ window.addEventListener("load", () => {
     });
 
     affichage.addEventListener("change", function () {
-        afficherDessins = affichage.checked;
+        setAfficherDessins(affichage.checked);
         if (currentView !== "simulator") {
             afficherDetection(afficherDessins);
         }

@@ -1,4 +1,4 @@
-import {getRobot} from "./index.js";
+import {getRobot} from "./elements-manager.js";
 
 let currentInterval = null;
 
@@ -33,12 +33,21 @@ export function turnRobot(socket, robotIp, angle, direction) {
     // let duration = (1330 / 2) * (Math.abs(angle * (Math.PI / 180)) / Math.PI);
     // console.log("ANGLE : "+Math.abs(angle * (Math.PI / 180)));
 
-    let speed = 128 * Math.abs(angle * (Math.PI / 180));
+    // let speed = 128 * Math.abs(angle * (Math.PI / 180));
+    //
+    // if (direction === "Left") {
+    //     socket.emit('motor', createOrder(-speed, speed, 100, robotIp));
+    // } else { // Right
+    //     socket.emit('motor', createOrder(speed, -speed, 100, robotIp));
+    // }
+
+    // let duration = (1330 / 2) * (Math.abs(angle * (Math.PI / 180)) / Math.PI);
+    let duration = 50;
 
     if (direction === "Left") {
-        socket.emit('motor', createOrder(-speed, speed, 100, robotIp));
+        socket.emit('motor', createOrder(-128, 128, duration, robotIp));
     } else { // Right
-        socket.emit('motor', createOrder(speed, -speed, 100, robotIp));
+        socket.emit('motor', createOrder(128, -128, duration, robotIp));
     }
 }
 
@@ -49,7 +58,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
     let direction = "Left";
     let angleThreshold = 22.5;
-    let distanceThreshold = 10;
+    let distanceThreshold = 5;
 
     currentInterval = setInterval(() => {
         let robot = getRobot(0);
@@ -61,7 +70,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
             let distanceDifference = distanceBetweenPoints(robotPosition, {
                 x: x,
                 y: y
-            }) / (calculateBallSize(460) / 4.5);
+            }) / (calculateBallSize(460) / 4);
 
             if (distanceDifference < distanceThreshold) {
                 clearInterval(currentInterval);
@@ -79,25 +88,28 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
             angleDifference > 0 ? direction = "Left" : direction = "Right";
 
-            console.log(angleDifference)
-
-            // turnRobot(socket, robotIp, angleDifference, direction);
-            //
-            // if ((angleDifference <= angleThreshold) && (angleDifference >= -angleThreshold)) {
-            //     distanceDifference > distanceThreshold ? moveRobotStraightLine(socket, robotIp, distanceDifference) : clearInterval(currentInterval);
-            // }
+            turnRobot(socket, robotIp, angleDifference, direction);
 
             if ((angleDifference <= angleThreshold) && (angleDifference >= -angleThreshold)) {
-                if (direction === "Left") {
-                    socket.emit('motor', createOrder(128 * angleDifference * (Math.PI / 180), 255, 100, robotIp));
+                // distanceDifference > distanceThreshold ? moveRobotStraightLine(socket, robotIp, distanceDifference) : clearInterval(currentInterval);
+                if (distanceDifference > distanceThreshold) {
+                    socket.emit('motor', createOrder(255, 255, 100, robotIp));
                 } else {
-                    socket.emit('motor', createOrder(255, 128 * angleDifference * (Math.PI / 180), 100, robotIp));
+                    clearInterval(currentInterval);
                 }
-            } else {
-                turnRobot(socket, robotIp, angleDifference, direction);
             }
+
+            // if ((angleDifference <= angleThreshold) && (angleDifference >= -angleThreshold)) {
+            //     if (direction === "Left") {
+            //         socket.emit('motor', createOrder(128 * angleDifference * (Math.PI / 180), 255, 100, robotIp));
+            //     } else {
+            //         socket.emit('motor', createOrder(255, 128 * angleDifference * (Math.PI / 180), 100, robotIp));
+            //     }
+            // } else {
+            //     turnRobot(socket, robotIp, angleDifference, direction);
+            // }
         }
-    }, 100);
+    }, 50);
 }
 
 export function turnRobotInCircle(socket, robotIp, radius, angle) {
@@ -123,9 +135,13 @@ export function isRobotNear(robotIp, x, y, deltaMax) {
 }
 
 export function distanceBetweenPoints(p1, p2) {
-    return Math.sqrt(
-        Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2)
-    );
+    if (p1 !== undefined && p2 !== undefined) {
+        return Math.sqrt(
+            Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2)
+        );
+    } else {
+        return -1;
+    }
 }
 
 export function calculateBallSize(tableLength) {
