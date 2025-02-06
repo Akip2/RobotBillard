@@ -58,7 +58,7 @@ class VueSimulateur {
         this.isRunning = true;
         Render.run(this.render);
 
-        this.updateLoop = this.createUpdateLoop(0);
+        this.updateLoop = this.createUpdateLoop(simulatorSpeed);
 
         this.overlay = document.createElement("canvas");
         this.overlay.width = width;
@@ -70,9 +70,11 @@ class VueSimulateur {
     }
 
     createUpdateLoop(speed) {
-        return setInterval(() => {
-            Engine.update(this.engine, speed*(1000 / simulatorFPS));
-        }, 1000 / (simulatorFPS));
+        if(speed > 0){
+            return setInterval(() => {
+                Engine.update(this.engine, speed*1000 / simulatorFPS);
+            }, 1000 / (simulatorFPS*speed));
+        }
     }
 
     setup(table) {

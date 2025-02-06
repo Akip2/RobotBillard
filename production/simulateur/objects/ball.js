@@ -1,5 +1,6 @@
 import {Bodies, Body, COLLISION_FILTERS} from "../global.js";
 import SimulationObject from "./simulation-object.js";
+import {simulatorSpeed} from "../../js/index.js";
 
 class Ball extends SimulationObject {
     constructor(radius, color, x = 0, y = 0, circled = false) {

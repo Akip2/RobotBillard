@@ -13,7 +13,7 @@ class Robot extends SimulationObject {
                 radius: [15, 15, 15, 15]
             },
             frictionAir: 1,
-            restitution: 0.02
+            restitution: 0.02/simulatorSpeed
         });
 
         const leftWheel = Bodies.rectangle(

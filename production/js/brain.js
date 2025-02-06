@@ -1,4 +1,4 @@
-import {getRobot} from "./index.js";
+import {getRobot, simulatorSpeed} from "./index.js";
 
 let currentInterval = null;
 
@@ -97,7 +97,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
                 turnRobot(socket, robotIp, angleDifference, direction);
             }
         }
-    }, 100);
+    }, 100/simulatorSpeed);
 }
 
 export function turnRobotInCircle(socket, robotIp, radius, angle) {
