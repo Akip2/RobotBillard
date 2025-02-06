@@ -115,7 +115,7 @@ class VueSimulateur {
         const ctx = this.overlay.getContext("2d");
         ctx.clearRect(0, 0, this.overlay.width, this.overlay.height);
 
-        // si on veut pas tracer les cercles on s'arrête juste apres le nettoyage du canvas
+        // si on ne veut pas tracer les cercles, on s'arrête juste apres le nettoyage du canvas
         if (afficherDessins) {
             ballsPositions.forEach((ballPosition) => {
                 ctx.lineWidth = 4;

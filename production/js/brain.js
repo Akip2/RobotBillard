@@ -88,26 +88,27 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
             angleDifference > 0 ? direction = "Left" : direction = "Right";
 
-            turnRobot(socket, robotIp, angleDifference, direction);
-
             if ((angleDifference <= angleThreshold) && (angleDifference >= -angleThreshold)) {
-                // distanceDifference > distanceThreshold ? moveRobotStraightLine(socket, robotIp, distanceDifference) : clearInterval(currentInterval);
                 if (distanceDifference > distanceThreshold) {
                     socket.emit('motor', createOrder(255, 255, 100, robotIp));
                 } else {
                     clearInterval(currentInterval);
                 }
+            } else {
+                if (direction === "Left") {
+                    if (angleDifference > 90 || angleDifference < -90) {
+                        socket.emit('motor', createOrder(-(angleDifference / 360) * 255, -255, 100, robotIp));
+                    } else {
+                        socket.emit('motor', createOrder((angleDifference / 360) * 255, 255, 100, robotIp));
+                    }
+                } else {
+                    if (angleDifference > 90 || angleDifference < -90) {
+                        socket.emit('motor', createOrder(-255, -(angleDifference / 360) * 255, 100, robotIp));
+                    } else {
+                        socket.emit('motor', createOrder(255, (angleDifference / 360) * 255, 100, robotIp));
+                    }
+                }
             }
-
-            // if ((angleDifference <= angleThreshold) && (angleDifference >= -angleThreshold)) {
-            //     if (direction === "Left") {
-            //         socket.emit('motor', createOrder(128 * angleDifference * (Math.PI / 180), 255, 100, robotIp));
-            //     } else {
-            //         socket.emit('motor', createOrder(255, 128 * angleDifference * (Math.PI / 180), 100, robotIp));
-            //     }
-            // } else {
-            //     turnRobot(socket, robotIp, angleDifference, direction);
-            // }
         }
     }, 50);
 }
