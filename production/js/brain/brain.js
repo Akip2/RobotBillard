@@ -90,13 +90,17 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
             angleDifference > 0 ? direction = "Left" : direction = "Right";
 
-            if ((angleDifference <= angleThreshold) && (angleDifference >= -angleThreshold)) {
+            const isTargetForward = (angleDifference <= angleThreshold) && (angleDifference >= -angleThreshold);
+            const isTargetBackward = (angleDifference <= -180 + angleThreshold) || (angleDifference >= 180 - angleThreshold);
+
+            if (isTargetForward) {
                 socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, robotIp));
-            } else if ((angleDifference <= -180 + angleThreshold) || (angleDifference >= 180 - angleThreshold)) {
+            } else if (isTargetBackward) {
                 socket.emit('motor', createOrder(-ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, MIN_ORDER_DURATION, robotIp));
             } else {
                 // Tries to turn and go forward / backward smoothly
                 const isTargetBehind = angleDifference > 90 || angleDifference < -90;
+
                 let otherMotorSpeed = Math.abs(90 - Math.abs(angleDifference)) / 180 * ROBOT_MAX_SPEED;
                 let fullSpeedMotor = ROBOT_MAX_SPEED;
 
