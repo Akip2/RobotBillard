@@ -1,5 +1,4 @@
-import {loadSimulator} from "./view-manager.js";
-import {vue} from "./view-manager.js";
+import {loadSimulator, vue} from "./view-manager.js";
 
 const speedSlider = document.querySelector("#sim-speed");
 const selectScenarios = document.querySelector("#select-scenarios");

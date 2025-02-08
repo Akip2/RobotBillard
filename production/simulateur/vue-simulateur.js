@@ -70,10 +70,10 @@ class VueSimulateur {
     }
 
     createUpdateLoop(speed) {
-        if(speed > 0){
+        if (speed > 0) {
             return setInterval(() => {
-                Engine.update(this.engine, speed*1000 / simulatorFPS);
-            }, 1000 / (simulatorFPS*speed));
+                Engine.update(this.engine, speed * 1000 / simulatorFPS);
+            }, 1000 / (simulatorFPS * speed));
         }
     }
 

@@ -16,17 +16,16 @@ class CollisionController {
                 let ballCenter = null;
                 if (bodyA.collisionFilter.category === COLLISION_FILTERS.BALL_CENTER && bodyB.collisionFilter.category === COLLISION_FILTERS.HOLE) {
                     ballCenter = bodyA;
-                }
-                else if(bodyB.collisionFilter.category === COLLISION_FILTERS.BALL_CENTER && bodyA.collisionFilter.category === COLLISION_FILTERS.HOLE) {
+                } else if (bodyB.collisionFilter.category === COLLISION_FILTERS.BALL_CENTER && bodyA.collisionFilter.category === COLLISION_FILTERS.HOLE) {
                     ballCenter = bodyB;
                 }
 
-                if(ballCenter != null) {
+                if (ballCenter != null) {
                     console.log("BALL TOUCH HOLE");
                     const balls = table.getBalls();
 
                     balls.forEach(ball => {
-                        if(ball.collisionCenter === ballCenter) {
+                        if (ball.collisionCenter === ballCenter) {
                             table.removeBall(ball);
                         }
                     })

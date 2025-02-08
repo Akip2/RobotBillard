@@ -1,6 +1,5 @@
 import VueSimulateur from "./vue-simulateur.js";
 import CollisionController from "./collision-controller.js";
-import RandomConfig from "./configurations/random-config.js";
 import BillardConfig from "./configurations/billard-config.js";
 
 const canvasContainer = document.getElementById("canvas-container");

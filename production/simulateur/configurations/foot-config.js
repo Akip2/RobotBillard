@@ -1,14 +1,6 @@
 import Table from "../table.js";
 import Robot from "../objects/robot.js";
-import {
-    ballColors,
-    ballRadius,
-    height,
-    robotHeight,
-    robotWidth,
-    wallSize, wheelHeight, wheelWidth,
-    width
-} from "../params.js";
+import {ballRadius, height, robotHeight, robotWidth, wheelHeight, wheelWidth, width} from "../params.js";
 import Ball from "../objects/ball.js";
 
 class FootConfig extends Table {

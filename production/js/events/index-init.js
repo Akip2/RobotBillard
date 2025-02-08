@@ -2,7 +2,7 @@
 
 import {startBillardScenario} from "../scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "../scenarios/testScenario.js";
-import {createOrder, moveRobotTo} from "../brain.js";
+import {createOrder, moveRobotTo} from "../brain/brain.js";
 import {socket} from "../index.js";
 import {afficherDetection, currentView, loadSimulator} from "./view-manager.js";
 import {
@@ -13,13 +13,14 @@ import {
     duration,
     leftSpeed,
     rightSpeed,
-    simulatorSpeed,
     setAfficherDessins,
     setCurrentScenario,
     setDuration,
     setLeftSpeed,
-    setRightSpeed
+    setRightSpeed,
+    simulatorSpeed
 } from "./parameters.js";
+import {MAX_ORDER_DURATION, MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 
 // loader
 const loader = document.querySelector("#loader-container");
@@ -66,10 +67,17 @@ window.addEventListener("load", () => {
 
     // Execution time of the motors
     inputDuration.addEventListener("input", () => {
-        let durationBeforeTest = inputDuration.value;
+        let initialDuration = inputDuration.value;
+
         // We check if time is really between 100ms and 10.000ms
-        let time = durationBeforeTest < 100 ? 100 : durationBeforeTest > 10000 ? 10000 : durationBeforeTest;
-        setDuration(time);
+        let duration = initialDuration;
+
+        if (initialDuration < MIN_ORDER_DURATION) {
+            duration = MIN_ORDER_DURATION;
+        } else if (initialDuration > MAX_ORDER_DURATION) {
+            duration = MAX_ORDER_DURATION;
+        }
+        setDuration(duration);
     });
 
     // Buttons to move robots
@@ -80,16 +88,16 @@ window.addEventListener("load", () => {
         setRightSpeed(cursorRightMotor.value);
     });
     btnForward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(leftSpeed, rightSpeed, duration/simulatorSpeed, currentRobotId));
+        socket.emit('motor', createOrder(leftSpeed, rightSpeed, duration / simulatorSpeed, currentRobotId));
     });
     btnBackward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-leftSpeed, -rightSpeed, duration/simulatorSpeed, currentRobotId));
+        socket.emit('motor', createOrder(-leftSpeed, -rightSpeed, duration / simulatorSpeed, currentRobotId));
     });
     btnTurnRight.addEventListener("click", () => {
-        socket.emit('motor', createOrder(leftSpeed, -rightSpeed, duration/simulatorSpeed, currentRobotId));
+        socket.emit('motor', createOrder(leftSpeed, -rightSpeed, duration / simulatorSpeed, currentRobotId));
     });
     btnTurnLeft.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-leftSpeed, rightSpeed, duration/simulatorSpeed, currentRobotId));
+        socket.emit('motor', createOrder(-leftSpeed, rightSpeed, duration / simulatorSpeed, currentRobotId));
     });
 
     canvasContainer.addEventListener("click", (event) => {
@@ -114,7 +122,8 @@ window.addEventListener("load", () => {
         if (currentView !== "simulator") {
             afficherDetection(afficherDessins);
         }
-        // pour le simulateur, la gestion des dessins est gérée par la classe VueSimulateur (drawDetectedCircles) grace à la variable afficherDessins
+        // pour le simulateur, la gestion des dessins est gérée par la classe VueSimulateur (drawDetectedCircles)
+        // grace à la variable afficherDessins
     });
 
     // Loader

@@ -24,6 +24,7 @@ socket.on('connect', function () {
     socket.on("robots-list", function (robots) {
         console.log("navigateur : socket on robot-list");
         selectRobots.innerHTML = "";
+
         if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
             robots.forEach(function (robot) {
                 addRobot(robot);

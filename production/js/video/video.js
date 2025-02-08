@@ -1,13 +1,13 @@
 import {detectAndDrawArucos, detectCircles, drawDetectedCircles, preProcess} from "./video-functions.js";
-import {calculateBallSize, distanceBetweenPoints} from "../brain.js";
-import {defaultBallRadius, FPS, HEIGHT, WIDTH} from "./video-parameters.js";
+import {calculateBallSize, distanceBetweenPoints} from "../brain/brain.js";
+import {DEFAULT_BALL_RADIUS, FPS, HEIGHT, WIDTH} from "./video-parameters.js";
 
 let stillContinue = true;
 let robots = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("canvas-output-video");
-    const canvasBrut = document.getElementById("canvas-output-video-brut"); // Vidéo brute
+    const canvasBrut = document.getElementById("canvas-output-video-brut");
     const ctx = canvas.getContext("2d");
 
     // Access camera
@@ -82,15 +82,15 @@ function processVideo(video, canvas, canvasBrut, ctx) {
 
                 // AruCo detection
                 let arucos = detectAndDrawArucos(finalImage);
-
                 let corners = arucos.slice(0, 4);
+
                 let [topLeft, topRight, bottomRight, bottomLeft] = corners;
                 robots = arucos.slice(4, arucos.length);
 
                 const markersVector = new cv.MatVector();
                 const mv = new cv.Mat(corners.length, 1, cv.CV_32SC2);
 
-                let ballRadius = defaultBallRadius;
+                let ballRadius = DEFAULT_BALL_RADIUS;
                 let isPerimeterFound = false;
 
                 // If the 4 table corners are detected, draw them and lines between them
@@ -133,7 +133,6 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                 console.error(err);
             }
         }
-
         setTimeout(processFrame, delay);
     }
 

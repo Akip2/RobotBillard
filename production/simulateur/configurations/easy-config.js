@@ -6,7 +6,9 @@ import {
     height,
     robotHeight,
     robotWidth,
-    wallSize, wheelHeight, wheelWidth,
+    wallSize,
+    wheelHeight,
+    wheelWidth,
     width
 } from "../params.js";
 import Ball from "../objects/ball.js";

@@ -1,6 +1,7 @@
 import {getBalls, getRobot} from "../elements-manager.js";
-import {distanceBetweenPoints, moveRobotTo} from "../brain.js";
+import {distanceBetweenPoints, moveRobotTo} from "../brain/brain.js";
 import {getRealHoles} from "../video/video-functions.js";
+import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 
 /**
  * méthode qui permet de lancer une simulation de partie de billard
@@ -31,7 +32,7 @@ export async function startBillardScenario(socket, index) {
             }
         }
 
-        await sleep(100);
+        await sleep(MIN_ORDER_DURATION);
     }
 }
 
@@ -69,7 +70,6 @@ function getAlignPositionToPush(ballToPush) {
     let holes = getRealHoles();
 
     console.log(holes);
-
 
 }
 
