@@ -179,11 +179,16 @@ export function loadSimulator(configurationName) {
 
     selectRobotsSimulator.innerHTML = "";
 
+    let option;
     for (let i = 0; i < table.getRobots().length; i++) {
-        let option = document.createElement("option");
+        option = document.createElement("option");
         option.text = "Robot n°" + (i + 1);
         selectRobotsSimulator.appendChild(option);
     }
+
+    option = document.createElement("option");
+    option.text = "Broadcast";
+    selectRobotsSimulator.appendChild(option);
 
     setCurrentRobotId(0);
 }

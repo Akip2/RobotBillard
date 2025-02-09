@@ -26,7 +26,8 @@ export function initParams(){
     });
 
     selectRobots.addEventListener("change", (event) => {
-        currentRobotId = event.target.value;
+        const optionName = event.target.value;
+        currentRobotId = optionName === "Broadcast" ? -1 : optionName;
     });
 
     speedSlider.addEventListener("change", (event) => {
@@ -35,8 +36,13 @@ export function initParams(){
     });
 
     selectRobotsSimulator.addEventListener("change", (event) => {
-        let optionName = event.target.value;
-        currentRobotId = optionName[optionName.length - 1] - 1;
+        const optionName = event.target.value;
+
+        if(optionName === "Broadcast"){
+            currentRobotId = -1;
+        } else {
+            currentRobotId = optionName[optionName.length - 1] - 1;
+        }
     });
 
     // Choose a configuration for the simulator
