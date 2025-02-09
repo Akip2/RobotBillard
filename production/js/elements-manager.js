@@ -1,7 +1,7 @@
 import {currentView, table} from "./events/view-manager.js";
 import {getRealRobot} from "./video/video.js";
 import {getRealBalls} from "./video/video-functions.js";
-import {selectRobots} from "./events/index-init.js";
+import {selectRobots} from "./index.js";
 
 export function getRobot(index) {
     if (currentView === "simulator") {

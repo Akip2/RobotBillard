@@ -7,7 +7,7 @@ import EasyConfig from "../../simulateur/configurations/easy-config.js";
 import CollisionController from "../../simulateur/collision-controller.js";
 import {setStillContinue} from "../video/video.js";
 import {afficherDessins, currentConfig, setCurrentConfig, setCurrentRobotId} from "./parameters.js";
-import {canvasContainer, reload, selectRobots} from "./index-init.js";
+import {canvasContainer, reload, selectRobots} from "../index.js";
 import {socket} from "../index.js";
 import Camera from "../../simulateur/camera.js";
 
@@ -29,7 +29,7 @@ const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 const speedContainer = document.querySelector("#speed-container");
 const viewsList = document.querySelector("#views-list");
 
-export function init() {
+export function initView() {
     // Change curent view
     viewsList.addEventListener("click", (event) => {
         socket.emit("change-mode", event.target.id);

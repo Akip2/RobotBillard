@@ -1,4 +1,4 @@
-import {loadSimulator} from "./view-manager.js";
+import {afficherDetection, currentView, loadSimulator} from "./view-manager.js";
 import {vue} from "./view-manager.js";
 
 const speedSlider = document.querySelector("#sim-speed");
@@ -6,6 +6,7 @@ const selectScenarios = document.querySelector("#select-scenarios");
 const selectRobots = document.querySelector("#select-robot");
 const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 const configurationChoice = document.querySelector("#select-configuration");
+const affichage = document.querySelector("#checkbox-affichage");
 
 export let currentRobotId = null;
 export let currentConfig = "Billard";
@@ -18,7 +19,8 @@ export let leftSpeed = 130;
 export let rightSpeed = 130;
 export let duration = 1000;
 
-window.addEventListener("load", () => {
+
+export function initParams(){
     selectScenarios.addEventListener("change", (event) => {
         currentScenario = event.target.value;
     });
@@ -30,7 +32,7 @@ window.addEventListener("load", () => {
     speedSlider.addEventListener("change", (event) => {
         simulatorSpeed = event.target.value;
         vue.changeSpeed();
-    })
+    });
 
     selectRobotsSimulator.addEventListener("change", (event) => {
         let optionName = event.target.value;
@@ -41,7 +43,15 @@ window.addEventListener("load", () => {
     configurationChoice.addEventListener("change", (event) => {
         loadSimulator(event.target.value);
     });
-});
+
+    affichage.addEventListener("change", function () {
+        setAfficherDessins(affichage.checked);
+        if (currentView !== "simulator") {
+            afficherDetection(afficherDessins);
+        }
+        // pour le simulateur, la gestion des dessins est gérée par la classe VueSimulateur (drawDetectedCircles) grace à la variable afficherDessins
+    });
+}
 
 export function setCurrentConfig(config) {
     currentConfig = config;
