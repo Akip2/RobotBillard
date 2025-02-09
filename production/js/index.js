@@ -85,8 +85,10 @@ socket.on('connect', function () {
             if (currentRobotId === null) {
                 setCurrentRobotId(robots[0])
             }
+            addRobot("Broadcast");
+        } else {
+            addRobot("Aucun robot disponible");
         }
-        addRobot("Broadcast");
         /*
         else {
             addRobot("Aucun robot disponible");
