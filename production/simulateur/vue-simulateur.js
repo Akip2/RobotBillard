@@ -71,6 +71,11 @@ class VueSimulateur {
         this.canvasContainer.appendChild(this.overlay);
 
         Matter.Events.on(this.render, 'afterRender', () => {
+            this.robots.forEach(robot => {
+                Body.setAngle(robot.aruco, robot.getAngle());
+                Body.setPosition(robot.aruco, robot.getPosition());
+            });
+
             if(noise > 0) {
                 this.generateNoise();
             }
@@ -90,6 +95,8 @@ class VueSimulateur {
         const holes = table.holes;
         const walls = table.walls;
         const robots = table.robots;
+
+        this.robots = robots;
 
         this.addObjects(walls);
         this.addObjects(holes);
