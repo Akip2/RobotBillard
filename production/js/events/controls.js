@@ -10,7 +10,7 @@ import {
 } from "./parameters.js";
 import {socket} from "../index.js";
 import {createOrder} from "../brain/brain.js";
-import {MAX_ORDER_DURATION, MIN_ORDER_DURATION} from "../brain/brain-parameters";
+import {MAX_ORDER_DURATION, MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 
 const btnForward = document.querySelector("#btn-forward");
 const btnBackward = document.querySelector("#btn-backward");
