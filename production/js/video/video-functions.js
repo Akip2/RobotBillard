@@ -19,13 +19,14 @@ let holesPositions = [];
 export function preProcess(frame) {
     // let blurred = new cv.Mat();
     let gray = new cv.Mat();
+    let bright = new cv.Mat();
+    // let blurred = new cv.Mat();
 
     cv.cvtColor(frame, gray, cv.COLOR_RGBA2GRAY); // Grayscale
-    // cv.GaussianBlur(gray, blurred, new cv.Size(21, 21), 0);
-    // cv.medianBlur(gray, blurred, parseFloat(document.getElementById("tmp-1").value));
-    // cv.bilateralFilter(gray, blurred, 9, parseFloat(document.getElementById("tmp-1").value), parseFloat(document.getElementById("tmp-2").value));
+    cv.convertScaleAbs(gray, bright, 1.5, 20); // 1 - 3 // 0 - 100
+    // cv.bilateralFilter(bright, blurred, 9, 24, 60);
 
-    return gray;
+    return bright;
 }
 
 /**

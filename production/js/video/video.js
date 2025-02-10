@@ -120,6 +120,7 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                 drawDetectedCircles(finalImage, circles, mv, robots, isPerimeterFound);
 
                 // Draw the final result in the canvas
+                // preProcessedFrame
                 cv.imshow(canvas, finalImage);
 
                 // Clean memory
