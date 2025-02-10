@@ -1,6 +1,6 @@
 import {Body, Composite, Engine, Mouse, MouseConstraint, Render, World,} from "./global.js";
 import {ballRadius, height, simulatorFPS, width} from "./params.js";
-import {afficherDessins, simulatorSpeed} from "../js/events/parameters.js";
+import {afficherDessins, simulatorSpeed, noise} from "../js/events/parameters.js";
 
 class VueSimulateur {
     constructor(canvasContainer) {
@@ -71,7 +71,9 @@ class VueSimulateur {
         this.canvasContainer.appendChild(this.overlay);
 
         Matter.Events.on(this.render, 'afterRender', () => {
-            this.generateNoise();
+            if(noise > 0) {
+                this.generateNoise();
+            }
         });
     }
 
@@ -148,7 +150,7 @@ class VueSimulateur {
         let imageData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
         let pixels = imageData.data;
 
-        for (let i = 0; i < pixels.length; i += 4) {
+        for (let i = 0; i < pixels.length; i += (9 - noise)) {
             let noise = (Math.random() - 0.5) * 100;
             pixels[i] += noise;
             pixels[i + 1] += noise;

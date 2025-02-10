@@ -27,6 +27,7 @@ const videoDessin = document.querySelector("#canvas-output-video");
 const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 const speedContainer = document.querySelector("#speed-container");
 const viewsList = document.querySelector("#views-list");
+const noiseContainer = document.querySelector("#noise-container");
 
 export let isSimulator = false;
 
@@ -63,6 +64,7 @@ function showVideo(affiche) {
         hide(speedContainer);
         hide(reload);
         hide(configurationChoice);
+        hide(noiseContainer);
 
         showCanvas();
         show(selectRobots);
@@ -83,6 +85,7 @@ function showVideo(affiche) {
         show(viewArrowControls);
         show(reload);
         show(configurationChoice);
+        show(noiseContainer);
 
         loadSimulator(currentConfig);
         setStillContinue(false);
