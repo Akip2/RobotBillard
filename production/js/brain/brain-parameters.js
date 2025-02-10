@@ -9,3 +9,5 @@ export const MAX_ORDER_DURATION = 10000;
 // Internal robot value
 export const ROBOT_MIN_SPEED = 64;
 export const ROBOT_MAX_SPEED = 255;
+
+export const BROADCAST = "Broadcast";

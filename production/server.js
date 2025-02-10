@@ -13,6 +13,7 @@ const io = require('socket.io').listen(server, {
 });
 
 const port = 8001;
+const BROADCAST = "Broadcast";
 
 // -- Used to solve some problems ----------------
 app.use(express.static(path.join(__dirname)));
@@ -47,7 +48,7 @@ io.sockets.on("connection", function (socket) {
         if (isSimulator) {
             socket.emit("motor", val);
         } else {
-            if (ipRobot === -1) { // Broadcast
+            if (ipRobot === BROADCAST) { // Broadcast
                 socket.broadcast.emit("motor", val);
             } else {
                 delete val.ipRobot;

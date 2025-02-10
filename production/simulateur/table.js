@@ -1,6 +1,7 @@
 import Wall from "./objects/wall.js";
 import {height, holeRadius, wallSize, width} from "./params.js";
 import Hole from "./objects/hole.js";
+import {BROADCAST} from "../js/brain/brain-parameters.js";
 
 class Table {
     constructor(robots, balls, vue) {
@@ -47,7 +48,7 @@ class Table {
     }
 
     sendRobotOrder(order, id) {
-        if (id === -1) {
+        if (id === BROADCAST) {
             for (const robot of this.robots) {
                 robot.executeOrder(order);
             }

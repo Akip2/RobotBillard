@@ -1,4 +1,5 @@
 import {afficherDetection, currentView, loadSimulator, vue} from "./view-manager.js";
+import {BROADCAST} from "../brain/brain-parameters.js";
 
 const speedSlider = document.querySelector("#sim-speed");
 const selectScenarios = document.querySelector("#select-scenarios");
@@ -26,7 +27,7 @@ export function initParams() {
 
     selectRobots.addEventListener("change", (event) => {
         const optionName = event.target.value;
-        currentRobotId = optionName === "Broadcast" ? -1 : optionName;
+        currentRobotId = optionName === "Broadcast" ? BROADCAST : optionName;
     });
 
     speedSlider.addEventListener("change", (event) => {
@@ -38,7 +39,7 @@ export function initParams() {
         const optionName = event.target.value;
 
         if (optionName === "Broadcast") {
-            currentRobotId = -1;
+            currentRobotId = BROADCAST;
         } else {
             currentRobotId = optionName[optionName.length - 1] - 1;
         }
