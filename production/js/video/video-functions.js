@@ -67,7 +67,6 @@ export function drawAndGetDirectionOfAruco(frame, cornersOfAruco) {
  */
 export function detectAndDrawArucos(frame) {
     const dictionary = cv.getPredefinedDictionary(cv.DICT_ARUCO_ORIGINAL);
-
     let arucoIds = new cv.Mat();
     let arucoCorners = new cv.MatVector();
 
