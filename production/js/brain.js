@@ -154,12 +154,6 @@ export function calculateBallSize(tableLength) {
 }
 
 export function createOrder(left, right, duration, ipRobot) {
-    let broadcastToAll = document.getElementById("checkbox-allRobots").checked;
-
-    if (broadcastToAll) {
-        ipRobot = -1;
-    }
-
     return {
         left: left,
         right: right,

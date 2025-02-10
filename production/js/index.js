@@ -89,10 +89,5 @@ socket.on('connect', function () {
         } else {
             addRobot("Aucun robot disponible");
         }
-        /*
-        else {
-            addRobot("Aucun robot disponible");
-        }
-         */
     });
 });
