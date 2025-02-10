@@ -58,6 +58,8 @@ class VueSimulateur {
         this.isRunning = true;
         Render.run(this.render);
 
+        this.canvas = this.canvasContainer.querySelector("#canvas-simulateur");
+
         this.updateLoop = this.createUpdateLoop(simulatorSpeed);
 
         this.overlay = document.createElement("canvas");
@@ -67,6 +69,10 @@ class VueSimulateur {
         this.overlay.style.backgroundImage = "none";
 
         this.canvasContainer.appendChild(this.overlay);
+
+        Matter.Events.on(this.render, 'afterRender', () => {
+            this.generateNoise();
+        });
     }
 
     createUpdateLoop(speed) {
@@ -135,6 +141,21 @@ class VueSimulateur {
                 ctx.closePath();
             });
         }
+    }
+
+    generateNoise() {
+        const ctx = this.canvas.getContext("2d");
+        let imageData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        let pixels = imageData.data;
+
+        for (let i = 0; i < pixels.length; i += 4) {
+            let noise = (Math.random() - 0.5) * 100;
+            pixels[i] += noise;
+            pixels[i + 1] += noise;
+            pixels[i + 2] += noise;
+        }
+
+        ctx.putImageData(imageData, 0, 0);
     }
 
     changeSpeed() {
