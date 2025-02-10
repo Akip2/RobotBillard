@@ -36,13 +36,17 @@ class Camera {
                 let center = new cv.Point(circle[0], circle[1]);
 
                 ballsDetected.push(center);
+                circle = null;
+                center = null;
             }
 
+            this.table.updateDetectedCircles(ballsDetected);
+
+            //Cleaning memory
             preProcessedImg.delete();
             circles.delete();
             imgData.delete();
-
-            this.table.updateDetectedCircles(ballsDetected);
+            ballsDetected = null;
         } catch (err) {
             console.error(err);
         }
