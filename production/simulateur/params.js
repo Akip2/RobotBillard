@@ -19,8 +19,8 @@ const holeRadius = 14.25;
 const robotWidth = 38;
 const robotHeight = 38;
 
-const wheelHeight = robotHeight/18;
-const wheelWidth = robotWidth/1.6;
+const wheelHeight = robotHeight / 18;
+const wheelWidth = robotWidth / 1.6;
 
 const simulatorCameraFPS = 20;
 const simulatorFPS = 60;

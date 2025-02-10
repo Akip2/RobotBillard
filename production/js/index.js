@@ -5,7 +5,7 @@ import {addRobot} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenario} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
-import {moveRobotTo} from "./brain.js";
+import {moveRobotTo} from "./brain/brain.js";
 
 export const socket = io(); // Connection to server
 
@@ -77,6 +77,7 @@ socket.on('connect', function () {
     socket.on("robots-list", function (robots) {
         console.log("navigateur : socket on robot-list");
         selectRobots.innerHTML = "";
+
         if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
             robots.forEach(function (robot) {
                 addRobot(robot);

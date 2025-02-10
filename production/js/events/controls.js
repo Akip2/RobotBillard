@@ -9,7 +9,7 @@ import {
     simulatorSpeed
 } from "./parameters.js";
 import {socket} from "../index.js";
-import {createOrder} from "../brain.js";
+import {createOrder} from "../brain/brain.js";
 
 const btnForward = document.querySelector("#btn-forward");
 const btnBackward = document.querySelector("#btn-backward");

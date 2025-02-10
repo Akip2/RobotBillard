@@ -7,7 +7,8 @@ import {
     holeRadius,
     robotHeight,
     robotWidth,
-    wallSize, wheelHeight,
+    wallSize,
+    wheelHeight,
     wheelWidth,
     width
 } from "../params.js";
@@ -20,14 +21,14 @@ class RandomConfig extends Table {
         const robots = [new Robot(
             robotWidth, robotHeight, wheelWidth, wheelHeight,
 
-            //Verifie que l'abscisse du robot n'est pas dans un mur ou en dehors de l'écran
+            // Vérifie que l'abscisse du robot n'est pas dans un mur ou en dehors de l'écran
             randomWidth < (robotWidth / 2) + wallSize
                 ? (robotWidth / 2 + wallSize)
                 : randomWidth > (width - robotWidth / 2 - wallSize)
                     ? width - robotWidth / 2 - wallSize
                     : randomWidth,
 
-            //Verifie que l'ordonnée du robot n'est pas dans un mur ou en dehors de l'écran
+            // Vérifie que l'ordonnée du robot n'est pas dans un mur ou en dehors de l'écran
             randomHeight < (robotHeight / 2) + wallSize
                 ? (robotHeight / 2 + wallSize)
                 : randomHeight > (height - robotHeight / 2 - wallSize)

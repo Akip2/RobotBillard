@@ -1,4 +1,4 @@
-import {Bodies, Body, Constraint, Composite} from "../global.js";
+import {Bodies, Body, Composite, Constraint} from "../global.js";
 import SimulationObject from "./simulation-object.js";
 
 const WHEEL_SIDE = Object.freeze({
@@ -9,26 +9,26 @@ const WHEEL_SIDE = Object.freeze({
 class Wheel extends SimulationObject {
     constructor(robot, wheelWidth, wheelHeight, side) {
         const relativeX = (-robot.getWidth() / 2) + wheelWidth / 2;
-        const relativeY = side*(robot.getHeight() / 2) + side*wheelHeight;
+        const relativeY = side * (robot.getHeight() / 2) + side * wheelHeight;
 
-        const core=Bodies.rectangle(
+        const core = Bodies.rectangle(
             robot.getX() + relativeX,
             robot.getY() + relativeY,
             wheelWidth,
             wheelHeight, {
-            render: {
-                fillStyle: "#2F2F2F", // real color of our robot
-                visible: false
-            },
+                render: {
+                    fillStyle: "#2F2F2F", // real color of our robot
+                    visible: false
+                },
 
-            collisionFilter: {
-                group: -1,
-                category: 2,
-                mask: 0,
-            },
-        });
+                collisionFilter: {
+                    group: -1,
+                    category: 2,
+                    mask: 0,
+                },
+            });
 
-        const stiffness=0.6;
+        const stiffness = 0.6;
 
         const pin = Constraint.create({
             bodyA: robot.body,
@@ -58,9 +58,9 @@ class Wheel extends SimulationObject {
         this.direction = direction;
     }
 
-    setSpeed(speed, duration=1000) {
-        this.speed = speed/4.25;
-        let delta=0;
+    setSpeed(speed, duration = 1000) {
+        this.speed = speed / 4.25;
+        let delta = 0;
 
         clearInterval(this.movingInterval);
         if (this.speed > 0) {  // The robot starts moving
@@ -69,12 +69,11 @@ class Wheel extends SimulationObject {
                 this.moving();
                 delta += 10;
 
-                if(delta >= duration){
+                if (delta >= duration) {
                     clearInterval(this.movingInterval); //End of duration, the robot stops executing the order
                 }
             }, 10);
-        }
-        else if(!this.body.isStatic) {
+        } else if (!this.body.isStatic) {
             Body.setStatic(this.body, true);
         }
     }

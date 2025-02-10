@@ -111,6 +111,7 @@ function tryRemove(element) {
 function showCanvas() {
     if (videoBrut.classList.contains("displayNone")) {
         let potentialCanvas = document.querySelector("#canvas-simulateur");
+
         if (potentialCanvas != null) {
             canvasContainer.classList.remove("simulator-container");
             tryRemove(potentialCanvas);
@@ -118,11 +119,9 @@ function showCanvas() {
             if (camera !== null) {
                 camera.stop();
             }
-
             if (vue !== null) {
                 vue.clearSimulation();
             }
-
             tryAdd(videoBrut);
         }
     }

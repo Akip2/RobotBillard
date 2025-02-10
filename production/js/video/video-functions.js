@@ -1,17 +1,17 @@
 import {
-    bannedArucos,
-    bottomLeftId,
-    bottomRightId,
-    defaultBallRadius,
-    distanceFromBorder,
-    houghCirclesDistanceBetweenCircles,
-    houghCirclesParameter1,
-    houghCirclesParameter2,
-    houghCirclesResolution,
-    topLeftId,
-    topRightId
+    BANNED_ARUCOS,
+    BOTTOM_LEFT_ARUCO_ID,
+    BOTTOM_RIGHT_ARUCO_ID,
+    DEFAULT_BALL_RADIUS,
+    DISTANCE_FROM_BORDER_TO_BE_HOLE,
+    HOUGH_CIRCLES_DISTANCE_BETWEEN_CIRCLES,
+    HOUGH_CIRCLES_PARAMETER_1,
+    HOUGH_CIRCLES_PARAMETER_2,
+    HOUGH_CIRCLES_RESOLUTION,
+    TOP_LEFT_ARUCO_ID,
+    TOP_RIGHT_ARUCO_ID
 } from "./video-parameters.js";
-import {distanceBetweenPoints} from "../brain.js";
+import {distanceBetweenPoints} from "../brain/brain.js";
 
 let ballsPositions = [];
 let holesPositions = [];
@@ -85,7 +85,7 @@ export function detectAndDrawArucos(frame) {
         let cornersOfAruco = arucoCorners.get(i);
 
         // don't detect banned aruco ids
-        if (bannedArucos.includes(arucoId)) {
+        if (BANNED_ARUCOS.includes(arucoId)) {
             let topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
             let x = topLeftCornerOfAruco[0];
             let y = topLeftCornerOfAruco[1];
@@ -93,26 +93,26 @@ export function detectAndDrawArucos(frame) {
             let point = new cv.Point(x, y);
 
             switch (arucoId) {
-                case topLeftId:
+                case TOP_LEFT_ARUCO_ID:
                     topLeftAruco = point;
                     break;
-                case topRightId:
+                case TOP_RIGHT_ARUCO_ID:
                     topRightAruco = point;
                     break;
-                case bottomLeftId:
+                case BOTTOM_LEFT_ARUCO_ID:
                     bottomLeftAruco = point;
                     break;
-                case bottomRightId:
+                case BOTTOM_RIGHT_ARUCO_ID:
                     bottomRightAruco = point
                     break;
                 default:
                     let bottomRightCornerOfAruco = cornersOfAruco.data32F.slice(4, 6);
+                    let orientation = drawAndGetDirectionOfAruco(frame, cornersOfAruco);
 
                     // The center of the aruco
                     point = new cv.Point((topLeftCornerOfAruco[0] + bottomRightCornerOfAruco[0]) / 2,
                         (topLeftCornerOfAruco[1] + bottomRightCornerOfAruco[1]) / 2)
 
-                    let orientation = drawAndGetDirectionOfAruco(frame, cornersOfAruco);
                     let robotData = {
                         position: point,
                         orientation: orientation,
@@ -121,12 +121,11 @@ export function detectAndDrawArucos(frame) {
             }
         }
     }
-
     let corners = [topLeftAruco, topRightAruco, bottomRightAruco, bottomLeftAruco];
     return corners.concat(robotsArucos);
 }
 
-export function detectCircles(frame, ballRadius = defaultBallRadius) {
+export function detectCircles(frame, ballRadius = DEFAULT_BALL_RADIUS) {
     let circles = new cv.Mat();
 
     let margin = (20 / 100) * ballRadius; // + or - 20% of expected size
@@ -134,14 +133,13 @@ export function detectCircles(frame, ballRadius = defaultBallRadius) {
     let maxRadius = ballRadius + margin;
 
     cv.HoughCircles(frame, circles, cv.HOUGH_GRADIENT,
-        houghCirclesResolution,
-        houghCirclesDistanceBetweenCircles,
-        houghCirclesParameter1,
-        houghCirclesParameter2,
+        HOUGH_CIRCLES_RESOLUTION,
+        HOUGH_CIRCLES_DISTANCE_BETWEEN_CIRCLES,
+        HOUGH_CIRCLES_PARAMETER_1,
+        HOUGH_CIRCLES_PARAMETER_2,
         minRadius,
         maxRadius
     );
-
     return circles;
 }
 
@@ -161,7 +159,7 @@ export function drawDetectedCircles(frame, circles, mv, robots, isPerimeterFound
             // Change the color if inside or outside circle and differentiate balls from holes
             if (result >= 0) {
                 // if the center of the detected circle is too close from the site of the table it may be a hole
-                if (result < distanceFromBorder && holesPositions.length < 6) {
+                if (result < DISTANCE_FROM_BORDER_TO_BE_HOLE && holesPositions.length < 6) {
                     perimeterColor = [128, 128, 128, 255] // color of holes
                 } else {
                     let i = 0;

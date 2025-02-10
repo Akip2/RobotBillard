@@ -6,7 +6,6 @@ class Camera {
         this.canvasContainer = canvasContainer;
         this.table = table;
         this.analysisInterval = null;
-
         this.isRunning = false;
     }
 

@@ -4,21 +4,22 @@ export const WIDTH = 700;
 export const HEIGHT = 400;
 
 // ids of the aruco placed at the corners of the table
-export const topLeftId = 757;
-export const topRightId = 1;
-export const bottomLeftId = 157;
-export const bottomRightId = 10;
+export const TOP_LEFT_ARUCO_ID = 757;
+export const TOP_RIGHT_ARUCO_ID = 1;
+export const BOTTOM_LEFT_ARUCO_ID = 157;
+export const BOTTOM_RIGHT_ARUCO_ID = 10;
 
 // Aruco ids that we don't want to detect (they might get detected too easily)
-export const bannedArucos = [0, 252, 1023];
+export const BANNED_ARUCOS = [0, 252, 1023];
 
 // Parameters for houghCircles method
-export const houghCirclesResolution = 2; // resolution : 1 = default resolution, 2 = resolution divided by 2
-export const houghCirclesDistanceBetweenCircles = 15;
-export const houghCirclesParameter1 = 100; // the lower it is, the more circles are detected (including false ones)
-export const houghCirclesParameter2 = 30;
+export const HOUGH_CIRCLES_RESOLUTION = 2; // resolution : 1 = default resolution, 2 = resolution divided by 2
+export const HOUGH_CIRCLES_DISTANCE_BETWEEN_CIRCLES = 15;
+export const HOUGH_CIRCLES_PARAMETER_1 = 100; // the lower it is, the more circles are detected (including false ones)
+export const HOUGH_CIRCLES_PARAMETER_2 = 30;
 
-export const defaultBallRadius = 10;
+// In pixels
+export const DEFAULT_BALL_RADIUS = 10;
 
 // Distance in pixel needed to be considered a ball instead of a hole
-export const distanceFromBorder = 38;
+export const DISTANCE_FROM_BORDER_TO_BE_HOLE = 38;
