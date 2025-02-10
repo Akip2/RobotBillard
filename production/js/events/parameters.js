@@ -19,7 +19,7 @@ export let rightSpeed = 130;
 export let duration = 1000;
 
 
-export function initParams(){
+export function initParams() {
     selectScenarios.addEventListener("change", (event) => {
         currentScenario = event.target.value;
     });
@@ -37,7 +37,7 @@ export function initParams(){
     selectRobotsSimulator.addEventListener("change", (event) => {
         const optionName = event.target.value;
 
-        if(optionName === "Broadcast"){
+        if (optionName === "Broadcast") {
             currentRobotId = -1;
         } else {
             currentRobotId = optionName[optionName.length - 1] - 1;
