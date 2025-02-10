@@ -85,7 +85,7 @@ export function detectAndDrawArucos(frame) {
         let cornersOfAruco = arucoCorners.get(i);
 
         // don't detect banned aruco ids
-        if (BANNED_ARUCOS.includes(arucoId)) {
+        if (!BANNED_ARUCOS.includes(arucoId)) {
             let topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
             let x = topLeftCornerOfAruco[0];
             let y = topLeftCornerOfAruco[1];
@@ -153,6 +153,7 @@ export function drawDetectedCircles(frame, circles, mv, robots, isPerimeterFound
         let perimeterColor = [0, 0, 255, 255]; // color when no table is detected
 
         // Detect which ones are inside the table or not and add the inside one in the attribute
+        console.log(isPerimeterFound);
         if (isPerimeterFound) {
             let result = cv.pointPolygonTest(mv, center, true);
 
