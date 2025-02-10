@@ -10,4 +10,8 @@ export const MAX_ORDER_DURATION = 10000;
 export const ROBOT_MIN_SPEED = 64;
 export const ROBOT_MAX_SPEED = 255;
 
+// Used in moveRobotTo
+export const ANGLE_THRESHOLD = 22.5;
+export const DISTANCE_THRESHOLD = 10;
+
 export const BROADCAST = "Broadcast";

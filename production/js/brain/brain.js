@@ -1,58 +1,16 @@
 import {simulatorSpeed} from "../events/parameters.js";
 import {getRobot} from "../elements-manager.js";
-import {BALL_REAL_SIZE, MIN_ORDER_DURATION, ROBOT_MAX_SPEED, TABLE_REAL_SIZE} from "./brain-parameters.js";
+import {
+    ANGLE_THRESHOLD,
+    BALL_REAL_SIZE,
+    DISTANCE_THRESHOLD,
+    MIN_ORDER_DURATION,
+    ROBOT_MAX_SPEED,
+    TABLE_REAL_SIZE
+} from "./brain-parameters.js";
 import {isSimulator} from "../events/view-manager.js";
 
 let currentInterval = null;
-
-/**
- *
- * @param socket
- * @param robotIp
- * @param distance in centimeter
- * @param direction
- */
-export function moveRobotStraightLine(socket, robotIp, distance, direction = 1) {
-    let duration = 3000;
-
-    // We know how far the robot goes in 3 seconds at a certain power,
-    // so we can deduce how many power is needed and how much time
-    let speedFor3Sec = (distance + 11.66) / 0.6;
-    let realSpeed = Math.round(speedFor3Sec * (3000 / duration));
-
-    // Tries to minimize time
-    while ((realSpeed > ROBOT_MAX_SPEED) || (realSpeed < 200)) {
-        realSpeed < 200 ? duration -= MIN_ORDER_DURATION : duration += MIN_ORDER_DURATION;
-
-        realSpeed = Math.round(speedFor3Sec * (3000 / duration));
-    }
-
-    socket.emit('motor', createOrder(realSpeed * direction, realSpeed * direction, duration, robotIp));
-}
-
-export function turnRobot(socket, robotIp, angle, direction) {
-    // We know how much time we need to turn in a certain angle at 128 power
-
-    // let duration = (1330 / 2) * (Math.abs(angle * (Math.PI / 180)) / Math.PI);
-    // console.log("ANGLE : "+Math.abs(angle * (Math.PI / 180)));
-
-    // let speed = 128 * Math.abs(angle * (Math.PI / 180));
-    //
-    // if (direction === "Left") {
-    //     socket.emit('motor', createOrder(-speed, speed, robotOrderMinimalDuration, robotIp));
-    // } else { // Right
-    //     socket.emit('motor', createOrder(speed, -speed, robotOrderMinimalDuration, robotIp));
-    // }
-
-    // let duration = (1330 / 2) * (Math.abs(angle * (Math.PI / 180)) / Math.PI);
-    let duration = 50;
-
-    if (direction === "Left") {
-        socket.emit('motor', createOrder(-128, 128, duration, robotIp));
-    } else { // Right
-        socket.emit('motor', createOrder(128, -128, duration, robotIp));
-    }
-}
 
 export function moveRobotTo(socket, robotIp, x, y) {
     if (currentInterval !== null) {
@@ -60,8 +18,6 @@ export function moveRobotTo(socket, robotIp, x, y) {
     }
 
     let direction = "Left";
-    let angleThreshold = 22.5;
-    let distanceThreshold = 10;
 
     currentInterval = setInterval(() => {
         let robot = getRobot(0);
@@ -75,7 +31,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
                 y: y
             }) / (calculateBallSize(460) / 4);
 
-            if (distanceDifference < distanceThreshold) {
+            if (distanceDifference < DISTANCE_THRESHOLD) {
                 clearInterval(currentInterval);
             }
 
@@ -91,8 +47,8 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
             angleDifference > 0 ? direction = "Left" : direction = "Right";
 
-            const isTargetForward = (angleDifference <= angleThreshold) && (angleDifference >= -angleThreshold);
-            const isTargetBackward = (angleDifference <= -180 + angleThreshold) || (angleDifference >= 180 - angleThreshold);
+            const isTargetForward = (angleDifference <= ANGLE_THRESHOLD) && (angleDifference >= -ANGLE_THRESHOLD);
+            const isTargetBackward = (angleDifference <= -180 + ANGLE_THRESHOLD) || (angleDifference >= 180 - ANGLE_THRESHOLD);
 
             if (isTargetForward) {
                 socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, robotIp));
@@ -106,7 +62,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
                 let fullSpeedMotor = ROBOT_MAX_SPEED;
 
                 // Needs to turn before moving if too close to the target
-                if (distanceDifference < distanceThreshold * 2) {
+                if (distanceDifference < DISTANCE_THRESHOLD * 2) {
                     otherMotorSpeed = -ROBOT_MAX_SPEED / 2;
                     fullSpeedMotor /= 2;
                 }
