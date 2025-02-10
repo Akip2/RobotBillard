@@ -82,12 +82,12 @@ function processVideo(video, canvas, canvasBrut, ctx) {
 
                 // AruCo detection
                 let arucos = detectAndDrawArucos(finalImage);
-                const corners = arucos.slice(0, 4);
-                const [topLeft, topRight, bottomRight, bottomLeft] = corners;
+                const tableCorners = arucos.slice(0, 4);
+                const [topLeft, topRight, bottomRight, bottomLeft] = tableCorners;
 
                 robots = arucos.slice(4, arucos.length);
 
-                const mv = new cv.Mat(corners.length, 1, cv.CV_32SC2);
+                const mv = new cv.Mat(tableCorners.length, 1, cv.CV_32SC2);
 
                 let ballRadius = DEFAULT_BALL_RADIUS;
                 let isPerimeterFound = false;
@@ -118,7 +118,7 @@ function processVideo(video, canvas, canvasBrut, ctx) {
 
                 // Detect and draw the circles
                 let circles = detectCircles(preProcessedFrame, ballRadius);
-                drawDetectedCircles(finalImage, circles, mv, robots, isPerimeterFound);
+                drawDetectedCircles(finalImage, circles, mv, robots, tableCorners, isPerimeterFound);
 
                 // Draw the final result in the canvas
                 // preProcessedFrame

@@ -20,6 +20,4 @@ export const HOUGH_CIRCLES_PARAMETER_2 = 30;
 
 // In pixels
 export const DEFAULT_BALL_RADIUS = 10;
-
-// Distance in pixel needed to be considered a ball instead of a hole
-export const DISTANCE_FROM_BORDER_TO_BE_HOLE = 38;
+export const HOLE_NUMBERS = 6;
