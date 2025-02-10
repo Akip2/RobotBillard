@@ -29,6 +29,8 @@ const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 const speedContainer = document.querySelector("#speed-container");
 const viewsList = document.querySelector("#views-list");
 
+export let isSimulator = false;
+
 export function initView() {
     // Change curent view
     viewsList.addEventListener("click", (event) => {
@@ -36,6 +38,7 @@ export function initView() {
         currentView = event.target.id;
         switch (currentView) {
             case "camera":
+                isSimulator = false;
                 hide(selectRobotsSimulator);
                 hide(speedContainer);
                 show(selectRobots);
@@ -49,6 +52,7 @@ export function initView() {
                 setCurrentRobotId(selectRobots.firstChild.innerText);
                 break;
             case "simulator":
+                isSimulator = true;
                 hide(videoBrut);
                 hide(videoDessin);
                 show(speedContainer);
@@ -62,6 +66,7 @@ export function initView() {
                 setStillContinue(false);
                 break;
             case "manual":
+                isSimulator = true;
                 hide(selectRobotsSimulator);
                 hide(speedContainer);
                 show(selectRobots);

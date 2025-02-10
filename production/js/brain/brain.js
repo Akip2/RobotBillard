@@ -1,6 +1,7 @@
 import {simulatorSpeed} from "../events/parameters.js";
 import {getRobot} from "../elements-manager.js";
 import {BALL_REAL_SIZE, MIN_ORDER_DURATION, ROBOT_MAX_SPEED, TABLE_REAL_SIZE} from "./brain-parameters.js";
+import {isSimulator} from "../events/view-manager.js";
 
 let currentInterval = null;
 
@@ -125,7 +126,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
                 }
             }
         }
-    }, (MIN_ORDER_DURATION / 2) / simulatorSpeed);
+    }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1));
 }
 
 export function isRobotNear(robotIp, x, y, deltaMax) {
