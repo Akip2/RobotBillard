@@ -7,8 +7,7 @@ import EasyConfig from "../../simulateur/configurations/easy-config.js";
 import CollisionController from "../../simulateur/collision-controller.js";
 import {setStillContinue} from "../video/video.js";
 import {afficherDessins, currentConfig, setCurrentConfig, setCurrentRobotId} from "./parameters.js";
-import {canvasContainer, reload, selectRobots} from "../index.js";
-import {socket} from "../index.js";
+import {canvasContainer, reload, selectRobots, socket} from "../index.js";
 import Camera from "../../simulateur/camera.js";
 
 export let vue = null;
@@ -36,48 +35,52 @@ export function initView() {
         currentView = event.target.id;
         switch (currentView) {
             case "camera":
-                hide(selectRobotsSimulator);
-                hide(speedContainer);
-                show(selectRobots);
-                showCanvas();
-                afficherDetection(afficherDessins);
-                tryAdd(viewGoScenarios);
-                tryRemove(viewArrowControls);
-                tryRemove(reload);
-                tryRemove(configurationChoice);
-                setStillContinue(true);
-                setCurrentRobotId(selectRobots.firstChild.innerText);
+                showVideo("true");
+                show(viewGoScenarios);
+                hide(viewArrowControls);
                 break;
             case "simulator":
-                hide(videoBrut);
-                hide(videoDessin);
-                show(speedContainer);
-                show(selectRobotsSimulator);
-                hide(selectRobots);
-                loadSimulator(currentConfig);
-                tryAdd(viewGoScenarios);
-                tryAdd(viewArrowControls);
-                tryAdd(reload);
-                tryAdd(configurationChoice);
-                setStillContinue(false);
+                showVideo("false");
                 break;
             case "manual":
-                hide(selectRobotsSimulator);
-                hide(speedContainer);
-                show(selectRobots);
-                showCanvas();
-                afficherDetection(afficherDessins);
-                tryRemove(viewGoScenarios);
-                tryAdd(viewArrowControls);
-                tryRemove(reload);
-                tryRemove(configurationChoice);
-                setStillContinue(true);
-                setCurrentRobotId(selectRobots.firstChild.innerText);
+                showVideo("true");
+                hide(viewGoScenarios);
+                show(viewArrowControls);
                 break;
             default:
                 console.log("Erreur : vue inconnue");
         }
     });
+}
+
+function showVideo(affiche) {
+    if (affiche) { // show video to see the camera output
+        hide(selectRobotsSimulator);
+        hide(speedContainer);
+        hide(reload);
+        hide(configurationChoice);
+
+        showCanvas();
+        show(selectRobots);
+
+        afficherDetection(afficherDessins);
+        setStillContinue(true);
+        setCurrentRobotId(selectRobots.firstChild.innerText);
+    } else { // see the simulator canvas
+        hide(videoBrut);
+        hide(videoDessin);
+        hide(selectRobots);
+
+        show(speedContainer);
+        show(selectRobotsSimulator);
+        show(viewGoScenarios);
+        show(viewArrowControls);
+        show(reload);
+        show(configurationChoice);
+
+        loadSimulator(currentConfig);
+        setStillContinue(false);
+    }
 }
 
 // To show a view
@@ -92,29 +95,13 @@ function hide(element) {
     element.classList.add("displayNone");
 }
 
-// Add an element if it's not already displayed
-function tryAdd(element) {
-    if (element.classList.contains("displayNone")) {
-        element.classList.remove("displayNone");
-        element.classList.add("displayFlex");
-    }
-}
-
-// Remove an element if it's already
-function tryRemove(element) {
-    if (element.classList.contains("displayFlex")) {
-        element.classList.remove("displayFlex");
-        element.classList.add("displayNone");
-    }
-}
-
 function showCanvas() {
     if (videoBrut.classList.contains("displayNone")) {
         let potentialCanvas = document.querySelector("#canvas-simulateur");
 
         if (potentialCanvas != null) {
             canvasContainer.classList.remove("simulator-container");
-            tryRemove(potentialCanvas);
+            hide(potentialCanvas);
 
             if (camera !== null) {
                 camera.stop();
@@ -122,25 +109,28 @@ function showCanvas() {
             if (vue !== null) {
                 vue.clearSimulation();
             }
-            tryAdd(videoBrut);
+            show(videoBrut);
         }
     }
 }
 
-export function afficherDetection(boolean) {
-    if (boolean) {
-        tryRemove(videoBrut);
-        tryAdd(videoDessin);
+export function afficherDetection(affiche) {
+    if (affiche) {
+        hide(videoBrut);
+        show(videoDessin);
     } else {
-        tryAdd(videoBrut);
-        tryRemove(videoDessin);
+        show(videoBrut);
+        hide(videoDessin);
     }
 }
 
 export function loadSimulator(configurationName) {
+    // if the camera is running, we stop it to improve simulator performances
     if (camera !== null && camera.isRunning) {
         camera.stop();
     }
+
+    // if we already are on the simulator view, we reinitialize it
     if (vue !== null && vue.isRunning) {
         vue.clearSimulation();
     }
