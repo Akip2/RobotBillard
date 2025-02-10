@@ -7,6 +7,8 @@ export function getRobot(index) {
     if (currentView === "simulator") {
         let angle = table.robots[index].body.angle;
 
+        // Matter.js angle range from -infinity to +infinity
+        // we convert them to be between -180 to 180
         if (angle > 0) {
             angle = 360 - ((Math.abs(table.robots[index].body.angle) * (180 / Math.PI)) % 360);
         } else {

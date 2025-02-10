@@ -1,7 +1,8 @@
 import {getBalls, getRobot} from "../elements-manager.js";
 import {distanceBetweenPoints, moveRobotTo} from "../brain/brain.js";
-import {getRealHoles} from "../video/video-functions.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
+import {isEmpty, sleep} from "./scenario-functions.js";
+
 
 /**
  * méthode qui permet de lancer une simulation de partie de billard
@@ -11,21 +12,17 @@ import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
  * @param robotIp
  * @returns {Promise<void>}
  */
-export async function startBillardScenario(socket, robotIp) {
+export async function startSimpleBillardScenario(socket, robotIp) {
     let balls = getBalls();
-    // let holes = getHoles();
     let robot = getRobot(0);
     let ballToPush;
 
     while (!isEmpty(balls)) {
         balls = getBalls();
-        // holes = getHoles();
         robot = getRobot(0);
 
         if (robot !== undefined) {
             ballToPush = getNearestBall(balls, robot.position);
-
-            // getNearestHole();
 
             if (ballToPush !== undefined) {
                 moveRobotTo(socket, robotIp, ballToPush.x, ballToPush.y);
@@ -48,34 +45,4 @@ function getNearestBall(balls, robotPosition) {
         }
     }
     return nearestBall;
-}
-
-function getNearestHole(holes, ball) {
-    let nearestHole = holes[0];
-    let minDistance = distanceBetweenPoints(nearestHole, ball);
-
-    for (let i = 1; i < holes.length; i++) {
-        let distance = distanceBetweenPoints(holes[i], ball);
-
-        if (distance < minDistance) {
-            nearestHole = holes[i];
-            minDistance = distance;
-        }
-    }
-    return nearestHole;
-}
-
-function getAlignPositionToPush(ballToPush) {
-    let holes = getRealHoles();
-
-    console.log(holes);
-
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function isEmpty(tab) {
-    return tab.length === 0;
 }

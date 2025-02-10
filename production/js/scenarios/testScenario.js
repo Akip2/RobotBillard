@@ -1,16 +1,45 @@
 import {isRobotNear, moveRobotTo} from "../brain/brain.js";
 import {getRobot} from "../elements-manager.js";
+import {sleep} from "./scenario-functions.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 
-export function startTestScenario(socket, robotIp) {
-    let robotPosition = getRobot(0).position;
+export async function startTestScenario(socket, robotIp) {
+    let startRobotPosition = getRobot(0).position;
+    let robot = getRobot(0);
 
-    moveRobotTo(socket, robotIp, robotPosition.x, robotPosition.y + 100);
+    while (!isRobotNear(robotIp, startRobotPosition.x + 100, startRobotPosition.y, 10)) {
+        robot = getRobot(0);
 
-    let check = setInterval(() => {
-        if (isRobotNear(robotIp, robotPosition.x, robotPosition.y + 100, 5)) {
-            moveRobotTo(socket, robotIp, robotPosition.x, robotPosition.y - 100);
-            clearInterval(check);
+        if (robot !== undefined) {
+            moveRobotTo(socket, robotIp, startRobotPosition.x + 100, startRobotPosition.y);
         }
-    }, MIN_ORDER_DURATION);
+        await sleep(MIN_ORDER_DURATION);
+    }
+
+    while (!isRobotNear(robotIp, startRobotPosition.x + 100, startRobotPosition.y + 50, 10)) {
+        robot = getRobot(0);
+
+        if (robot !== undefined) {
+            moveRobotTo(socket, robotIp, startRobotPosition.x + 100, startRobotPosition.y + 50);
+        }
+        await sleep(MIN_ORDER_DURATION);
+    }
+
+    while (!isRobotNear(robotIp, startRobotPosition.x, startRobotPosition.y + 50, 10)) {
+        robot = getRobot(0);
+
+        if (robot !== undefined) {
+            moveRobotTo(socket, robotIp, startRobotPosition.x, startRobotPosition.y + 50);
+        }
+        await sleep(MIN_ORDER_DURATION);
+    }
+
+    while (!isRobotNear(robotIp, startRobotPosition.x, startRobotPosition.y, 10)) {
+        robot = getRobot(0);
+
+        if (robot !== undefined) {
+            moveRobotTo(socket, robotIp, startRobotPosition.x, startRobotPosition.y);
+        }
+        await sleep(MIN_ORDER_DURATION);
+    }
 }
