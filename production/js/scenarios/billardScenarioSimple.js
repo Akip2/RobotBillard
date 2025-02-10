@@ -8,19 +8,19 @@ import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
  * socket et la connexion qui permet de communiquer avec le robot
  * index est d'index du robot à faire bouger (dans le tableau de robot)
  * @param socket
- * @param index
+ * @param robotIp
  * @returns {Promise<void>}
  */
-export async function startBillardScenario(socket, index) {
+export async function startBillardScenario(socket, robotIp) {
     let balls = getBalls();
     // let holes = getHoles();
-    let robot = getRobot(index);
+    let robot = getRobot(0);
     let ballToPush;
 
     while (!isEmpty(balls)) {
         balls = getBalls();
         // holes = getHoles();
-        robot = getRobot(index);
+        robot = getRobot(0);
 
         if (robot !== undefined) {
             ballToPush = getNearestBall(balls, robot.position);
@@ -28,10 +28,9 @@ export async function startBillardScenario(socket, index) {
             // getNearestHole();
 
             if (ballToPush !== undefined) {
-                moveRobotTo(socket, index, ballToPush.x, ballToPush.y);
+                moveRobotTo(socket, robotIp, ballToPush.x, ballToPush.y);
             }
         }
-
         await sleep(MIN_ORDER_DURATION);
     }
 }

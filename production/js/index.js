@@ -27,10 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
     goBtn.addEventListener("click", () => {
         switch (currentScenario) {
             case "Billard":
-                startBillardScenario(socket, 0);
+                startBillardScenario(socket, currentRobotId);
                 break;
             case "default":
-                startTestScenario(socket, 0);
+                startTestScenario(socket, currentRobotId);
                 break;
         }
     });
