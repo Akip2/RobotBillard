@@ -60,8 +60,8 @@ export function moveRobotTo(socket, robotIp, x, y) {
     }
 
     let direction = "Left";
-    let angleThreshold = 10;
-    let distanceThreshold = 5;
+    let angleThreshold = 22.5;
+    let distanceThreshold = 10;
 
     currentInterval = setInterval(() => {
         let robot = getRobot(0);

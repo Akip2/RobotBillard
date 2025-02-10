@@ -153,7 +153,6 @@ export function drawDetectedCircles(frame, circles, mv, robots, isPerimeterFound
         let perimeterColor = [0, 0, 255, 255]; // color when no table is detected
 
         // Detect which ones are inside the table or not and add the inside one in the attribute
-        console.log(isPerimeterFound);
         if (isPerimeterFound) {
             let result = cv.pointPolygonTest(mv, center, true);
 
@@ -170,7 +169,7 @@ export function drawDetectedCircles(frame, circles, mv, robots, isPerimeterFound
                         let robotPosition = robots[i].position;
                         let dist = distanceBetweenPoints(robotPosition, center);
 
-                        if (dist <= circle[2] * 5) {
+                        if (dist <= circle[2] * 3) {
                             isOnAruco = true;
                         }
                         i++;
