@@ -1,17 +1,17 @@
 // header
-import VueSimulateur from "../../simulateur/vue-simulateur.js";
-import RandomConfig from "../../simulateur/configurations/random-config.js";
 import BillardConfig from "../../simulateur/configurations/billard-config.js";
-import FootConfig from "../../simulateur/configurations/foot-config.js";
-import EasyConfig from "../../simulateur/configurations/easy-config.js";
+import Camera from "../../simulateur/camera.js";
 import CollisionController from "../../simulateur/collision-controller.js";
-import {setStillContinue} from "../video/video.js";
+import EasyConfig from "../../simulateur/configurations/easy-config.js";
+import FootConfig from "../../simulateur/configurations/foot-config.js";
+import RandomConfig from "../../simulateur/configurations/random-config.js";
+import VueSimulateur from "../../simulateur/vue-simulateur.js";
 import {afficherDessins, currentConfig, setCurrentConfig, setCurrentRobotId} from "./parameters.js";
 import {canvasContainer, reload, selectRobots, socket} from "../index.js";
-import Camera from "../../simulateur/camera.js";
+import {setStillContinue} from "../video/video.js";
 
-export let vue = null;
 let camera = null;
+export let vue = null;
 export let table = null;
 export let currentView = "camera";
 
@@ -37,15 +37,15 @@ export function initView() {
         currentView = event.target.id;
         switch (currentView) {
             case "camera":
-                showVideo("true");
+                showVideo(true);
                 show(viewGoScenarios);
                 hide(viewArrowControls);
                 break;
             case "simulator":
-                showVideo("false");
+                showVideo(false);
                 break;
             case "manual":
-                showVideo("true");
+                showVideo(true);
                 hide(viewGoScenarios);
                 show(viewArrowControls);
                 break;
@@ -131,11 +131,9 @@ export function afficherDetection(affiche) {
 }
 
 export function loadSimulator(configurationName) {
-    // if the camera is running, we stop it to improve simulator performances
     if (camera !== null && camera.isRunning) {
         camera.stop();
     }
-
     // if we already are on the simulator view, we reinitialize it
     if (vue !== null && vue.isRunning) {
         vue.clearSimulation();
