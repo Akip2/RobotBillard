@@ -7,6 +7,8 @@ export async function startTestScenario(socket, robotIp) {
     let startRobotPosition = getRobot(0).position;
     let robot = getRobot(0);
 
+
+    // Go to the right
     while (!isRobotNear(robotIp, startRobotPosition.x + 100, startRobotPosition.y, 10)) {
         robot = getRobot(0);
 
@@ -16,6 +18,7 @@ export async function startTestScenario(socket, robotIp) {
         await sleep(MIN_ORDER_DURATION);
     }
 
+    // Go down
     while (!isRobotNear(robotIp, startRobotPosition.x + 100, startRobotPosition.y + 50, 10)) {
         robot = getRobot(0);
 
@@ -25,6 +28,7 @@ export async function startTestScenario(socket, robotIp) {
         await sleep(MIN_ORDER_DURATION);
     }
 
+    // Go left
     while (!isRobotNear(robotIp, startRobotPosition.x, startRobotPosition.y + 50, 10)) {
         robot = getRobot(0);
 
@@ -34,6 +38,7 @@ export async function startTestScenario(socket, robotIp) {
         await sleep(MIN_ORDER_DURATION);
     }
 
+    // Go up
     while (!isRobotNear(robotIp, startRobotPosition.x, startRobotPosition.y, 10)) {
         robot = getRobot(0);
 

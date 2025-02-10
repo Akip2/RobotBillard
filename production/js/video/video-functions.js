@@ -3,7 +3,7 @@ import {
     BOTTOM_LEFT_ARUCO_ID,
     BOTTOM_RIGHT_ARUCO_ID,
     DEFAULT_BALL_RADIUS,
-    DISTANCE_FROM_BORDER_TO_BE_HOLE,
+    HOLE_NUMBERS,
     HOUGH_CIRCLES_DISTANCE_BETWEEN_CIRCLES,
     HOUGH_CIRCLES_PARAMETER_1,
     HOUGH_CIRCLES_PARAMETER_2,
@@ -11,7 +11,7 @@ import {
     TOP_LEFT_ARUCO_ID,
     TOP_RIGHT_ARUCO_ID
 } from "./video-parameters.js";
-import {distanceBetweenPoints} from "../brain/brain.js";
+import {distanceBetweenPoints, middleOfPoints} from "../brain/brain.js";
 
 let ballsPositions = [];
 let holesPositions = [];
@@ -42,14 +42,8 @@ export function drawAndGetDirectionOfAruco(frame, cornersOfAruco) {
     let bottomRightCornerOfAruco = cornersOfAruco.data32F.slice(4, 6);
     let bottomLeftCornerOfAruco = cornersOfAruco.data32F.slice(6, 8);
 
-    let topCenter = new cv.Point(
-        (topRightCornerOfAruco[0] + topLeftCornerOfAruco[0]) / 2,
-        (topRightCornerOfAruco[1] + topLeftCornerOfAruco[1]) / 2
-    );
-    let bottomCenter = new cv.Point(
-        (bottomLeftCornerOfAruco[0] + bottomRightCornerOfAruco[0]) / 2,
-        (bottomLeftCornerOfAruco[1] + bottomRightCornerOfAruco[1]) / 2
-    );
+    let topCenter = middleOfPoints(topRightCornerOfAruco, topLeftCornerOfAruco);
+    let bottomCenter = middleOfPoints(bottomLeftCornerOfAruco, bottomRightCornerOfAruco);
 
     let angle = Math.atan2(bottomCenter.y - topCenter.y, topCenter.x - bottomCenter.x) * (180 / Math.PI);
     angle < 0 ? angle += 360 : angle;
@@ -121,8 +115,8 @@ export function detectAndDrawArucos(frame) {
             }
         }
     }
-    let corners = [topLeftAruco, topRightAruco, bottomRightAruco, bottomLeftAruco];
-    return corners.concat(robotsArucos);
+    let tableCorners = [topLeftAruco, topRightAruco, bottomRightAruco, bottomLeftAruco];
+    return tableCorners.concat(robotsArucos);
 }
 
 export function detectCircles(frame, ballRadius = DEFAULT_BALL_RADIUS) {
@@ -143,47 +137,65 @@ export function detectCircles(frame, ballRadius = DEFAULT_BALL_RADIUS) {
     return circles;
 }
 
-export function drawDetectedCircles(frame, circles, mv, robots, isPerimeterFound = false) {
+export function drawDetectedCircles(frame, circles, mv, robots, tableCorners, isPerimeterFound = false) {
     ballsPositions = [];
     holesPositions = [];
 
     for (let i = 0; i < circles.cols; ++i) {
         let circle = circles.data32F.slice(i * 3, (i + 1) * 3);
-        let center = new cv.Point(circle[0], circle[1]);
+        let circleCenter = new cv.Point(circle[0], circle[1]);
         let perimeterColor = [0, 0, 255, 255]; // color when no table is detected
 
         // Detect which ones are inside the table or not and add the inside one in the attribute
         if (isPerimeterFound) {
-            let result = cv.pointPolygonTest(mv, center, true);
+            let result = cv.pointPolygonTest(mv, circleCenter, true);
 
             // Change the color if inside or outside circle and differentiate balls from holes
             if (result >= 0) {
                 // if the center of the detected circle is too close from the site of the table it may be a hole
-                if (result < DISTANCE_FROM_BORDER_TO_BE_HOLE && holesPositions.length < 6) {
+                let ballRadius = circle[2];
+                let isHole = false;
+
+                const [topLeft, topRight, bottomRight, bottomLeft] = tableCorners;
+                const topMiddleHole = middleOfPoints(topLeft, topRight);
+                const bottomMiddleHole = middleOfPoints(bottomLeft, bottomRight);
+
+                const tableHoles = tableCorners.slice();
+                tableHoles.push(topMiddleHole, bottomMiddleHole);
+
+                for (const corner of tableHoles) {
+                    if (distanceBetweenPoints(circleCenter, corner) < ballRadius * 6) {
+                        isHole = true;
+                    }
+                }
+
+                if (isHole && (holesPositions.length < HOLE_NUMBERS)) {
                     perimeterColor = [128, 128, 128, 255] // color of holes
+                    holesPositions.push(circleCenter);
                 } else {
                     let i = 0;
-                    let isOnAruco = false;
+                    let isCircleOnAruco = false;
 
-                    while (i < robots.length && !isOnAruco) {
+                    while (i < robots.length && !isCircleOnAruco) {
                         let robotPosition = robots[i].position;
-                        let dist = distanceBetweenPoints(robotPosition, center);
+                        let dist = distanceBetweenPoints(robotPosition, circleCenter);
 
-                        if (dist <= circle[2] * 3) {
-                            isOnAruco = true;
+                        // If the circle is too close to aruco
+                        if (dist <= ballRadius * 3) {
+                            isCircleOnAruco = true;
                         }
                         i++;
                     }
-                    perimeterColor = isOnAruco ? [255, 0, 0, 255] : [0, 255, 0, 255];
-                    ballsPositions.push(center);
+                    perimeterColor = isCircleOnAruco ? [255, 0, 0, 255] : [0, 255, 0, 255];
+                    ballsPositions.push(circleCenter);
                 }
             } else {
                 perimeterColor = [255, 0, 0, 255] // color of balls outside the table (red)
             }
         }
 
-        cv.circle(frame, center, circle[2], perimeterColor, 3);
-        cv.circle(frame, center, 3, [255, 255, 0, 255], -1);
+        cv.circle(frame, circleCenter, circle[2], perimeterColor, 3);
+        cv.circle(frame, circleCenter, 3, [255, 255, 0, 255], -1);
     }
 }
 
