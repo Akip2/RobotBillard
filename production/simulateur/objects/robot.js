@@ -70,8 +70,8 @@ class Robot extends SimulationObject {
             this.wheelRight.setDirection(1);
         }
 
-        this.wheelLeft.setSpeed(Math.abs(order.left), order.duration);
-        this.wheelRight.setSpeed(Math.abs(order.right), order.duration);
+        this.wheelLeft.setSpeed(Math.abs(order.left), order.duration /simulatorSpeed);
+        this.wheelRight.setSpeed(Math.abs(order.right), order.duration / simulatorSpeed);
     }
 
     addToEnv(world) {

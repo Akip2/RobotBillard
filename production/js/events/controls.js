@@ -6,7 +6,6 @@ import {
     rightSpeed,
     setDuration, setLeftSpeed,
     setRightSpeed,
-    simulatorSpeed
 } from "./parameters.js";
 import {socket} from "../index.js";
 import {createOrder} from "../brain/brain.js";
@@ -37,15 +36,15 @@ export function initControls() {
         setRightSpeed(cursorRightMotor.value);
     });
     btnForward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(leftSpeed, rightSpeed, duration / simulatorSpeed, currentRobotId));
+        socket.emit('motor', createOrder(leftSpeed, rightSpeed, duration, currentRobotId));
     });
     btnBackward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-leftSpeed, -rightSpeed, duration / simulatorSpeed, currentRobotId));
+        socket.emit('motor', createOrder(-leftSpeed, -rightSpeed, duration, currentRobotId));
     });
     btnTurnRight.addEventListener("click", () => {
-        socket.emit('motor', createOrder(leftSpeed, -rightSpeed, duration / simulatorSpeed, currentRobotId));
+        socket.emit('motor', createOrder(leftSpeed, -rightSpeed, duration, currentRobotId));
     });
     btnTurnLeft.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-leftSpeed, rightSpeed, duration / simulatorSpeed, currentRobotId));
+        socket.emit('motor', createOrder(-leftSpeed, rightSpeed, duration, currentRobotId));
     });
 }

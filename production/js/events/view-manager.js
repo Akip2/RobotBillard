@@ -28,6 +28,8 @@ const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 const speedContainer = document.querySelector("#speed-container");
 const viewsList = document.querySelector("#views-list");
 
+export let isSimulator = false;
+
 export function initView() {
     // Change curent view
     viewsList.addEventListener("click", (event) => {
@@ -55,6 +57,8 @@ export function initView() {
 
 function showVideo(affiche) {
     if (affiche) { // show video to see the camera output
+        isSimulator = false;
+
         hide(selectRobotsSimulator);
         hide(speedContainer);
         hide(reload);
@@ -67,6 +71,8 @@ function showVideo(affiche) {
         setStillContinue(true);
         setCurrentRobotId(selectRobots.firstChild.innerText);
     } else { // see the simulator canvas
+        isSimulator = true;
+
         hide(videoBrut);
         hide(videoDessin);
         hide(selectRobots);
