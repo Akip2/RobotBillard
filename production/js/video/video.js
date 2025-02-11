@@ -1,4 +1,4 @@
-import {detectAndDrawArucos, detectArucos, detectCircles, drawDetectedCircles, preProcess} from "./video-functions.js";
+import {detectAndDrawArucos, detectCircles, drawDetectedCircles, preProcess} from "./video-functions.js";
 import {calculateBallSize, distanceBetweenPoints} from "../brain/brain.js";
 import {DEFAULT_BALL_RADIUS, FPS, HEIGHT, WIDTH} from "./video-parameters.js";
 
