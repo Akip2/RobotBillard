@@ -92,12 +92,6 @@ export function detectAndDrawArucos(frame) {
 
     detector.detectMarkers(frame, arucoCorners, arucoIds);
 
-    if(!isSimulator) {
-        cv.drawDetectedMarkers(frame, arucoCorners, arucoIds);
-    } else {
-        vue.drawArucos(arucoCorners, arucoIds);
-    }
-
     const robotsArucos = [];
     let topLeftAruco, topRightAruco, bottomLeftAruco, bottomRightAruco;
 
@@ -138,9 +132,11 @@ export function detectAndDrawArucos(frame) {
     let res;
     if(isSimulator) {
         res = robotsArucos;
+        vue.drawArucos(res);
     } else {
         const tableCorners = [topLeftAruco, topRightAruco, bottomRightAruco, bottomLeftAruco];
         res = tableCorners.concat(robotsArucos);
+        cv.drawDetectedMarkers(frame, arucoCorners, arucoIds);
     }
 
     return res;

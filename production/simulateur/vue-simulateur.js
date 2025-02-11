@@ -155,9 +155,8 @@ class VueSimulateur {
         }
     }
 
-    drawArucos(arucoCorners, arucoIds) {
-        console.log(arucoCorners);
-        console.log(arucoIds);
+    drawArucos(robotArucos) {
+        console.log(robotArucos);
     }
 
     generateNoise() {
