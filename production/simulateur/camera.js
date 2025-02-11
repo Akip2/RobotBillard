@@ -47,7 +47,6 @@ class Camera {
 
             let ballsDetected = this.detectCircles(preProcessedImg);
             let robotArucos = detectAndDrawArucos(preProcessedImg).slice(4);
-            console.log(robotArucos);
 
             this.table.updateDetectedCircles(ballsDetected);
 

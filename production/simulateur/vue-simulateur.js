@@ -155,6 +155,11 @@ class VueSimulateur {
         }
     }
 
+    drawArucos(arucoCorners, arucoIds) {
+        console.log(arucoCorners);
+        console.log(arucoIds);
+    }
+
     generateNoise() {
         const imageData = this.canvasContext.getImageData(0, 0, this.canvas.width, this.canvas.height);
         const pixels = imageData.data;

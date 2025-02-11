@@ -12,6 +12,7 @@ import {
     TOP_RIGHT_ARUCO_ID
 } from "./video-parameters.js";
 import {distanceBetweenPoints, middleOfPoints} from "../brain/brain.js";
+import {isSimulator, vue} from "../events/view-manager.js";
 
 let ballsPositions = [];
 let holesPositions = [];
@@ -55,6 +56,27 @@ export function drawAndGetDirectionOfAruco(frame, cornersOfAruco) {
 }
 
 /**
+ * Generate the data structure of a robot aruco
+ * @param cornersOfAruco Corners of the aruco
+ * @param arucoId Id of the robot aruco
+ */
+function generateArucoData(frame, cornersOfAruco, arucoId) {
+    const bottomRightCornerOfAruco = cornersOfAruco.data32F.slice(4, 6);
+    const topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
+    const orientation = drawAndGetDirectionOfAruco(frame, cornersOfAruco);
+
+    // The center of the aruco
+    const point = new cv.Point((topLeftCornerOfAruco[0] + bottomRightCornerOfAruco[0]) / 2,
+        (topLeftCornerOfAruco[1] + bottomRightCornerOfAruco[1]) / 2)
+
+    return {
+        position: point,
+        orientation: orientation,
+        id: arucoId
+    }
+}
+
+/**
  * Detect and draws arucos in a given frame
  * @param frame the frame containing the arucos
  * @returns {cv.Point[]} list of cv.Points containing the center of each aruco
@@ -69,9 +91,14 @@ export function detectAndDrawArucos(frame) {
     let detector = new cv.aruco_ArucoDetector(dictionary, detectionParams, refineParams)
 
     detector.detectMarkers(frame, arucoCorners, arucoIds);
-    cv.drawDetectedMarkers(frame, arucoCorners, arucoIds);
 
-    let robotsArucos = [];
+    if(!isSimulator) {
+        cv.drawDetectedMarkers(frame, arucoCorners, arucoIds);
+    } else {
+        vue.drawArucos(arucoCorners, arucoIds);
+    }
+
+    const robotsArucos = [];
     let topLeftAruco, topRightAruco, bottomLeftAruco, bottomRightAruco;
 
     for (let i = 0; i < arucoIds.rows; i++) {
@@ -80,43 +107,43 @@ export function detectAndDrawArucos(frame) {
 
         // don't detect banned aruco ids
         if (!BANNED_ARUCOS.includes(arucoId)) {
-            let topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
-            let x = topLeftCornerOfAruco[0];
-            let y = topLeftCornerOfAruco[1];
+            if(isSimulator) {
+                robotsArucos.push(generateArucoData(frame, cornersOfAruco, arucoId));
+            } else {
+                const topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
+                const x = topLeftCornerOfAruco[0];
+                const y = topLeftCornerOfAruco[1];
+                const point = new cv.Point(x, y);
 
-            let point = new cv.Point(x, y);
-
-            switch (arucoId) {
-                case TOP_LEFT_ARUCO_ID:
-                    topLeftAruco = point;
-                    break;
-                case TOP_RIGHT_ARUCO_ID:
-                    topRightAruco = point;
-                    break;
-                case BOTTOM_LEFT_ARUCO_ID:
-                    bottomLeftAruco = point;
-                    break;
-                case BOTTOM_RIGHT_ARUCO_ID:
-                    bottomRightAruco = point
-                    break;
-                default:
-                    let bottomRightCornerOfAruco = cornersOfAruco.data32F.slice(4, 6);
-                    let orientation = drawAndGetDirectionOfAruco(frame, cornersOfAruco);
-
-                    // The center of the aruco
-                    point = new cv.Point((topLeftCornerOfAruco[0] + bottomRightCornerOfAruco[0]) / 2,
-                        (topLeftCornerOfAruco[1] + bottomRightCornerOfAruco[1]) / 2)
-
-                    let robotData = {
-                        position: point,
-                        orientation: orientation,
-                    }
-                    robotsArucos.push(robotData);
+                switch (arucoId) {
+                    case TOP_LEFT_ARUCO_ID:
+                        topLeftAruco = point;
+                        break;
+                    case TOP_RIGHT_ARUCO_ID:
+                        topRightAruco = point;
+                        break;
+                    case BOTTOM_LEFT_ARUCO_ID:
+                        bottomLeftAruco = point;
+                        break;
+                    case BOTTOM_RIGHT_ARUCO_ID:
+                        bottomRightAruco = point
+                        break;
+                    default:
+                        robotsArucos.push(generateArucoData(frame, cornersOfAruco, arucoId));
+                }
             }
         }
     }
-    let tableCorners = [topLeftAruco, topRightAruco, bottomRightAruco, bottomLeftAruco];
-    return tableCorners.concat(robotsArucos);
+
+    let res;
+    if(isSimulator) {
+        res = robotsArucos;
+    } else {
+        const tableCorners = [topLeftAruco, topRightAruco, bottomRightAruco, bottomLeftAruco];
+        res = tableCorners.concat(robotsArucos);
+    }
+
+    return res;
 }
 
 export function detectCircles(frame, ballRadius = DEFAULT_BALL_RADIUS) {
