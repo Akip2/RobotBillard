@@ -1,6 +1,6 @@
 import {Body, Composite, Engine, Mouse, MouseConstraint, Render, World,} from "./global.js";
 import {ballRadius, height, simulatorFPS, width} from "./params.js";
-import {afficherDessins, simulatorSpeed} from "../js/events/parameters.js";
+import {afficherDessins, simulatorSpeed, noise} from "../js/events/parameters.js";
 
 class VueSimulateur {
     constructor(canvasContainer) {
@@ -24,6 +24,7 @@ class VueSimulateur {
                 height: height,
                 wireframes: false,
                 background: "grey", // grey of our table
+                pixelRatio: 1
             },
         });
 
@@ -58,6 +59,9 @@ class VueSimulateur {
         this.isRunning = true;
         Render.run(this.render);
 
+        this.canvas = this.canvasContainer.querySelector("#canvas-simulateur");
+        this.canvasContext = this.canvas.getContext("2d", {willReadFrequently: true});
+
         this.updateLoop = this.createUpdateLoop(simulatorSpeed);
 
         this.overlay = document.createElement("canvas");
@@ -66,7 +70,20 @@ class VueSimulateur {
         this.overlay.style.pointerEvents = "none";
         this.overlay.style.backgroundImage = "none";
 
+        this.overlayContext = this.overlay.getContext("2d",{willReadFrequently: true});
+
         this.canvasContainer.appendChild(this.overlay);
+
+        Matter.Events.on(this.render, 'afterRender', () => {
+            this.robots.forEach(robot => {
+                Body.setAngle(robot.aruco, robot.getAngle());
+                Body.setPosition(robot.aruco, robot.getPosition());
+            });
+
+            if(noise > 0) {
+                this.generateNoise();
+            }
+        });
     }
 
     createUpdateLoop(speed) {
@@ -82,6 +99,8 @@ class VueSimulateur {
         const holes = table.holes;
         const walls = table.walls;
         const robots = table.robots;
+
+        this.robots = robots;
 
         this.addObjects(walls);
         this.addObjects(holes);
@@ -114,27 +133,40 @@ class VueSimulateur {
     }
 
     drawDetectedCircles(ballsPositions) {
-        const ctx = this.overlay.getContext("2d");
-        ctx.clearRect(0, 0, this.overlay.width, this.overlay.height);
+        this.overlayContext.clearRect(0, 0, this.overlay.width, this.overlay.height);
 
         // si on ne veut pas tracer les cercles, on s'arrête juste apres le nettoyage du canvas
         if (afficherDessins) {
             ballsPositions.forEach((ballPosition) => {
-                ctx.lineWidth = 4;
+                this.overlayContext.lineWidth = 4;
 
-                ctx.beginPath();
-                ctx.strokeStyle = "lime";
-                ctx.arc(ballPosition.x, ballPosition.y, 1, 0, 2 * Math.PI);
-                ctx.stroke();
-                ctx.closePath();
+                this.overlayContext.beginPath();
+                this.overlayContext.strokeStyle = "lime";
+                this.overlayContext.arc(ballPosition.x, ballPosition.y, 1, 0, 2 * Math.PI);
+                this.overlayContext.stroke();
+                this.overlayContext.closePath();
 
-                ctx.beginPath();
-                ctx.strokeStyle = "blue";
-                ctx.arc(ballPosition.x, ballPosition.y, ballRadius, 0, 2 * Math.PI);
-                ctx.stroke();
-                ctx.closePath();
+                this.overlayContext.beginPath();
+                this.overlayContext.strokeStyle = "blue";
+                this.overlayContext.arc(ballPosition.x, ballPosition.y, ballRadius, 0, 2 * Math.PI);
+                this.overlayContext.stroke();
+                this.overlayContext.closePath();
             });
         }
+    }
+
+    generateNoise() {
+        const imageData = this.canvasContext.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        const pixels = imageData.data;
+
+        for (let i = 0; i < pixels.length; i += (9 - noise)) {
+            let noise = (Math.random() - 0.5) * 100;
+            pixels[i] += noise;
+            pixels[i + 1] += noise;
+            pixels[i + 2] += noise;
+        }
+
+        this.canvasContext.putImageData(imageData, 0, 0);
     }
 
     changeSpeed() {

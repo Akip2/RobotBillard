@@ -71,7 +71,7 @@ function processVideo(video, canvas, canvasBrut, ctx) {
 
                 // Capture the frame of the video in a temporary canvas
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
                 // Convert the frame in an OpenCV matrix
                 frame.data.set(imageData.data);
@@ -82,19 +82,20 @@ function processVideo(video, canvas, canvasBrut, ctx) {
 
                 // AruCo detection
                 let arucos = detectAndDrawArucos(finalImage);
-                let corners = arucos.slice(0, 4);
+                const tableCorners = arucos.slice(0, 4);
+                const [topLeft, topRight, bottomRight, bottomLeft] = tableCorners;
 
-                let [topLeft, topRight, bottomRight, bottomLeft] = corners;
                 robots = arucos.slice(4, arucos.length);
 
-                const markersVector = new cv.MatVector();
-                const mv = new cv.Mat(corners.length, 1, cv.CV_32SC2);
+                const mv = new cv.Mat(tableCorners.length, 1, cv.CV_32SC2);
 
                 let ballRadius = DEFAULT_BALL_RADIUS;
                 let isPerimeterFound = false;
 
                 // If the 4 table corners are detected, draw them and lines between them
                 if (topLeft && topRight && bottomLeft && bottomRight) {
+                    const markersVector = new cv.MatVector();
+
                     let points = [
                         {x: topLeft.x, y: topLeft.y},
                         {x: topRight.x, y: topRight.y},
@@ -117,19 +118,20 @@ function processVideo(video, canvas, canvasBrut, ctx) {
 
                 // Detect and draw the circles
                 let circles = detectCircles(preProcessedFrame, ballRadius);
-                drawDetectedCircles(finalImage, circles, mv, robots, isPerimeterFound);
+                drawDetectedCircles(finalImage, circles, mv, robots, tableCorners, isPerimeterFound);
 
                 // Draw the final result in the canvas
+                // preProcessedFrame
                 cv.imshow(canvas, finalImage);
 
                 // Clean memory
-                preProcessedFrame.delete();
-                circles.delete();
                 finalImage.delete();
+                preProcessedFrame.delete();
+                mv.delete();
+                circles.delete();
 
                 delay = 1000 / FPS - (Date.now() - begin);
-            } catch
-                (err) {
+            } catch (err) {
                 console.error(err);
             }
         }

@@ -7,6 +7,7 @@ const selectRobots = document.querySelector("#select-robot");
 const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 const configurationChoice = document.querySelector("#select-configuration");
 const affichage = document.querySelector("#checkbox-affichage");
+const noiseSlider = document.querySelector("#noise");
 
 export let currentRobotId = BROADCAST;
 export let currentConfig = "Billard";
@@ -19,6 +20,7 @@ export let leftSpeed = 130;
 export let rightSpeed = 130;
 export let duration = 1000;
 
+export let noise = 1;
 
 export function initParams() {
     selectScenarios.addEventListener("change", (event) => {
@@ -53,6 +55,10 @@ export function initParams() {
         }
         // pour le simulateur, la gestion des dessins est gérée par la classe VueSimulateur (drawDetectedCircles) grace à la variable afficherDessins
     });
+
+    noiseSlider.addEventListener("change", (event) => {
+        noise = event.target.value;
+    })
 }
 
 export function setCurrentConfig(config) {

@@ -13,15 +13,15 @@ import {isEmpty, sleep} from "./scenario-functions.js";
  * @param robotIp
  * @returns {Promise<void>}
  */
-export async function startComplexBillardScenario(socket, robotIp) {
+export async function startBillardScenarioComplex(socket, robotIp) {
     let balls = getBalls();
-    // let holes = getHoles();
+    let holes = getRealHoles();
     let robot = getRobot(0);
     let ballToPush;
 
     while (!isEmpty(balls)) {
         balls = getBalls();
-        // holes = getHoles();
+        holes = getRealHoles();
         robot = getRobot(0);
 
         if (robot !== undefined) {

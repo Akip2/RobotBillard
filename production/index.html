@@ -47,12 +47,19 @@
                 </select>
             </div>
 
+            <div id="noise-container" class="param displayNone">
+                <label for="noise">Bruit</label>
+                <input type="range" id="noise" min="0" max="8" value="1" step="1" oninput="this.nextElementSibling.value = this.value">
+                <output>1</output>
+            </div>
+
             <div class="param">
                 <label for="checkbox-affichage">Affichage</label>
                 <input type="checkbox" id="checkbox-affichage" class="input-checkbox" name="affichage" checked/>
             </div>
 
             <div id="speed-container" class="param displayNone">
+                <label for="sim-speed">Vitesse</label>
                 <input type="range" id="sim-speed" min="0" max="2.0" value="1" step="0.1"
                        oninput="this.nextElementSibling.value = this.value">
                 <output>1</output>

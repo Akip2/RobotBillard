@@ -12,7 +12,7 @@ import {isEmpty, sleep} from "./scenario-functions.js";
  * @param robotIp
  * @returns {Promise<void>}
  */
-export async function startSimpleBillardScenario(socket, robotIp) {
+export async function startBillardScenarioSimple(socket, robotIp) {
     let balls = getBalls();
     let robot = getRobot(0);
     let ballToPush;

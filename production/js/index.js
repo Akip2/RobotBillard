@@ -3,10 +3,10 @@ import {currentConfig, currentRobotId, currentScenario, initParams, setCurrentRo
 import {currentView, initView, loadSimulator, table} from "./events/view-manager.js";
 import {addRobot} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
-import {startSimpleBillardScenario} from "./scenarios/simpleBillardScenario.js";
+import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
 import {moveRobotTo} from "./brain/brain.js";
-import {startComplexBillardScenario} from "./scenarios/complexBillardScenario.js";
+import {startBillardScenarioComplex} from "./scenarios/billardScenarioComplex.js";
 
 export const socket = io(); // Connection to server
 
@@ -29,10 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
     goBtn.addEventListener("click", () => {
         switch (currentScenario) {
             case "SimpleBillard":
-                startSimpleBillardScenario(socket, currentRobotId);
+                startBillardScenarioSimple(socket, currentRobotId);
                 break;
             case "ComplexBillard":
-                startComplexBillardScenario(socket, currentRobotId);
+                startBillardScenarioComplex(socket, currentRobotId);
                 break;
             case "default":
                 startTestScenario(socket, currentRobotId);
