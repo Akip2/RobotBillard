@@ -3,15 +3,15 @@ import {
     BOTTOM_LEFT_ARUCO_ID,
     BOTTOM_RIGHT_ARUCO_ID,
     DEFAULT_BALL_RADIUS,
-    HOLE_NUMBERS,
     HOUGH_CIRCLES_DISTANCE_BETWEEN_CIRCLES,
     HOUGH_CIRCLES_PARAMETER_1,
     HOUGH_CIRCLES_PARAMETER_2,
     HOUGH_CIRCLES_RESOLUTION,
+    MAXIMUM_HOLES,
     TOP_LEFT_ARUCO_ID,
     TOP_RIGHT_ARUCO_ID
 } from "./video-parameters.js";
-import {distanceBetweenPoints, middleOfPoints} from "../brain/brain.js";
+import {convertCVPointToMathPoint, distanceBetweenPoints, middleOfPoints} from "../brain/brain.js";
 import {isSimulator, vue} from "../events/view-manager.js";
 
 let ballsPositions = [];
@@ -38,10 +38,10 @@ export function preProcess(frame) {
  * @returns {number} the angle (0 - 360) the aruco provided is facing
  */
 export function drawAndGetDirectionOfAruco(frame, cornersOfAruco) {
-    let topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
-    let topRightCornerOfAruco = cornersOfAruco.data32F.slice(2, 4);
-    let bottomRightCornerOfAruco = cornersOfAruco.data32F.slice(4, 6);
-    let bottomLeftCornerOfAruco = cornersOfAruco.data32F.slice(6, 8);
+    let topLeftCornerOfAruco = convertCVPointToMathPoint(cornersOfAruco.data32F.slice(0, 2));
+    let topRightCornerOfAruco = convertCVPointToMathPoint(cornersOfAruco.data32F.slice(2, 4));
+    let bottomRightCornerOfAruco = convertCVPointToMathPoint(cornersOfAruco.data32F.slice(4, 6));
+    let bottomLeftCornerOfAruco = convertCVPointToMathPoint(cornersOfAruco.data32F.slice(6, 8));
 
     let topCenter = middleOfPoints(topRightCornerOfAruco, topLeftCornerOfAruco);
     let bottomCenter = middleOfPoints(bottomLeftCornerOfAruco, bottomRightCornerOfAruco);
@@ -62,8 +62,8 @@ export function drawAndGetDirectionOfAruco(frame, cornersOfAruco) {
  * @param arucoId Id of the robot aruco
  */
 function generateArucoData(frame, cornersOfAruco, arucoId) {
-    const bottomRightCornerOfAruco = cornersOfAruco.data32F.slice(4, 6);
-    const topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
+    const bottomRightCornerOfAruco = convertCVPointToMathPoint(cornersOfAruco.data32F.slice(4, 6));
+    const topLeftCornerOfAruco = convertCVPointToMathPoint(cornersOfAruco.data32F.slice(0, 2));
     const orientation = drawAndGetDirectionOfAruco(frame, cornersOfAruco);
 
     // The center of the aruco
@@ -187,12 +187,12 @@ export function drawDetectedCircles(frame, circles, mv, robots, tableCorners, is
                 tableHoles.push(topMiddleHole, bottomMiddleHole);
 
                 for (const corner of tableHoles) {
-                    if (distanceBetweenPoints(circleCenter, corner) < ballRadius * 6) {
+                    if (distanceBetweenPoints(circleCenter, corner) < ballRadius * 8) {
                         isHole = true;
                     }
                 }
 
-                if (isHole && (holesPositions.length < HOLE_NUMBERS)) {
+                if (isHole && (holesPositions.length < MAXIMUM_HOLES)) {
                     perimeterColor = [128, 128, 128, 255] // color of holes
                     holesPositions.push(circleCenter);
                 } else {
