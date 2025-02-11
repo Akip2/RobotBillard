@@ -1,7 +1,7 @@
 import {getBalls, getRobot} from "../elements-manager.js";
-import {distanceBetweenPoints, moveRobotTo} from "../brain/brain.js";
+import {moveRobotTo} from "../brain/brain.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
-import {isEmpty, sleep} from "./scenario-functions.js";
+import {getNearestBall, sleep} from "./scenario-functions.js";
 
 
 /**
@@ -17,7 +17,8 @@ export async function startBillardScenarioSimple(socket, robotIp) {
     let robot = getRobot(0);
     let ballToPush;
 
-    while (!isEmpty(balls)) {
+    // TODO btn stop
+    while (true/*!isEmpty(balls)*/) {
         balls = getBalls();
         robot = getRobot(0);
 
@@ -30,19 +31,4 @@ export async function startBillardScenarioSimple(socket, robotIp) {
         }
         await sleep(MIN_ORDER_DURATION);
     }
-}
-
-function getNearestBall(balls, robotPosition) {
-    let nearestBall = balls[0];
-    let minDistance = distanceBetweenPoints(nearestBall, robotPosition);
-
-    for (let i = 1; i < balls.length; i++) {
-        let distance = distanceBetweenPoints(balls[i], robotPosition);
-
-        if (distance < minDistance) {
-            nearestBall = balls[i];
-            minDistance = distance;
-        }
-    }
-    return nearestBall;
 }

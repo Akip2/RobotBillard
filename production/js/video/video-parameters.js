@@ -20,4 +20,4 @@ export const HOUGH_CIRCLES_PARAMETER_2 = 30;
 
 // In pixels
 export const DEFAULT_BALL_RADIUS = 10;
-export const HOLE_NUMBERS = 6;
+export const MAXIMUM_HOLES = 12;

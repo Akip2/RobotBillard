@@ -33,12 +33,28 @@ class Camera {
             let circleCenter = new cv.Point(circle[0], circle[1]);
 
             const robots = this.table.getRobotsDetected();
+            const holes = this.table.holes;
 
             if (robots !== undefined) {
                 for (let j = 0; j < robots.length; j++) {
                     // Check if circle is not on Aruco
                     if (distanceBetweenPoints(circleCenter, robots[j].position) > ballRadius * 3) {
-                        ballsDetected.push(circleCenter);
+                        let k = 0;
+                        let isNearHole = false;
+
+                        while ((k < holes.length) && !isNearHole) {
+                            const hole = holes[k].body;
+
+                            // Check if circle is not near holes
+                            if (distanceBetweenPoints(circleCenter, hole.position) < ballRadius * 2) {
+                                isNearHole = true;
+                            }
+                            k++;
+                        }
+
+                        if (!isNearHole) {
+                            ballsDetected.push(circleCenter);
+                        }
                     }
                 }
             }
@@ -57,11 +73,9 @@ class Camera {
 
             let robotArucos = detectAndDrawArucos(preProcessedImg);
             this.table.updateDetectedRobots(robotArucos);
-            console.log(this.table.getRobotsDetected());
 
             let ballsDetected = this.detectCircles(preProcessedImg);
             this.table.updateDetectedCircles(ballsDetected);
-
 
             //Cleaning memory
             preProcessedImg.delete();

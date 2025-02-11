@@ -11,6 +11,7 @@ import {afficherDessins, currentConfig, currentRobotId, setCurrentConfig, setCur
 import {BROADCAST} from "../brain/brain-parameters.js";
 import {canvasContainer, reload, selectRobots, selectRobotsSim, socket} from "../index.js";
 import {setStillContinue} from "../video/video.js";
+import FilledConfig from "../../simulateur/configurations/filled-config.js";
 
 let camera = null;
 export let vue = null;
@@ -37,6 +38,7 @@ export function initView() {
     viewsList.addEventListener("click", (event) => {
         socket.emit("change-mode", event.target.id);
         currentView = event.target.id;
+
         switch (currentView) {
             case "camera":
                 showVideo(true);
@@ -152,6 +154,9 @@ export function loadSimulator(configurationName, robotId) {
     switch (configurationName) {
         case "Random":
             table = new RandomConfig(vue);
+            break;
+        case "Filled":
+            table = new FilledConfig(vue);
             break;
         case "Billard":
             table = new BillardConfig(vue);

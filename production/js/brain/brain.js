@@ -112,6 +112,13 @@ export function middleOfPoints(p1, p2) {
     );
 }
 
+export function convertCVPointToMathPoint(CVpoint) {
+    return {
+        x: CVpoint[0],
+        y: CVpoint[1]
+    };
+}
+
 export function calculateBallSize(tableLength) {
     return (tableLength * BALL_REAL_SIZE) / TABLE_REAL_SIZE;
 }
