@@ -57,6 +57,7 @@ export function drawAndGetDirectionOfAruco(frame, cornersOfAruco) {
 
 /**
  * Generate the data structure of a robot aruco
+ * @param frame Frame containing the aruco
  * @param cornersOfAruco Corners of the aruco
  * @param arucoId Id of the robot aruco
  */
@@ -66,8 +67,7 @@ function generateArucoData(frame, cornersOfAruco, arucoId) {
     const orientation = drawAndGetDirectionOfAruco(frame, cornersOfAruco);
 
     // The center of the aruco
-    const point = new cv.Point((topLeftCornerOfAruco[0] + bottomRightCornerOfAruco[0]) / 2,
-        (topLeftCornerOfAruco[1] + bottomRightCornerOfAruco[1]) / 2)
+    const point = middleOfPoints(topLeftCornerOfAruco, bottomRightCornerOfAruco);
 
     return {
         position: point,
@@ -101,7 +101,7 @@ export function detectAndDrawArucos(frame) {
 
         // don't detect banned aruco ids
         if (!BANNED_ARUCOS.includes(arucoId)) {
-            if(isSimulator) {
+            if (isSimulator) {
                 robotsArucos.push(generateArucoData(frame, cornersOfAruco, arucoId));
             } else {
                 const topLeftCornerOfAruco = cornersOfAruco.data32F.slice(0, 2);
@@ -130,7 +130,8 @@ export function detectAndDrawArucos(frame) {
     }
 
     let res;
-    if(isSimulator) {
+
+    if (isSimulator) {
         res = robotsArucos;
         vue.drawDetectedArucos(res);
     } else {
@@ -138,7 +139,6 @@ export function detectAndDrawArucos(frame) {
         res = tableCorners.concat(robotsArucos);
         cv.drawDetectedMarkers(frame, arucoCorners, arucoIds);
     }
-
     return res;
 }
 
@@ -216,7 +216,6 @@ export function drawDetectedCircles(frame, circles, mv, robots, tableCorners, is
                 perimeterColor = [255, 0, 0, 255] // color of balls outside the table (red)
             }
         }
-
         cv.circle(frame, circleCenter, circle[2], perimeterColor, 3);
         cv.circle(frame, circleCenter, 3, [255, 255, 0, 255], -1);
     }

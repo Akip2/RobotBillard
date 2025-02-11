@@ -76,7 +76,7 @@ class VueSimulateur {
 
         Matter.Events.on(this.render, 'afterRender', () => {
             this.robots.forEach(robot => {
-                Body.setAngle(robot.aruco, robot.getAngle());
+                Body.setAngle(robot.aruco, robot.getAngle() + (Math.PI / 2));
                 Body.setPosition(robot.aruco, robot.getPosition());
             });
 

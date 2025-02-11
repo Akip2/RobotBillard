@@ -1,8 +1,7 @@
 import {getBalls, getHoles, getRobot} from "../elements-manager.js";
-import {distanceBetweenPoints, moveRobotTo} from "../brain/brain.js";
-import {getRealHoles} from "../video/video-functions.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
-import {isEmpty, sleep} from "./scenario-functions.js";
+import {getNearestBall, sleep} from "./scenario-functions.js";
+import {moveRobotTo} from "../brain/brain.js";
 
 
 /**
@@ -19,7 +18,8 @@ export async function startBillardScenarioComplex(socket, robotIp) {
     let robot = getRobot(0);
     let ballToPush;
 
-    while (!isEmpty(balls)) {
+    // TODO btn stop
+    while (true/*!isEmpty(balls)*/) {
         balls = getBalls();
         holes = getHoles();
         robot = getRobot(0);
@@ -29,6 +29,7 @@ export async function startBillardScenarioComplex(socket, robotIp) {
 
             // getNearestHole();
             console.log(holes);
+            console.log()
 
             if (ballToPush !== undefined) {
                 moveRobotTo(socket, robotIp, ballToPush.x, ballToPush.y);
@@ -36,41 +37,4 @@ export async function startBillardScenarioComplex(socket, robotIp) {
         }
         await sleep(MIN_ORDER_DURATION);
     }
-}
-
-function getNearestBall(balls, robotPosition) {
-    let nearestBall = balls[0];
-    let minDistance = distanceBetweenPoints(nearestBall, robotPosition);
-
-    for (let i = 1; i < balls.length; i++) {
-        let distance = distanceBetweenPoints(balls[i], robotPosition);
-
-        if (distance < minDistance) {
-            nearestBall = balls[i];
-            minDistance = distance;
-        }
-    }
-    return nearestBall;
-}
-
-function getNearestHole(holes, ball) {
-    let nearestHole = holes[0];
-    let minDistance = distanceBetweenPoints(nearestHole, ball);
-
-    for (let i = 1; i < holes.length; i++) {
-        let distance = distanceBetweenPoints(holes[i], ball);
-
-        if (distance < minDistance) {
-            nearestHole = holes[i];
-            minDistance = distance;
-        }
-    }
-    return nearestHole;
-}
-
-function getAlignPositionToPush(ballToPush) {
-    let holes = getRealHoles();
-
-    console.log(holes);
-
 }
