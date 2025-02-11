@@ -1,5 +1,6 @@
 import {ballRadius, simulatorCameraFPS} from "./params.js";
 import {detectAndDrawArucos, detectCircles, preProcess} from "../js/video/video-functions.js";
+import {distanceBetweenPoints} from "../js/brain/brain.js";
 
 class Camera {
     constructor(canvasContainer, table) {
@@ -31,7 +32,25 @@ class Camera {
             let circle = circles.data32F.slice(i * 3, (i + 1) * 3);
             let center = new cv.Point(circle[0], circle[1]);
 
-            ballsDetected.push(center);
+            let j=0;
+            let isCircleOnAruco = false;
+            const arucos = this.table.getRobotsDetected();
+            console.log(arucos);
+            while (j < arucos.length && !isCircleOnAruco) {
+                const robotPosition = arucos[j].position;
+                const dist = distanceBetweenPoints(robotPosition, center);
+
+                // If the circle is too close to aruco
+                if (dist <= ballRadius * 3) {
+                    isCircleOnAruco = true;
+                }
+                j++;
+            }
+
+            if(!isCircleOnAruco) {
+                ballsDetected.push(center);
+            }
+
             circle = null;
             center = null;
         }
@@ -45,11 +64,13 @@ class Camera {
             let imgData = cv.imread(this.canvas);
             let preProcessedImg = preProcess(imgData);
 
-            let ballsDetected = this.detectCircles(preProcessedImg);
             let robotArucos = detectAndDrawArucos(preProcessedImg);
-
-            this.table.updateDetectedCircles(ballsDetected);
             this.table.updateDetectedRobots(robotArucos);
+            console.log(this.table.getRobotsDetected());
+
+            let ballsDetected = this.detectCircles(preProcessedImg);
+            this.table.updateDetectedCircles(ballsDetected);
+
 
             //Cleaning memory
             preProcessedImg.delete();
