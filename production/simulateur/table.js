@@ -27,21 +27,6 @@ class Table {
         ];
     }
 
-    removeBall(ball) {
-        let index = this.balls.indexOf(ball);
-        let ballRemoved = this.balls.splice(index, 1)[0];
-
-        this.vue.removeBall(ballRemoved.body);
-    }
-
-    getBalls() {
-        return this.balls;
-    }
-
-    getRobots() {
-        return this.robots;
-    }
-
     run() {
         this.vue.setup(this);
         this.vue.run();
@@ -60,6 +45,25 @@ class Table {
     updateDetectedCircles(ballsDetected) {
         this.ballsDetected = ballsDetected;
         this.vue.drawDetectedCircles(ballsDetected);
+    }
+
+    removeBall(ball) {
+        let index = this.balls.indexOf(ball);
+        let ballRemoved = this.balls.splice(index, 1)[0];
+
+        this.vue.removeBall(ballRemoved.body);
+    }
+
+    getRobots() {
+        return this.robots;
+    }
+
+    getHoles() {
+        return this.holes;
+    }
+
+    getBalls() {
+        return this.balls;
     }
 
     getBallsDetected() {
