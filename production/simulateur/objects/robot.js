@@ -1,4 +1,4 @@
-import {Bodies, Body, Composite, Constraint} from "../global.js";
+import {Bodies, Body, Composite} from "../global.js";
 import SimulationObject from "./simulation-object.js";
 import {Wheel, WHEEL_SIDE} from "./wheel.js";
 import {simulatorSpeed} from "../../js/events/parameters.js";
@@ -81,8 +81,8 @@ class Robot extends SimulationObject {
             this.wheelRight.setDirection(1);
         }
 
-        this.wheelLeft.setSpeed(Math.abs(order.left), order.duration /1.2**(simulatorSpeed-1));
-        this.wheelRight.setSpeed(Math.abs(order.right), order.duration / 1.2**(simulatorSpeed-1));
+        this.wheelLeft.setSpeed(Math.abs(order.left), order.duration / 1.2 ** (simulatorSpeed - 1));
+        this.wheelRight.setSpeed(Math.abs(order.right), order.duration / 1.2 ** (simulatorSpeed - 1));
     }
 
     addToEnv(world) {

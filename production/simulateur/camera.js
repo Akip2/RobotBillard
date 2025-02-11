@@ -57,11 +57,9 @@ class Camera {
 
             let robotArucos = detectAndDrawArucos(preProcessedImg);
             this.table.updateDetectedRobots(robotArucos);
-            console.log(this.table.getRobotsDetected());
 
             let ballsDetected = this.detectCircles(preProcessedImg);
             this.table.updateDetectedCircles(ballsDetected);
-
 
             //Cleaning memory
             preProcessedImg.delete();

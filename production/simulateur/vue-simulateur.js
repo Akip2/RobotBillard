@@ -1,6 +1,6 @@
 import {Body, Composite, Engine, Mouse, MouseConstraint, Render, World,} from "./global.js";
 import {ballRadius, height, simulatorFPS, width} from "./params.js";
-import {afficherDessins, simulatorSpeed, noise} from "../js/events/parameters.js";
+import {afficherDessins, noise, simulatorSpeed} from "../js/events/parameters.js";
 
 class VueSimulateur {
     constructor(canvasContainer) {
@@ -70,7 +70,7 @@ class VueSimulateur {
         this.overlay.style.pointerEvents = "none";
         this.overlay.style.backgroundImage = "none";
 
-        this.overlayContext = this.overlay.getContext("2d",{willReadFrequently: true});
+        this.overlayContext = this.overlay.getContext("2d", {willReadFrequently: true});
 
         this.canvasContainer.appendChild(this.overlay);
 
@@ -80,7 +80,7 @@ class VueSimulateur {
                 Body.setPosition(robot.aruco, robot.getPosition());
             });
 
-            if(noise > 0) {
+            if (noise > 0) {
                 this.generateNoise();
             }
         });
@@ -156,11 +156,11 @@ class VueSimulateur {
     drawDetectedArucos(robotArucos) {
         this.overlayContext.clearRect(0, 0, this.overlay.width, this.overlay.height);
 
-        if(afficherDessins) {
+        if (afficherDessins) {
             robotArucos.forEach((robotAruco) => {
                 const position = robotAruco.position;
                 this.overlayContext.fillStyle = "red";
-                this.overlayContext.fillRect(position.x-5, position.y-5, 10, 10);
+                this.overlayContext.fillRect(position.x - 5, position.y - 5, 10, 10);
             });
         }
     }
