@@ -133,8 +133,6 @@ class VueSimulateur {
     }
 
     drawDetectedCircles(ballsPositions) {
-        this.overlayContext.clearRect(0, 0, this.overlay.width, this.overlay.height);
-
         // si on ne veut pas tracer les cercles, on s'arrête juste apres le nettoyage du canvas
         if (afficherDessins) {
             ballsPositions.forEach((ballPosition) => {
@@ -155,8 +153,16 @@ class VueSimulateur {
         }
     }
 
-    drawArucos(robotArucos) {
-        console.log(robotArucos);
+    drawDetectedArucos(robotArucos) {
+        this.overlayContext.clearRect(0, 0, this.overlay.width, this.overlay.height);
+
+        if(afficherDessins) {
+            robotArucos.forEach((robotAruco) => {
+                const position = robotAruco.position;
+                this.overlayContext.fillStyle = "red";
+                this.overlayContext.fillRect(position.x-5, position.y-5, 10, 10);
+            });
+        }
     }
 
     generateNoise() {

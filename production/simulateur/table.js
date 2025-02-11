@@ -47,6 +47,10 @@ class Table {
         this.vue.drawDetectedCircles(ballsDetected);
     }
 
+    updateDetectedRobots(robotsArucos) {
+        this.robotsDetected = robotsArucos;
+    }
+
     removeBall(ball) {
         let index = this.balls.indexOf(ball);
         let ballRemoved = this.balls.splice(index, 1)[0];
@@ -68,6 +72,10 @@ class Table {
 
     getBallsDetected() {
         return this.ballsDetected;
+    }
+
+    getRobotsDetected() {
+        return this.robotsDetected;
     }
 }
 
