@@ -53,7 +53,7 @@ class Table {
                 robot.executeOrder(order);
             }
         } else {
-            this.robots[id].executeOrder(order);
+            this.robots[id - 1].executeOrder(order);
         }
     }
 

@@ -6,8 +6,10 @@ import EasyConfig from "../../simulateur/configurations/easy-config.js";
 import FootConfig from "../../simulateur/configurations/foot-config.js";
 import RandomConfig from "../../simulateur/configurations/random-config.js";
 import VueSimulateur from "../../simulateur/vue-simulateur.js";
-import {afficherDessins, currentConfig, setCurrentConfig, setCurrentRobotId} from "./parameters.js";
-import {canvasContainer, reload, selectRobots, socket} from "../index.js";
+import {addRobot} from "../elements-manager.js";
+import {afficherDessins, currentConfig, currentRobotId, setCurrentConfig, setCurrentRobotId} from "./parameters.js";
+import {BROADCAST} from "../brain/brain-parameters.js";
+import {canvasContainer, reload, selectRobots, selectRobotsSim, socket} from "../index.js";
 import {setStillContinue} from "../video/video.js";
 
 let camera = null;
@@ -24,7 +26,6 @@ const configurationChoice = document.querySelector("#select-configuration");
 const videoBrut = document.querySelector("#canvas-output-video-brut");
 const videoDessin = document.querySelector("#canvas-output-video");
 
-const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 const speedContainer = document.querySelector("#speed-container");
 const viewsList = document.querySelector("#views-list");
 
@@ -59,7 +60,7 @@ function showVideo(affiche) {
     if (affiche) { // show video to see the camera output
         isSimulator = false;
 
-        hide(selectRobotsSimulator);
+        hide(selectRobotsSim);
         hide(speedContainer);
         hide(reload);
         hide(configurationChoice);
@@ -78,13 +79,14 @@ function showVideo(affiche) {
         hide(selectRobots);
 
         show(speedContainer);
-        show(selectRobotsSimulator);
+        show(selectRobotsSim);
         show(viewGoScenarios);
         show(viewArrowControls);
         show(reload);
         show(configurationChoice);
 
-        loadSimulator(currentConfig);
+        setCurrentRobotId(BROADCAST);
+        loadSimulator(currentConfig, currentRobotId);
         setStillContinue(false);
     }
 }
@@ -130,7 +132,7 @@ export function afficherDetection(affiche) {
     }
 }
 
-export function loadSimulator(configurationName) {
+export function loadSimulator(configurationName, robotId) {
     if (camera !== null && camera.isRunning) {
         camera.stop();
     }
@@ -170,18 +172,34 @@ export function loadSimulator(configurationName) {
     table.run();
     camera.start();
 
-    selectRobotsSimulator.innerHTML = "";
+    updateRobotList();
+}
 
-    let option;
-    for (let i = 0; i < table.getRobots().length; i++) {
-        option = document.createElement("option");
-        option.text = "Robot n°" + (i + 1);
-        selectRobotsSimulator.appendChild(option);
+export function updateRobotList() {
+
+    let found = false;
+
+    selectRobotsSim.innerHTML = "";
+
+    for (let i = 1; i <= table.getRobots().length; i++) {
+        let robotName = "Robot n°" + i;
+        addRobot(robotName);
+    }
+    addRobot("Broadcast");
+
+    // use and display the current option
+    for (let option of selectRobotsSim.options) {
+        let lastChar = option.value[option.value.length - 1] === "t" ? "Broadcast" : option.value[option.value.length - 1];
+        if (lastChar === currentRobotId) {
+            option.selected = true;
+            console.log("option.selected : " + option);
+            found = true;
+            break;
+        }
     }
 
-    option = document.createElement("option");
-    option.text = "Broadcast";
-    selectRobotsSimulator.appendChild(option);
-
-    setCurrentRobotId(0);
+    if (!found) {
+        selectRobotsSim.options[selectRobotsSim.options.length - 1].selected = true;
+        setCurrentRobotId(BROADCAST);
+    }
 }

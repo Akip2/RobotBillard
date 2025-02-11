@@ -18,6 +18,7 @@ export const canvasContainer = document.querySelector("#canvas-container");
 
 // viewGoScenarios
 export const selectRobots = document.querySelector("#select-robot");
+export const selectRobotsSim = document.querySelector("#select-robot-sim");
 const goBtn = document.querySelector("#go-btn");
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -41,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Reload the simulation
     reload.addEventListener("click", () => {
-        loadSimulator(currentConfig);
+        loadSimulator(currentConfig, currentRobotId);
     });
 
     canvasContainer.addEventListener("click", (event) => {

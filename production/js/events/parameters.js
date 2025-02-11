@@ -1,4 +1,4 @@
-import {afficherDetection, currentView, loadSimulator, vue} from "./view-manager.js";
+import {afficherDetection, currentView, loadSimulator, updateRobotList, vue} from "./view-manager.js";
 import {BROADCAST} from "../brain/brain-parameters.js";
 
 const speedSlider = document.querySelector("#sim-speed");
@@ -8,7 +8,7 @@ const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 const configurationChoice = document.querySelector("#select-configuration");
 const affichage = document.querySelector("#checkbox-affichage");
 
-export let currentRobotId = null;
+export let currentRobotId = BROADCAST;
 export let currentConfig = "Billard";
 export let currentScenario = "default";
 
@@ -37,17 +37,13 @@ export function initParams() {
 
     selectRobotsSimulator.addEventListener("change", (event) => {
         const optionName = event.target.value;
-
-        if (optionName === "Broadcast") {
-            currentRobotId = BROADCAST;
-        } else {
-            currentRobotId = optionName[optionName.length - 1] - 1;
-        }
+        currentRobotId = optionName === "Broadcast" ? BROADCAST : optionName[optionName.length - 1];
     });
 
     // Choose a configuration for the simulator
     configurationChoice.addEventListener("change", (event) => {
-        loadSimulator(event.target.value);
+        loadSimulator(event.target.value, currentRobotId);
+        updateRobotList();
     });
 
     affichage.addEventListener("change", function () {
