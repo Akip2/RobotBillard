@@ -54,7 +54,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="-OGlP8KNZQWg6UsRNXII-3" value="billardScenarioSimple.js" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;" parent="1" vertex="1">
-          <mxGeometry x="330" y="40" width="650" height="620" as="geometry" />
+          <mxGeometry x="330" y="40" width="130" height="620" as="geometry" />
         </mxCell>
         <mxCell id="-OGlP8KNZQWg6UsRNXII-4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;" parent="-OGlP8KNZQWg6UsRNXII-3" vertex="1">
           <mxGeometry x="60" y="80" width="10" height="520" as="geometry" />
