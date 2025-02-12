@@ -1,0 +1,69 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.9 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="26.0.9">
+  <diagram name="Page-1" id="yIvkXzmNjsXhJXlFP6nN">
+    <mxGraphModel dx="1050" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="YdF8LwHC32WW-9jldTC2-1" value="JS" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="760" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-2" value="brain" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-1">
+          <mxGeometry x="40" y="40" width="240" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-6" value="brain.js" style="shape=card;whiteSpace=wrap;html=1;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-2">
+          <mxGeometry x="20" y="60" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-8" value="brain-parameters.js" style="shape=card;whiteSpace=wrap;html=1;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-2">
+          <mxGeometry x="140" y="60" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-3" value="scenarios" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-1">
+          <mxGeometry x="40" y="280" width="240" height="200" as="geometry">
+            <mxRectangle x="40" y="280" width="140" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-19" value="billard-scenario-complexe.js" style="shape=card;whiteSpace=wrap;html=1;size=20;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-3">
+          <mxGeometry x="30" y="120" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-20" value="billard-scenario-simple.js" style="shape=card;whiteSpace=wrap;html=1;size=20;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-3">
+          <mxGeometry x="140" y="40" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-21" value="scenario-function.js" style="shape=card;whiteSpace=wrap;html=1;size=20;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-3">
+          <mxGeometry x="30" y="40" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-22" value="test-scenario.js" style="shape=card;whiteSpace=wrap;html=1;size=20;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-3">
+          <mxGeometry x="140" y="120" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-4" value="events" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-1">
+          <mxGeometry x="480" y="40" width="240" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-12" value="parameters.js" style="shape=card;whiteSpace=wrap;html=1;size=20;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-4">
+          <mxGeometry x="80" y="75" width="80" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-13" value="view-manager.js" style="shape=card;whiteSpace=wrap;html=1;size=20;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-4">
+          <mxGeometry x="170" y="75" width="60" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-14" value="controls.js" style="shape=card;whiteSpace=wrap;html=1;size=20;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-4">
+          <mxGeometry x="10" y="75" width="60" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-5" value="video" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-1">
+          <mxGeometry x="480" y="280" width="240" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-11" value="video-parmeters.js" style="shape=card;whiteSpace=wrap;html=1;size=20;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-5">
+          <mxGeometry x="85" y="70" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-10" value="video-function.js" style="shape=card;whiteSpace=wrap;html=1;size=20;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-5">
+          <mxGeometry x="170" y="70" width="60" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-9" value="video.js" style="shape=card;whiteSpace=wrap;html=1;size=20;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-5">
+          <mxGeometry x="10" y="70" width="60" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-15" value="index.js" style="shape=card;whiteSpace=wrap;html=1;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-1">
+          <mxGeometry x="340" y="140" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="YdF8LwHC32WW-9jldTC2-16" value="element-manager.js" style="shape=card;whiteSpace=wrap;html=1;" vertex="1" parent="YdF8LwHC32WW-9jldTC2-1">
+          <mxGeometry x="340" y="280" width="80" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
