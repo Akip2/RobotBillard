@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.9 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="26.0.9">
   <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
-    <mxGraphModel dx="1400" dy="828" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1050" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -54,7 +54,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="-OGlP8KNZQWg6UsRNXII-3" value="billardScenarioSimple.js" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;" parent="1" vertex="1">
-          <mxGeometry x="330" y="40" width="130" height="620" as="geometry" />
+          <mxGeometry x="330" y="40" width="650" height="620" as="geometry" />
         </mxCell>
         <mxCell id="-OGlP8KNZQWg6UsRNXII-4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;" parent="-OGlP8KNZQWg6UsRNXII-3" vertex="1">
           <mxGeometry x="60" y="80" width="10" height="520" as="geometry" />
@@ -96,7 +96,7 @@
             <mxPoint x="760" y="590" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="-OGlP8KNZQWg6UsRNXII-72" value="min(distanceBalls)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;labelBackgroundColor=none;strokeColor=#A8201A;fontColor=default;" parent="-OGlP8KNZQWg6UsRNXII-3" edge="1">
+        <mxCell id="-OGlP8KNZQWg6UsRNXII-72" value="boule avec distance la plus faible" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;labelBackgroundColor=none;strokeColor=#A8201A;fontColor=default;" parent="-OGlP8KNZQWg6UsRNXII-3" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="520" y="530" as="targetPoint" />
             <Array as="points">
@@ -108,8 +108,8 @@
         <mxCell id="-OGlP8KNZQWg6UsRNXII-73" value="loop" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;" parent="-OGlP8KNZQWg6UsRNXII-3" vertex="1">
           <mxGeometry x="500" y="420" width="280" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="-OGlP8KNZQWg6UsRNXII-74" value="[pour ball dans boules (for each)]" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBackgroundColor=none;fontColor=#143642;" parent="-OGlP8KNZQWg6UsRNXII-3" vertex="1">
-          <mxGeometry x="520" y="450" width="180" height="30" as="geometry" />
+        <mxCell id="-OGlP8KNZQWg6UsRNXII-74" value="[pour chaque boule]" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBackgroundColor=none;fontColor=#143642;" parent="-OGlP8KNZQWg6UsRNXII-3" vertex="1">
+          <mxGeometry x="520" y="450" width="130" height="30" as="geometry" />
         </mxCell>
         <mxCell id="-OGlP8KNZQWg6UsRNXII-7" value="startScenario(socket, robotIp)" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=horizontal;curved=0;rounded=0;labelBackgroundColor=none;strokeColor=#A8201A;fontColor=default;" parent="1" source="aM9ryv3xv72pqoxQDRHE-6" target="-OGlP8KNZQWg6UsRNXII-4" edge="1">
           <mxGeometry relative="1" as="geometry">
