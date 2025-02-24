@@ -16,6 +16,26 @@ export function getNearestBall(balls, robotPosition) {
     return nearestBall;
 }
 
+export function getNearestBallToHoles(holes, balls) {
+    let closestHole;
+    let closestBall;
+    let minDist = Number.POSITIVE_INFINITY;
+
+    balls.forEach((ball) => {
+        holes.forEach((hole) => {
+            let currentDist = distanceBetweenPoints(hole, ball);
+
+            if(currentDist <= minDist) {
+                closestBall = ball;
+                closestHole = hole;
+                minDist = currentDist;
+            }
+        })
+    });
+
+    return [closestBall, closestHole];
+}
+
 export function getNearestHole(holes, ball) {
     let nearestHole = holes[0];
     let minDistance = distanceBetweenPoints(nearestHole, ball);
