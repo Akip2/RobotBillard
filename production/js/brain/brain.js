@@ -29,7 +29,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
             let distanceDifference = distanceBetweenPoints(robotPosition, {
                 x: x,
                 y: y
-            }) / (calculateBallSize(460) / 4);
+            });
 
             if (distanceDifference < DISTANCE_THRESHOLD) {
                 clearInterval(currentInterval);
@@ -94,7 +94,7 @@ export function isRobotNear(robotIp, x, y, deltaMax) {
 
         return delta < deltaMax;
     }
-    return false; // Good idea ?
+    return false;
 }
 
 export function distanceBetweenPoints(p1, p2) {
