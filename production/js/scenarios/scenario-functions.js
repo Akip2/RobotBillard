@@ -58,6 +58,15 @@ export function getAlignPositionToPush(ballToPush) {
 
 }
 
+export function normalize(vector) {
+    const highestVal = vector.x > vector.y ? vector.x : vector.y;
+
+    return {
+        x: vector.x/highestVal,
+        y: vector.y/highestVal
+    }
+}
+
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

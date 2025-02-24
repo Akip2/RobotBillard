@@ -1,6 +1,6 @@
 import {getBalls, getHoles, getRobot} from "../elements-manager.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
-import {getNearestBall, getNearestBallToHoles, sleep} from "./scenario-functions.js";
+import {getNearestBall, getNearestBallToHoles, normalize, sleep} from "./scenario-functions.js";
 import {moveRobotTo} from "../brain/brain.js";
 import {isActive} from "../index.js";
 
@@ -23,20 +23,23 @@ export async function startBillardScenarioComplex(socket, robotIp) {
         holes = getHoles();
         robot = getRobot(0);
 
-        const alpha = 10;
+        const alpha = 0.2;
         
         if (robot !== undefined) {
             const [ballToPush, hole] = getNearestBallToHoles(holes, balls);
 
             if (ballToPush !== undefined) {
                 const pushVector = {
-                    x: ballToPush.x - hole.x,
-                    y: ballToPush.y - hole.y,
+                    x: hole.x - ballToPush.x,
+                    y: hole.y - ballToPush.y,
                 }
 
-                
-                const robotX = ballToPush.x - alpha*pushVector.x;
-                const robotY = ballToPush.y - alpha*pushVector.y;
+                const normalizedPushVector = normalize(pushVector);
+
+                const robotX = ballToPush.x - alpha*normalizedPushVector.x;
+                const robotY = ballToPush.y + alpha*normalizedPushVector.y;
+
+                console.log(pushVector);
 
                 moveRobotTo(socket, robotIp, robotX, robotY);
                 //await sleep(1000);
