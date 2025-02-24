@@ -86,6 +86,7 @@ export function getHoles() {
 
 export function addRobot(robotName) {
     let option = document.createElement("option");
+    option.className = "option";
     option.text = robotName;
 
     if (currentView === "simulator") {

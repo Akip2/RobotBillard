@@ -16,6 +16,55 @@
     </div>
 </div>
 
+<!-- options menu -->
+<div id="fond" class="displayNone">
+    <div id="menu-options">
+        <div id="header-menu-options">
+            <h1 id="titre-menu-options">Menu d'options</h1>
+            <img src="./img/croix.png" alt="croix de fermeture" id="croix">
+        </div>
+        <div id="options-list">
+            <button id="reload-btn" class="param displayNone">Recharger</button>
+
+            <div class="param">
+                <label for="checkbox-affichage">Affichage</label>
+                <input type="checkbox" id="checkbox-affichage" class="input-checkbox" name="affichage" checked/>
+            </div>
+
+            <select name="scenarios" id="select-configuration" class="select-top-table-container displayNone">
+                <option value="Billard" class="option" selected>Billard</option>
+                <option value="Random" class="option">Random</option>
+                <option value="Filled" class="option">Remplie</option>
+                <option value="Foot" class="option">Foot</option>
+                <option value="Facile" class="option">Facile</option>
+            </select>
+
+            <select name="robots" id="select-robot" class="select-top-table-container displayFlex">
+                <!-- here some robots which are available to control (added with javascript) -->
+                <option value="default" class="option" selected>Broadcast</option>
+            </select>
+
+            <select name="robots" id="select-robot-sim" class="select-top-table-container displayNone">
+                <option value="default" class="option">Aucun robot disponible</option>
+            </select>
+
+            <div id="noise-container" class="param displayNone">
+                <label for="noise">Bruit</label>
+                <input type="range" id="noise" min="0" max="8" value="1" step="1"
+                       oninput="this.nextElementSibling.value = this.value">
+                <output>1</output>
+            </div>
+
+            <div id="speed-container" class="param displayNone">
+                <label for="sim-speed">Vitesse</label>
+                <input type="range" id="sim-speed" min="0" max="2.0" value="1" step="0.1"
+                       oninput="this.nextElementSibling.value = this.value">
+                <output>1</output>
+            </div>
+        </div>
+    </div>
+</div>
+
 <header>
     <div id="views-list">
         <button class="btns-vue" id="camera">Caméra</button>
@@ -28,48 +77,13 @@
 <main>
     <!-- Left part which contains canvas and buttons to change view -->
     <div class="part displayFlex" id="left-part">
-        <div id="top-table-container">
-            <button id="reload-btn" class="displayNone">Recharger</button>
-            <select name="scenarios" id="select-configuration" class="select-top-table-container displayNone">
-                <option value="Random" class="option">Random</option>
-                <option value="Filled" class="option">Remplie</option>
-                <option value="Billard" class="option" selected>Billard</option>
-                <option value="Foot" class="option">Foot</option>
-                <option value="Facile" class="option">Facile</option>
-            </select>
-            <div>
-                <select name="robots" id="select-robot" class="select-top-table-container displayFlex">
-                    <!-- here some robots which are available to control (added with javascript) -->
-                    <option value="default" class="option" selected>Broadcast</option>
-                </select>
 
-                <select name="robots" id="select-robot-sim" class="select-top-table-container displayNone">
-                    <option value="default" class="option">Aucun robot disponible</option>
-                </select>
-            </div>
+        <button id="btn-options" class="param">Options</button>
 
-            <div id="noise-container" class="param displayNone">
-                <label for="noise">Bruit</label>
-                <input type="range" id="noise" min="0" max="8" value="1" step="1" oninput="this.nextElementSibling.value = this.value">
-                <output>1</output>
-            </div>
-
-            <div class="param">
-                <label for="checkbox-affichage">Affichage</label>
-                <input type="checkbox" id="checkbox-affichage" class="input-checkbox" name="affichage" checked/>
-            </div>
-
-            <div id="speed-container" class="param displayNone">
-                <label for="sim-speed">Vitesse</label>
-                <input type="range" id="sim-speed" min="0" max="2.0" value="1" step="0.1"
-                       oninput="this.nextElementSibling.value = this.value">
-                <output>1</output>
-            </div>
-        </div>
         <div id="canvas-container">
-            <!--            <input type="number" id="tmp-1" min="10" max="300" step="10" value="100">-->
-            <!--            <input type="number" id="tmp-2" min="100" max="10000" step="100" value="1000">-->
-            <!--                        <video autoplay loop muted id="canvas-input-video" width="700" height="400" src="./video/aruco.mp4"></video>-->
+            <!-- <input type="number" id="tmp-1" min="10" max="300" step="10" value="100"> -->
+            <!-- <input type="number" id="tmp-2" min="100" max="10000" step="100" value="1000"> -->
+            <!-- <video autoplay loop muted id="canvas-input-video" width="700" height="400" src="./video/aruco.mp4"></video> -->
             <canvas class="canvas-video displayNone" id="canvas-output-video-brut"></canvas>
             <canvas class="canvas-video displayFlex" id="canvas-output-video"></canvas>
         </div>

@@ -16,6 +16,26 @@ export function getNearestBall(balls, robotPosition) {
     return nearestBall;
 }
 
+export function getNearestBallToHoles(holes, balls) {
+    let closestHole;
+    let closestBall;
+    let minDist = Number.POSITIVE_INFINITY;
+
+    balls.forEach((ball) => {
+        holes.forEach((hole) => {
+            let currentDist = distanceBetweenPoints(hole, ball);
+
+            if(currentDist <= minDist) {
+                closestBall = ball;
+                closestHole = hole;
+                minDist = currentDist;
+            }
+        })
+    });
+
+    return [closestBall, closestHole];
+}
+
 export function getNearestHole(holes, ball) {
     let nearestHole = holes[0];
     let minDistance = distanceBetweenPoints(nearestHole, ball);
@@ -36,6 +56,15 @@ export function getAlignPositionToPush(ballToPush) {
 
     console.log(holes);
 
+}
+
+export function normalize(vector) {
+    const highestVal = vector.x > vector.y ? vector.x : vector.y;
+
+    return {
+        x: vector.x/highestVal,
+        y: vector.y/highestVal
+    }
 }
 
 export function sleep(ms) {
