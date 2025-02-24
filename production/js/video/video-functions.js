@@ -3,6 +3,7 @@ import {
     BOTTOM_LEFT_ARUCO_ID,
     BOTTOM_RIGHT_ARUCO_ID,
     DEFAULT_BALL_RADIUS,
+    HOLE_DISTANCE_FACTOR,
     HOUGH_CIRCLES_DISTANCE_BETWEEN_CIRCLES,
     HOUGH_CIRCLES_PARAMETER_1,
     HOUGH_CIRCLES_PARAMETER_2,
@@ -18,14 +19,60 @@ let ballsPositions = [];
 let holesPositions = [];
 
 export function preProcess(frame) {
-    // let blurred = new cv.Mat();
     let gray = new cv.Mat();
     let bright = new cv.Mat();
-    // let blurred = new cv.Mat();
 
     cv.cvtColor(frame, gray, cv.COLOR_RGBA2GRAY); // Grayscale
     cv.convertScaleAbs(gray, bright, 1.5, 20); // 1 - 3 // 0 - 100
-    // cv.bilateralFilter(bright, blurred, 9, 24, 60);
+
+    // TEST
+    /*let mv = new cv.MatVector();
+    cv.split(gray, mv);
+
+    let resultPlanes = new cv.MatVector();
+    let resultNormPlanes = new cv.MatVector();
+
+    // Process each plane (R, G, B channels)
+    for (let i = 0; i < mv.size(); i++) {
+        let plane = mv.get(i);
+
+        // Dilate the plane
+        let dilatedImg = new cv.Mat();
+        cv.dilate(plane, dilatedImg, cv.Mat.ones(7, 7, cv.CV_8UC1));
+
+        // Apply median blur
+        let bgImg = new cv.Mat();
+        cv.medianBlur(dilatedImg, bgImg, 21);
+
+        // Compute the absolute difference between the original and blurred image
+        let diffImg = new cv.Mat();
+        cv.absdiff(plane, bgImg, diffImg);
+
+        // Invert the image (255 - diffImg)
+        let invertedDiffImg = new cv.Mat();
+        cv.bitwise_not(diffImg, invertedDiffImg);
+
+        // Normalize the diff image
+        let normImg = new cv.Mat();
+        cv.normalize(invertedDiffImg, normImg, 0, 255, cv.NORM_MINMAX, cv.CV_8UC1);
+
+        // Append the diff and norm images to the result arrays
+        resultPlanes.push_back(diffImg);
+        resultNormPlanes.push_back(normImg);
+
+        // Release temporary matrices
+        dilatedImg.delete();
+        bgImg.delete();
+        invertedDiffImg.delete();
+    }
+
+    let result = new cv.Mat();
+    cv.merge(resultPlanes, result);
+
+    let resultNorm = new cv.Mat();
+    cv.merge(resultNormPlanes, resultNorm);*/
+
+    gray.delete();
 
     return bright;
 }
@@ -187,7 +234,8 @@ export function drawDetectedCircles(frame, circles, mv, robots, tableCorners, is
                 tableHoles.push(topMiddleHole, bottomMiddleHole);
 
                 for (const corner of tableHoles) {
-                    if (distanceBetweenPoints(circleCenter, corner) < ballRadius * 8) {
+                    // If the circle is too close to a hole, it must be considered a hole too
+                    if (distanceBetweenPoints(circleCenter, corner) < ballRadius * HOLE_DISTANCE_FACTOR) {
                         isHole = true;
                     }
                 }
