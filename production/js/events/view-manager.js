@@ -200,7 +200,6 @@ export function updateRobotList() {
         let lastChar = option.value[option.value.length - 1] === "t" ? "Broadcast" : option.value[option.value.length - 1];
         if (lastChar === currentRobotId) {
             option.selected = true;
-            console.log("option.selected : " + option);
             found = true;
             break;
         }

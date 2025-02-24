@@ -1,6 +1,10 @@
 import {afficherDetection, currentView, loadSimulator, updateRobotList, vue} from "./view-manager.js";
 import {BROADCAST} from "../brain/brain-parameters.js";
 
+const fond = document.querySelector("#fond");
+const btnOptions = document.querySelector("#btn-options");
+const optionsMenu = document.querySelector("#menu-options");
+const croix = document.querySelector("#croix");
 const speedSlider = document.querySelector("#sim-speed");
 const selectScenarios = document.querySelector("#select-scenarios");
 const selectRobots = document.querySelector("#select-robot");
@@ -23,6 +27,20 @@ export let duration = 1000;
 export let noise = 1;
 
 export function initParams() {
+
+    btnOptions.addEventListener("click", () => {
+        fond.classList.remove("displayNone");
+    });
+
+    fond.addEventListener("click", (event) => {
+        let clickedElement = event.target;
+        // on vérifie que l'élément cliqué est soit en dehors du menu ou alors est la croix
+        if (!optionsMenu.contains(clickedElement) || clickedElement === croix) {
+            // on peut alors fermer le menu
+            fond.classList.add("displayNone");
+        }
+    })
+
     selectScenarios.addEventListener("change", (event) => {
         currentScenario = event.target.value;
     });
