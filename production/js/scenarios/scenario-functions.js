@@ -25,7 +25,7 @@ export function getNearestBallToHoles(holes, balls) {
         holes.forEach((hole) => {
             let currentDist = distanceBetweenPoints(hole, ball);
 
-            if(currentDist <= minDist) {
+            if(currentDist < minDist) {
                 closestBall = ball;
                 closestHole = hole;
                 minDist = currentDist;
@@ -59,11 +59,11 @@ export function getAlignPositionToPush(ballToPush) {
 }
 
 export function normalize(vector) {
-    const highestVal = vector.x > vector.y ? vector.x : vector.y;
+    const norm = Math.sqrt(Math.pow(vector.x, 2) + Math.pow(vector.y, 2));
 
     return {
-        x: vector.x/highestVal,
-        y: vector.y/highestVal
+        x: vector.x/norm,
+        y: vector.y/norm
     }
 }
 

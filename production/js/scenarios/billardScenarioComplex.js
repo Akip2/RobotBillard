@@ -23,7 +23,7 @@ export async function startBillardScenarioComplex(socket, robotIp) {
         holes = getHoles();
         robot = getRobot(0);
 
-        const alpha = 0.2;
+        const alpha = 2;
         
         if (robot !== undefined) {
             const [ballToPush, hole] = getNearestBallToHoles(holes, balls);
@@ -37,11 +37,12 @@ export async function startBillardScenarioComplex(socket, robotIp) {
                 const normalizedPushVector = normalize(pushVector);
 
                 const robotX = ballToPush.x - alpha*normalizedPushVector.x;
-                const robotY = ballToPush.y + alpha*normalizedPushVector.y;
+                const robotY = ballToPush.y - alpha*normalizedPushVector.y;
 
-                console.log(pushVector);
+                console.log(normalizedPushVector);
 
                 moveRobotTo(socket, robotIp, robotX, robotY);
+                //await sleep(1000);
                 //await sleep(1000);
                 //moveRobotTo(socket, robotIp, hole.x, hole.y);
             }
