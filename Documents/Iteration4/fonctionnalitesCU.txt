@@ -1,0 +1,13 @@
+Fonctionnalités et cas d'utilisations développés :
+	- Programmer un scénario de billard simple : FROGER Corentin (40%) et PIERROT Nathan (60%)
+	- Détection d'ArUco dans le simulateur : FONTANEZ Antoine (100%)
+	- Ajouter du "bruit" au simulateur : FONTANEZ Antoine (100%)
+	- Pouvoir modifier la vitesse de la simulation : FONTANEZ Antoine (100%)
+	- Considérer les cercles détectés sur un ArUco comme de faux positifs : FONTANEZ Antoine (80%) et FROGER Corentin (20%)
+	- Considérer les cercles comme des trous à l'aide des ArUcos plutôt qu'en se basant sur leur distance par rapport aux bords de la table : FROGER Corentin (100%)
+	- Calcul des trajectoires et de la vitesse du robot pour qu’il puisse bouger de manière fluide : FROGER Corentin (100%)
+	- Faire en sorte de voir le flux de la vidéo avec et sans les dessins d'OpenCV : PIERROT Nathan (100%)
+	- Interface mobile simple pour contrôler les robots réels : FROGER Corentin (100%)
+	- Pouvoir broadcast un ordre à tous les robots : FROGER Corentin (70%) et FONTANEZ Antoine (30%)
+	- Faire disparaitre les boules du simulateur seulement lorsque leur centre touche un trou (FONTANEZ Antoine 100%)
+	- Ajout d’une configuration où la table est remplie de boules (utile pour tester openCV) : FROGER Corentin (100%)

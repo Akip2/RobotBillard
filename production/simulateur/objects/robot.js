@@ -1,18 +1,19 @@
-import {Bodies, Body} from "../global.js";
+import {Bodies, Body, Composite} from "../global.js";
 import SimulationObject from "./simulation-object.js";
 import {Wheel, WHEEL_SIDE} from "./wheel.js";
+import {simulatorSpeed} from "../../js/events/parameters.js";
 
 class Robot extends SimulationObject {
     constructor(width, height, wheelWidth, wheelHeight, x = 0, y = 0, angle = 0) {
         const core = Bodies.rectangle(x, y, width, height, {
             render: {
-                fillStyle: "#B6423F" // real color of our robot
+                fillStyle: "#B6423F", // real color of our robot
             },
             chamfer: {
                 radius: [15, 15, 15, 15]
             },
             frictionAir: 1,
-            restitution: 0.02
+            restitution: 0.02 / simulatorSpeed
         });
 
         const leftWheel = Bodies.rectangle(
@@ -51,7 +52,18 @@ class Robot extends SimulationObject {
         this.wheelLeft = wheel1;
         this.wheelRight = wheel2;
 
-        this.bodyArray = [core, wheel1.body, wheel2.body];
+        this.aruco = Bodies.rectangle(x, y, width, height, {
+            collisionFilter: {
+                mask: 0x0000 //ignore collisions and mouse drag
+            },
+            render: {
+                sprite: {
+                    texture: "../../img/aruco-marker-ID-457.svg",
+                    xScale: 0.1,
+                    yScale: 0.1,
+                }
+            }
+        });
 
         Body.setAngle(body, angle);
     }
@@ -69,8 +81,8 @@ class Robot extends SimulationObject {
             this.wheelRight.setDirection(1);
         }
 
-        this.wheelLeft.setSpeed(Math.abs(order.left), order.duration);
-        this.wheelRight.setSpeed(Math.abs(order.right), order.duration);
+        this.wheelLeft.setSpeed(Math.abs(order.left), order.duration / 1.2 ** (simulatorSpeed - 1));
+        this.wheelRight.setSpeed(Math.abs(order.right), order.duration / 1.2 ** (simulatorSpeed - 1));
     }
 
     addToEnv(world) {
@@ -78,6 +90,7 @@ class Robot extends SimulationObject {
 
         this.wheelLeft.addToEnv(world);
         this.wheelRight.addToEnv(world);
+        Composite.add(world, this.aruco);
     }
 }
 

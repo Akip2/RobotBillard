@@ -13,19 +13,24 @@ class CollisionController {
                 const bodyA = pair.bodyA;
                 const bodyB = pair.bodyB;
 
-                const balls = table.getBalls();
+                let ballCenter = null;
+                if (bodyA.collisionFilter.category === COLLISION_FILTERS.BALL_CENTER && bodyB.collisionFilter.category === COLLISION_FILTERS.HOLE) {
+                    ballCenter = bodyA;
+                } else if (bodyB.collisionFilter.category === COLLISION_FILTERS.BALL_CENTER && bodyA.collisionFilter.category === COLLISION_FILTERS.HOLE) {
+                    ballCenter = bodyB;
+                }
 
-                balls.forEach(ball => {
-                    if (ball.body.parts.includes(bodyA) || ball.body.parts.includes(bodyB)) {
-                        const otherBody = ball.body.parts.includes(bodyA) ? bodyB : bodyA;
+                if (ballCenter != null) {
+                    console.log("BALL TOUCH HOLE");
+                    const balls = table.getBalls();
 
-                        if (otherBody.collisionFilter.category === COLLISION_FILTERS.HOLE) { // ball collides with hole
-                            console.log("ball touch hole");
+                    balls.forEach(ball => {
+                        if (ball.collisionCenter === ballCenter) {
                             table.removeBall(ball);
                         }
-                    }
-                });
-            });
+                    })
+                }
+            })
         });
     }
 }

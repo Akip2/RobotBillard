@@ -3,10 +3,9 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 
-
 const robotSockets = [];
 const socketIps = [];
-let simulatorMode = false;
+let isSimulator = false;
 
 const io = require('socket.io').listen(server, {
     pingInterval: 30000,
@@ -14,6 +13,7 @@ const io = require('socket.io').listen(server, {
 });
 
 const port = 8001;
+const BROADCAST = "Broadcast";
 
 // -- Used to solve some problems ----------------
 app.use(express.static(path.join(__dirname)));
@@ -45,40 +45,44 @@ io.sockets.on("connection", function (socket) {
 
         let ipRobot = val.ipRobot;
 
-        if (simulatorMode) {
-            socket.emit("motor", val); // We send the request back to the simulator
+        if (isSimulator) {
+            socket.emit("motor", val);
         } else {
-            delete val.ipRobot;
-            
-            let i = 0;
-            let found = false;
-            let robotSocket;
-
-            while (i < robotSockets.length && !found) {
-                robotSocket = robotSockets[i];
-                if (robotSocket.handshake.address === ipRobot) {
-                    found = true;
-                }
-                i++;
-            }
-
-            if (found) {
-                robotSocket.emit('motor', val);
+            if (ipRobot === BROADCAST) { // Broadcast
+                socket.broadcast.emit("motor", val);
             } else {
-                console.log("robot not found with ip : " + ipRobot);
+                delete val.ipRobot;
+
+                let i = 0;
+                let found = false;
+                let robotSocket;
+
+                while (i < robotSockets.length && !found) {
+                    robotSocket = robotSockets[i];
+                    if (robotSocket.handshake.address === ipRobot) {
+                        found = true;
+                    }
+                    i++;
+                }
+
+                if (found) {
+                    robotSocket.emit('motor', val);
+                } else {
+                    console.log("robot not found with ip : " + ipRobot);
+                }
             }
         }
     });
 
     socket.on("is-interface", function (mode) { // We learn that the socket is the interface
         robotSockets.splice(robotSockets.indexOf(socket), 1);
-        simulatorMode = (mode === "simulator");
+        isSimulator = (mode === "simulator");
         updateRobotsList(socket);
         console.log("remove interface");
     });
 
     socket.on("change-mode", function (val) { // User is changing the mode of the interface (simulator, manual, camera...)
-        simulatorMode = (val === "simulator");
+        isSimulator = (val === "simulator");
         // updateRobotsList(socket);
     });
 
@@ -87,19 +91,16 @@ io.sockets.on("connection", function (socket) {
 
         if (socketIps.includes(socket.handshake.address)) { // The disconnecting socket is a robot
             let index = socketIps.indexOf(socket.handshake.address);
-            console.log(index);
             const removed = robotSockets.splice(index, 1);
             socketIps.splice(index, 1);
 
+            console.log(index);
             console.log("retiré : ");
             console.log(removed);
         }
         updateRobotsList(socket);
     });
 });
-
-console.log(`Server is running on localhost:${port}`);
-
 
 function updateRobotsList(socket) {
     let robots = [];
@@ -109,6 +110,7 @@ function updateRobotsList(socket) {
     // We check if the robot has already been listed, if not, we add it to the robots list
     robotSockets.forEach(robotSocket => {
         let adresseIp = robotSocket.handshake.address;
+
         if (!robots.includes(adresseIp)) {
             robots.push(adresseIp);
         }
@@ -117,3 +119,5 @@ function updateRobotsList(socket) {
     socket.emit("robots-list", robots);
     console.log("apres le emit de updateRobotsList");
 }
+
+console.log(`Server is running on http://localhost:${port}`);

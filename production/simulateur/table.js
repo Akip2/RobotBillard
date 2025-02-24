@@ -1,6 +1,7 @@
 import Wall from "./objects/wall.js";
-import {width, height, holeRadius, wallSize} from "./params.js";
+import {height, holeRadius, wallSize, width} from "./params.js";
 import Hole from "./objects/hole.js";
+import {BROADCAST} from "../js/brain/brain-parameters.js";
 
 class Table {
     constructor(robots, balls, vue) {
@@ -26,28 +27,19 @@ class Table {
         ];
     }
 
-    removeBall(ball) {
-        let index = this.balls.indexOf(ball);
-        let ballRemoved = this.balls.splice(index, 1)[0];
-
-        this.vue.removeBall(ballRemoved.body);
-    }
-
-    getBalls() {
-        return this.balls;
-    }
-
-    getRobots() {
-        return this.robots;
-    }
-
     run() {
         this.vue.setup(this);
         this.vue.run();
     }
 
     sendRobotOrder(order, id) {
-        this.robots[id].executeOrder(order);
+        if (id === BROADCAST) {
+            for (const robot of this.robots) {
+                robot.executeOrder(order);
+            }
+        } else {
+            this.robots[id - 1].executeOrder(order);
+        }
     }
 
     updateDetectedCircles(ballsDetected) {
@@ -55,8 +47,35 @@ class Table {
         this.vue.drawDetectedCircles(ballsDetected);
     }
 
-    getBallsDetected(){
+    updateDetectedRobots(robotsArucos) {
+        this.robotsDetected = robotsArucos;
+    }
+
+    removeBall(ball) {
+        let index = this.balls.indexOf(ball);
+        let ballRemoved = this.balls.splice(index, 1)[0];
+
+        this.vue.removeBall(ballRemoved.body);
+    }
+
+    getRobots() {
+        return this.robots;
+    }
+
+    getHoles() {
+        return this.holes;
+    }
+
+    getBalls() {
+        return this.balls;
+    }
+
+    getBallsDetected() {
         return this.ballsDetected;
+    }
+
+    getRobotsDetected() {
+        return this.robotsDetected;
     }
 }
 

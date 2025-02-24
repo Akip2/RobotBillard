@@ -14,10 +14,11 @@ import {
 } from "../params.js";
 import Ball from "../objects/ball.js";
 
-class RandomConfig extends Table {
+class FilledConfig extends Table {
     constructor(vue) {
         let randomWidth = Math.random() * width;
         let randomHeight = Math.random() * height;
+
         const robots = [new Robot(
             robotWidth, robotHeight, wheelWidth, wheelHeight,
 
@@ -37,24 +38,27 @@ class RandomConfig extends Table {
         )];
 
         const balls = [];
-        ballColors.forEach(color => {
-            let ballFull = new Ball(
-                ballRadius,
-                color,
-                (Math.random() * (width - holeRadius * 2)) + holeRadius,
-                Math.random() * (height - holeRadius * 2) + holeRadius
-            );
 
-            let ballCircled = new Ball(
-                ballRadius,
-                color,
-                (Math.random() * (width - holeRadius * 2)) + holeRadius,
-                Math.random() * (height - holeRadius * 2) + holeRadius,
-                true
-            );
+        for (let i = 0; i < 20; i++) {
+            ballColors.forEach(color => {
+                let ballFull = new Ball(
+                    ballRadius,
+                    color,
+                    (Math.random() * (width - holeRadius * 2)) + holeRadius,
+                    Math.random() * (height - holeRadius * 2) + holeRadius
+                );
 
-            balls.push(ballFull, ballCircled);
-        });
+                let ballCircled = new Ball(
+                    ballRadius,
+                    color,
+                    (Math.random() * (width - holeRadius * 2)) + holeRadius,
+                    Math.random() * (height - holeRadius * 2) + holeRadius,
+                    true
+                );
+
+                balls.push(ballFull, ballCircled);
+            });
+        }
 
         let ballWhite = new Ball(
             ballRadius,
@@ -75,4 +79,4 @@ class RandomConfig extends Table {
     }
 }
 
-export default RandomConfig;
+export default FilledConfig;

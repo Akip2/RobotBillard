@@ -1,15 +1,50 @@
-import {isRobotNear, moveRobotTo} from "../brain.js";
-import {getRobot} from "../index.js";
+import {isRobotNear, moveRobotTo} from "../brain/brain.js";
+import {getRobot} from "../elements-manager.js";
+import {sleep} from "./scenario-functions.js";
+import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 
-export function startTestScenario(socket, index) {
-    let robotPosition = getRobot(index).position;
+export async function startTestScenario(socket, robotIp) {
+    let startRobotPosition = getRobot(0).position;
+    let robot = getRobot(0);
 
-    moveRobotTo(socket, index, robotPosition.x + 100, robotPosition.y);
 
-    let check = setInterval(() => {
-        if (isRobotNear(index, robotPosition.x + 100, robotPosition.y, 20)) {
-            moveRobotTo(socket, index, robotPosition.x - 50, robotPosition.y);
-            clearInterval(check);
+    // Go to the right
+    while (!isRobotNear(robotIp, startRobotPosition.x + 100, startRobotPosition.y, 10)) {
+        robot = getRobot(0);
+
+        if (robot !== undefined) {
+            moveRobotTo(socket, robotIp, startRobotPosition.x + 100, startRobotPosition.y);
         }
-    }, 100);
+        await sleep(MIN_ORDER_DURATION);
+    }
+
+    // Go down
+    while (!isRobotNear(robotIp, startRobotPosition.x + 100, startRobotPosition.y + 50, 10)) {
+        robot = getRobot(0);
+
+        if (robot !== undefined) {
+            moveRobotTo(socket, robotIp, startRobotPosition.x + 100, startRobotPosition.y + 50);
+        }
+        await sleep(MIN_ORDER_DURATION);
+    }
+
+    // Go left
+    while (!isRobotNear(robotIp, startRobotPosition.x, startRobotPosition.y + 50, 10)) {
+        robot = getRobot(0);
+
+        if (robot !== undefined) {
+            moveRobotTo(socket, robotIp, startRobotPosition.x, startRobotPosition.y + 50);
+        }
+        await sleep(MIN_ORDER_DURATION);
+    }
+
+    // Go up
+    while (!isRobotNear(robotIp, startRobotPosition.x, startRobotPosition.y, 10)) {
+        robot = getRobot(0);
+
+        if (robot !== undefined) {
+            moveRobotTo(socket, robotIp, startRobotPosition.x, startRobotPosition.y);
+        }
+        await sleep(MIN_ORDER_DURATION);
+    }
 }

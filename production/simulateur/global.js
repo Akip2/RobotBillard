@@ -11,8 +11,9 @@ const Engine = Matter.Engine,
 
 const COLLISION_FILTERS = Object.freeze({
     BALL: 0x0001,
-    HOLE: 0x0002,
-    ROBOT_BODY: 0x0003,
+    BALL_CENTER: 0x0002,
+    HOLE: 0x0004,
+    ROBOT_BODY: 0x0008,
 });
 
 export {

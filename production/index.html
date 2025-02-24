@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/index.css"/>
+    <link rel="stylesheet" href="./css/index.css"/>
     <link rel="icon" type="image/png" href="./img/favicon.png">
     <title>Robot Billard</title>
 </head>
@@ -11,7 +11,7 @@
 <div id="loader-container">
     <div class="loader">
         <div class="inner-circle">
-            <img src="img/ball8.png">
+            <img src="./img/ball8.png" alt="Ecran de chargement">
         </div>
     </div>
 </div>
@@ -32,6 +32,7 @@
             <button id="reload-btn" class="displayNone">Recharger</button>
             <select name="scenarios" id="select-configuration" class="select-top-table-container displayNone">
                 <option value="Random" class="option">Random</option>
+                <option value="Filled" class="option">Remplie</option>
                 <option value="Billard" class="option" selected>Billard</option>
                 <option value="Foot" class="option">Foot</option>
                 <option value="Facile" class="option">Facile</option>
@@ -39,28 +40,44 @@
             <div>
                 <select name="robots" id="select-robot" class="select-top-table-container displayFlex">
                     <!-- here some robots which are available to control (added with javascript) -->
-                    <option value="default" class="option">Aucun robot disponible</option>
+                    <option value="default" class="option" selected>Broadcast</option>
                 </select>
 
                 <select name="robots" id="select-robot-sim" class="select-top-table-container displayNone">
                     <option value="default" class="option">Aucun robot disponible</option>
                 </select>
             </div>
+
+            <div id="noise-container" class="param displayNone">
+                <label for="noise">Bruit</label>
+                <input type="range" id="noise" min="0" max="8" value="1" step="1" oninput="this.nextElementSibling.value = this.value">
+                <output>1</output>
+            </div>
+
+            <div class="param">
+                <label for="checkbox-affichage">Affichage</label>
+                <input type="checkbox" id="checkbox-affichage" class="input-checkbox" name="affichage" checked/>
+            </div>
+
+            <div id="speed-container" class="param displayNone">
+                <label for="sim-speed">Vitesse</label>
+                <input type="range" id="sim-speed" min="0" max="2.0" value="1" step="0.1"
+                       oninput="this.nextElementSibling.value = this.value">
+                <output>1</output>
+            </div>
         </div>
         <div id="canvas-container">
             <!--            <input type="number" id="tmp-1" min="10" max="300" step="10" value="100">-->
             <!--            <input type="number" id="tmp-2" min="100" max="10000" step="100" value="1000">-->
-            <!--            <video autoplay loop muted id="canvas-input-video" width="700" height="400" src="./video/aruco.mp4"></video>-->
-            <canvas class="displayFlex" id="canvas-output-video"></canvas>
+            <!--                        <video autoplay loop muted id="canvas-input-video" width="700" height="400" src="./video/aruco.mp4"></video>-->
+            <canvas class="canvas-video displayNone" id="canvas-output-video-brut"></canvas>
+            <canvas class="canvas-video displayFlex" id="canvas-output-video"></canvas>
         </div>
     </div>
 
-
     <!-- Right part which contains different views (one or more) -->
     <div class="part displayFlex" id="right-part">
-
         <div class="part displayNone" id="arrow-controls">
-
             <input type="range" class="cursor-motor" id="cursor-left-motor" min="0" max="255" list="steps">
 
             <div id="grid-btns">
@@ -102,8 +119,8 @@
                 <p class="text-up-to-select">Scénarios :</p>
                 <select name="scenarios" id="select-scenarios">
                     <option value="default" class="option">Test</option>
-                    <option value="Billard" class="option">Billard</option>
-                    <option value="Autre" class="option">Autre</option>
+                    <option value="SimpleBillard" class="option">Billard Simple</option>
+                    <option value="ComplexBillard" class="option">Billard Complexe</option>
                 </select>
             </div>
         </div>
@@ -119,9 +136,10 @@
 </footer>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="lib/matter_0.17.0.js"></script>
-<script async src="lib/openCV.js" type="text/javascript"></script>
-<script type="module" src="js/video.js"></script>
-<script type="module" src="js/index.js"></script>
+<script src="./lib/matter_0.17.0.js"></script>
+<script async src="./lib/openCV.js" type="text/javascript"></script>
+<script type="module" src="./js/video/video.js"></script>
+<script type="module" src="./js/index.js"></script>
 </body>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 </html>

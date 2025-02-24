@@ -1,15 +1,18 @@
-import {detectAndDrawArucos, detectCircles, drawDetectedCircles, HEIGHT, preProcess, WIDTH} from "./video-functions.js";
-import {calculateBallSize, distanceBetweenPoints} from "./brain.js";
+import {detectAndDrawArucos, detectCircles, drawDetectedCircles, preProcess} from "./video-functions.js";
+import {calculateBallSize, distanceBetweenPoints} from "../brain/brain.js";
+import {DEFAULT_BALL_RADIUS, FPS, HEIGHT, WIDTH} from "./video-parameters.js";
 
 let stillContinue = true;
 let robots = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("canvas-output-video");
+    const canvasBrut = document.getElementById("canvas-output-video-brut");
     const ctx = canvas.getContext("2d");
 
     // Access camera
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+
         // Use this code when you want to use an external camera, to change ratio of the empty one
         navigator.mediaDevices.getUserMedia({
             video: {
@@ -43,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // When video is ready, start processing
                 video.addEventListener("loadeddata", () => {
                     // Launch the loop of video processing
-                    processVideo(video, canvas, ctx);
+                    processVideo(video, canvas, canvasBrut, ctx);
                 });
             })
             .catch((error) => {
@@ -54,9 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-function processVideo(video, canvas, ctx) {
+function processVideo(video, canvas, canvasBrut, ctx) {
     let delay;
-    const FPS = 30;
     const frame = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
 
     function processFrame() {
@@ -64,9 +66,12 @@ function processVideo(video, canvas, ctx) {
             try {
                 let begin = Date.now();
 
+                // frame brut
+                cv.imshow(canvasBrut, frame);
+
                 // Capture the frame of the video in a temporary canvas
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
                 // Convert the frame in an OpenCV matrix
                 frame.data.set(imageData.data);
@@ -77,19 +82,20 @@ function processVideo(video, canvas, ctx) {
 
                 // AruCo detection
                 let arucos = detectAndDrawArucos(finalImage);
+                const tableCorners = arucos.slice(0, 4);
+                const [topLeft, topRight, bottomRight, bottomLeft] = tableCorners;
 
-                let corners = arucos.slice(0, 4);
-                let [topLeft, topRight, bottomRight, bottomLeft] = corners;
                 robots = arucos.slice(4, arucos.length);
 
-                const markersVector = new cv.MatVector();
-                const mv = new cv.Mat(corners.length, 1, cv.CV_32SC2);
+                const mv = new cv.Mat(tableCorners.length, 1, cv.CV_32SC2);
 
-                let ballRadius = 10;
+                let ballRadius = DEFAULT_BALL_RADIUS;
                 let isPerimeterFound = false;
 
                 // If the 4 table corners are detected, draw them and lines between them
                 if (topLeft && topRight && bottomLeft && bottomRight) {
+                    const markersVector = new cv.MatVector();
+
                     let points = [
                         {x: topLeft.x, y: topLeft.y},
                         {x: topRight.x, y: topRight.y},
@@ -112,23 +118,23 @@ function processVideo(video, canvas, ctx) {
 
                 // Detect and draw the circles
                 let circles = detectCircles(preProcessedFrame, ballRadius);
-                drawDetectedCircles(finalImage, circles, mv, isPerimeterFound);
+                drawDetectedCircles(finalImage, circles, mv, robots, tableCorners, isPerimeterFound);
 
                 // Draw the final result in the canvas
+                // preProcessedFrame
                 cv.imshow(canvas, finalImage);
 
                 // Clean memory
-                preProcessedFrame.delete();
-                circles.delete();
                 finalImage.delete();
+                preProcessedFrame.delete();
+                mv.delete();
+                circles.delete();
 
                 delay = 1000 / FPS - (Date.now() - begin);
-            } catch
-                (err) {
+            } catch (err) {
                 console.error(err);
             }
         }
-
         setTimeout(processFrame, delay);
     }
 
@@ -140,11 +146,6 @@ export function setStillContinue(boolean) {
     stillContinue = boolean;
 }
 
-export function getRealRobots() {
-    return robots;
-}
-
 export function getRealRobot(index) {
-    // console.log(robots)
     return robots[index];
 }

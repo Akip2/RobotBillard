@@ -28,10 +28,6 @@ main {
     justify-content: space-evenly;
 }
 
-.part {
-    /*border: 1px solid blue;*/
-}
-
 
 /* LOADER */
 
@@ -56,7 +52,7 @@ main {
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
@@ -119,10 +115,20 @@ header {
 /* LEFT PART */
 
 
+#canvas-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.canvas-video {
+    padding: 1rem;
+}
+
 .simulator-container {
-    position: relative;
+    align-self: center;
     height: 306px;
     width: 563px;
+    padding-top: 1rem;
 
     canvas {
         position: absolute;
@@ -134,7 +140,6 @@ header {
 }
 
 canvas {
-    background-image: url('../img/table.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -179,6 +184,20 @@ canvas {
     background-color: darkgray;
 }
 
+.param {
+    background-color: lightgray;
+    border: none;
+    padding: 0.5em;
+    margin: 0.8em;
+    justify-content: center;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    box-shadow: 3px 3px 5px 1px #a8a8a8;
+}
+
+.input-checkbox {
+    width: 2rem;
+}
 
 /* RIGHT PART */
 
@@ -417,4 +436,47 @@ footer {
 
 .displayFlex {
     display: flex;
+}
+
+
+@media (max-width: 600px) {
+    * {
+        background-color: white;
+    }
+
+    #titre {
+        display: none;
+    }
+
+    /*#grid-btns {*/
+    /*    display: block;*/
+    /*}*/
+    main {
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    #camera {
+        display: none;
+    }
+
+    #simulator {
+        display: none;
+    }
+
+    #robots-go-scenarios {
+        display: none;
+    }
+
+    #canvas-container {
+        display: none;
+    }
+
+    #input-duration {
+        background-color: white;
+    }
+
+    footer {
+        display: none;
+    }
 }
