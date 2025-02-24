@@ -85,6 +85,11 @@ export function moveRobotTo(socket, robotIp, x, y) {
     }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1));
 }
 
+export function stopRobots(socket) {
+    clearInterval(currentInterval);
+    socket.emit('motor', createOrder(0, 0, 100, "Broadcast"));
+}
+
 export function isRobotNear(robotIp, x, y, deltaMax) {
     let robot = getRobot(0);
 

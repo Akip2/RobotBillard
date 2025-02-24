@@ -2,6 +2,7 @@ import {isRobotNear, moveRobotTo} from "../brain/brain.js";
 import {getRobot} from "../elements-manager.js";
 import {sleep} from "./scenario-functions.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
+import {isActive} from "../index.js";
 
 export async function startTestScenario(socket, robotIp) {
     let startRobotPosition = getRobot(0).position;
@@ -9,7 +10,7 @@ export async function startTestScenario(socket, robotIp) {
 
 
     // Go to the right
-    while (!isRobotNear(robotIp, startRobotPosition.x + 100, startRobotPosition.y, 10)) {
+    while (isActive && !isRobotNear(robotIp, startRobotPosition.x + 100, startRobotPosition.y, 10)) {
         robot = getRobot(0);
 
         if (robot !== undefined) {
@@ -19,7 +20,7 @@ export async function startTestScenario(socket, robotIp) {
     }
 
     // Go down
-    while (!isRobotNear(robotIp, startRobotPosition.x + 100, startRobotPosition.y + 50, 10)) {
+    while (isActive && !isRobotNear(robotIp, startRobotPosition.x + 100, startRobotPosition.y + 50, 10)) {
         robot = getRobot(0);
 
         if (robot !== undefined) {
@@ -29,7 +30,7 @@ export async function startTestScenario(socket, robotIp) {
     }
 
     // Go left
-    while (!isRobotNear(robotIp, startRobotPosition.x, startRobotPosition.y + 50, 10)) {
+    while (isActive && !isRobotNear(robotIp, startRobotPosition.x, startRobotPosition.y + 50, 10)) {
         robot = getRobot(0);
 
         if (robot !== undefined) {
@@ -39,7 +40,7 @@ export async function startTestScenario(socket, robotIp) {
     }
 
     // Go up
-    while (!isRobotNear(robotIp, startRobotPosition.x, startRobotPosition.y, 10)) {
+    while (isActive && !isRobotNear(robotIp, startRobotPosition.x, startRobotPosition.y, 10)) {
         robot = getRobot(0);
 
         if (robot !== undefined) {

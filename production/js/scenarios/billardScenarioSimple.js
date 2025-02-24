@@ -2,7 +2,7 @@ import {getBalls, getRobot} from "../elements-manager.js";
 import {moveRobotTo} from "../brain/brain.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 import {getNearestBall, sleep} from "./scenario-functions.js";
-
+import {isActive} from "../index.js";
 
 /**
  * méthode qui permet de lancer une simulation de partie de billard
@@ -17,8 +17,7 @@ export async function startBillardScenarioSimple(socket, robotIp) {
     let robot = getRobot(0);
     let ballToPush;
 
-    // TODO btn stop
-    while (true/*!isEmpty(balls)*/) {
+    while (isActive/*!isEmpty(balls)*/) {
         balls = getBalls();
         robot = getRobot(0);
 
