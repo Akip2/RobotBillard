@@ -86,6 +86,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
 }
 
 export function stopRobots(socket) {
+    clearInterval(currentInterval);
     socket.emit('motor', createOrder(0, 0, 100, "Broadcast"));
 }
 
