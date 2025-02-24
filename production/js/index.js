@@ -5,7 +5,7 @@ import {addRobot} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
-import {moveRobotTo} from "./brain/brain.js";
+import {moveRobotTo, stopRobots} from "./brain/brain.js";
 import {startBillardScenarioComplex} from "./scenarios/billardScenarioComplex.js";
 
 export const socket = io(); // Connection to server
@@ -21,22 +21,34 @@ export const selectRobots = document.querySelector("#select-robot");
 export const selectRobotsSim = document.querySelector("#select-robot-sim");
 const goBtn = document.querySelector("#go-btn");
 
+export let isActive = false;
+
 document.addEventListener("DOMContentLoaded", () => {
     initView();
     initControls();
     initParams();
 
-    goBtn.addEventListener("click", () => {
-        switch (currentScenario) {
-            case "SimpleBillard":
-                startBillardScenarioSimple(socket, currentRobotId);
-                break;
-            case "ComplexBillard":
-                startBillardScenarioComplex(socket, currentRobotId);
-                break;
-            case "default":
-                startTestScenario(socket, currentRobotId);
-                break;
+    goBtn.addEventListener("click", (event) => {
+        isActive = !isActive;
+
+        if(isActive) {
+            goBtn.textContent = "STOP";
+
+            //Starting scenario
+            switch (currentScenario) {
+                case "SimpleBillard":
+                    startBillardScenarioSimple(socket, currentRobotId);
+                    break;
+                case "ComplexBillard":
+                    startBillardScenarioComplex(socket, currentRobotId);
+                    break;
+                case "default":
+                    startTestScenario(socket, currentRobotId);
+                    break;
+            }
+        } else {
+            goBtn.textContent = "GO";
+            stopRobots(socket);
         }
     });
 

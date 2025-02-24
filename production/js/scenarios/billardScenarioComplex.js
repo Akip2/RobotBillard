@@ -2,6 +2,7 @@ import {getBalls, getHoles, getRobot} from "../elements-manager.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 import {getNearestBall, sleep} from "./scenario-functions.js";
 import {moveRobotTo} from "../brain/brain.js";
+import {isActive} from "../index.js";
 
 
 /**
@@ -19,7 +20,7 @@ export async function startBillardScenarioComplex(socket, robotIp) {
     let ballToPush;
 
     // TODO btn stop
-    while (true/*!isEmpty(balls)*/) {
+    while (isActive/*!isEmpty(balls)*/) {
         balls = getBalls();
         holes = getHoles();
         robot = getRobot(0);
