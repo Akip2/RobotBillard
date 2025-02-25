@@ -5,7 +5,7 @@ import {
     BALL_REAL_SIZE,
     DISTANCE_THRESHOLD,
     MIN_ORDER_DURATION,
-    ROBOT_MAX_SPEED,
+    ROBOT_MAX_SPEED, ROBOT_MIN_SPEED,
     TABLE_REAL_SIZE
 } from "./brain-parameters.js";
 import {isSimulator} from "../events/view-manager.js";
@@ -29,12 +29,21 @@ export function turnRobot(socket, robotIp, x, y) {
             clearInterval(currentInterval);
         }
 
-        if (direction === "Left") {
-            socket.emit('motor', createOrder(-60, 60, MIN_ORDER_DURATION, robotIp));
-        } else {
-            socket.emit('motor', createOrder(60, -60, MIN_ORDER_DURATION, robotIp));
+        let rotationSpeed = Math.abs(angleDifference) * 2;
+        if(rotationSpeed > ROBOT_MAX_SPEED) {
+            rotationSpeed = ROBOT_MAX_SPEED;
+        } else if(rotationSpeed < ROBOT_MIN_SPEED) {
+            rotationSpeed = ROBOT_MIN_SPEED;
         }
-    }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1))
+
+        console.log(rotationSpeed);
+
+        if (direction === "Left") {
+            socket.emit('motor', createOrder(-rotationSpeed, rotationSpeed, MIN_ORDER_DURATION, robotIp));
+        } else {
+            socket.emit('motor', createOrder(rotationSpeed, -rotationSpeed, MIN_ORDER_DURATION, robotIp));
+        }
+    }, (MIN_ORDER_DURATION) / (isSimulator ? simulatorSpeed : 1))
 }
 
 export function moveRobotTo(socket, robotIp, x, y) {

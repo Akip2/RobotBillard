@@ -65,7 +65,7 @@ export async function startBillardScenarioComplex(socket, robotIp) {
 
                 robotX = ballToPush.x;
                 robotY = ballToPush.y;
-                while(isActive && !isRobotNear(robotIp, robotX, robotY, 10)) {
+                while(isActive && !isRobotNear(robotIp, robotX, robotY, 40)) {
                     robot = getRobot(0);
 
                     if (robot !== undefined) {
