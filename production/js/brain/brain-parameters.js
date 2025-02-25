@@ -12,6 +12,6 @@ export const ROBOT_MAX_SPEED = 255;
 
 // Used in moveRobotTo
 export const ANGLE_THRESHOLD = 15;
-export const DISTANCE_THRESHOLD = 20;
+export const DISTANCE_THRESHOLD = 30;
 
 export const BROADCAST = "Broadcast";

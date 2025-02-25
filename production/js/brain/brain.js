@@ -5,7 +5,8 @@ import {
     BALL_REAL_SIZE,
     DISTANCE_THRESHOLD,
     MIN_ORDER_DURATION,
-    ROBOT_MAX_SPEED, ROBOT_MIN_SPEED,
+    ROBOT_MAX_SPEED,
+    ROBOT_MIN_SPEED,
     TABLE_REAL_SIZE
 } from "./brain-parameters.js";
 import {isSimulator} from "../events/view-manager.js";
@@ -13,7 +14,7 @@ import {isSimulator} from "../events/view-manager.js";
 let currentInterval = null;
 
 export function turnRobot(socket, robotIp, x, y) {
-    if(currentInterval !== null) {
+    if (currentInterval !== null) {
         clearInterval(currentInterval);
     }
 
@@ -25,14 +26,14 @@ export function turnRobot(socket, robotIp, x, y) {
 
         angleDifference > 0 ? direction = "Left" : direction = "Right";
 
-        if(Math.abs(angleDifference) <= ANGLE_THRESHOLD) {
+        if (Math.abs(angleDifference) <= ANGLE_THRESHOLD) {
             clearInterval(currentInterval);
         }
 
         let rotationSpeed = Math.abs(angleDifference) * 2;
-        if(rotationSpeed > ROBOT_MAX_SPEED) {
+        if (rotationSpeed > ROBOT_MAX_SPEED) {
             rotationSpeed = ROBOT_MAX_SPEED;
-        } else if(rotationSpeed < ROBOT_MIN_SPEED) {
+        } else if (rotationSpeed < ROBOT_MIN_SPEED) {
             rotationSpeed = ROBOT_MIN_SPEED;
         }
 
@@ -64,10 +65,6 @@ export function moveRobotTo(socket, robotIp, x, y) {
                 x: x,
                 y: y
             });
-
-            if (distanceDifference < DISTANCE_THRESHOLD) {
-                clearInterval(currentInterval);
-            }
 
             let baseAngle = Math.atan2(robotPosition.y - y, x - robotPosition.x) * (180 / Math.PI);
             let targetAngle = baseAngle < 0 ? baseAngle + 360 : baseAngle;
@@ -115,6 +112,10 @@ export function moveRobotTo(socket, robotIp, x, y) {
                     }
                 }
             }
+
+            if (distanceDifference < DISTANCE_THRESHOLD) {
+                clearInterval(currentInterval);
+            }
         }
     }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1));
 }
@@ -125,20 +126,21 @@ export function stopRobots(socket) {
 }
 
 export function getAngleDifference(robot, x, y) {
-    const robotPosition = robot.position;
+    if (robot !== undefined) {
+        const robotPosition = robot.position;
+        const robotAngle = robot.orientation;
+        const baseAngle = Math.atan2(robotPosition.y - y, x - robotPosition.x) * (180 / Math.PI);
+        const targetAngle = baseAngle < 0 ? baseAngle + 360 : baseAngle;
+        let angleDifference = (targetAngle - robotAngle) + 360 % 360;
 
-    const robotAngle = robot.orientation;
-    const baseAngle = Math.atan2(robotPosition.y - y, x - robotPosition.x) * (180 / Math.PI);
-    const targetAngle = baseAngle < 0 ? baseAngle + 360 : baseAngle;
-    let angleDifference = (targetAngle - robotAngle) + 360 % 360;
+        if (angleDifference < -180) {
+            angleDifference += 360;
+        } else if (angleDifference > 180) {
+            angleDifference -= 360;
+        }
 
-    if (angleDifference < -180) {
-        angleDifference += 360;
-    } else if (angleDifference > 180) {
-        angleDifference -= 360;
+        return angleDifference;
     }
-
-    return angleDifference;
 }
 
 export function isRobotNear(robotIp, x, y, deltaMax) {

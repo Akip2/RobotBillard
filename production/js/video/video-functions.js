@@ -211,6 +211,38 @@ export function drawDetectedCircles(frame, circles, mv, robots, tableCorners, is
     ballsPositions = [];
     holesPositions = [];
 
+    // Defines the holes
+    if (isPerimeterFound) {
+        const [topLeft, topRight, bottomRight, bottomLeft] = tableCorners;
+        const topMiddleHole = middleOfPoints(topLeft, topRight);
+        const bottomMiddleHole = middleOfPoints(bottomLeft, bottomRight);
+
+        holesPositions = tableCorners.slice();
+        holesPositions.push(topMiddleHole, bottomMiddleHole);
+
+        // Offsets for each hole
+        let ballRadius = circles.data32F.slice(0, 3)[2]; // First ball radius
+
+        topLeft.x += ballRadius * 2;
+        topLeft.y += ballRadius * 2;
+        topRight.x -= ballRadius * 2;
+        topRight.y += ballRadius * 2;
+        bottomLeft.x += ballRadius * 2;
+        bottomLeft.y -= ballRadius * 2;
+        bottomRight.x -= ballRadius * 2;
+        bottomRight.y -= ballRadius * 2;
+        topMiddleHole.y += ballRadius * 2;
+        bottomMiddleHole.y -= ballRadius * 2;
+
+        // Draw the holes
+        for (const hole of holesPositions) {
+            cv.circle(frame, hole, ballRadius, [0, 0, 255, 255], 3);
+            cv.circle(frame, hole, 3, [255, 255, 0, 255], -1);
+        }
+    }
+
+    let holesNb = 0;
+
     for (let i = 0; i < circles.cols; ++i) {
         let circle = circles.data32F.slice(i * 3, (i + 1) * 3);
         let circleCenter = new cv.Point(circle[0], circle[1]);
@@ -218,55 +250,57 @@ export function drawDetectedCircles(frame, circles, mv, robots, tableCorners, is
 
         // Detect which ones are inside the table or not and add the inside one in the attribute
         if (isPerimeterFound) {
-            let result = cv.pointPolygonTest(mv, circleCenter, true);
+            let distanceFromBorder = cv.pointPolygonTest(mv, circleCenter, true);
 
-            // Change the color if inside or outside circle and differentiate balls from holes
-            if (result >= 0) {
-                // if the center of the detected circle is too close from the site of the table it may be a hole
+            // Check if it's outside the table or not
+            if (distanceFromBorder >= 0) {
+                // Check if it's actually a hole
                 let ballRadius = circle[2];
                 let isHole = false;
 
-                const [topLeft, topRight, bottomRight, bottomLeft] = tableCorners;
-                const topMiddleHole = middleOfPoints(topLeft, topRight);
-                const bottomMiddleHole = middleOfPoints(bottomLeft, bottomRight);
-
-                const tableHoles = tableCorners.slice();
-                tableHoles.push(topMiddleHole, bottomMiddleHole);
-
-                for (const corner of tableHoles) {
-                    // If the circle is too close to a hole, it must be considered a hole too
+                for (const corner of holesPositions) {
                     if (distanceBetweenPoints(circleCenter, corner) < ballRadius * HOLE_DISTANCE_FACTOR) {
                         isHole = true;
                     }
                 }
 
-                if (isHole && (holesPositions.length < MAXIMUM_HOLES)) {
-                    perimeterColor = [128, 128, 128, 255] // color of holes
-                    holesPositions.push(circleCenter);
+                // Is considered a hole
+                if (isHole && (holesNb < MAXIMUM_HOLES)) {
+                    perimeterColor = [128, 128, 128, 255];
+                    holesNb++;
                 } else {
                     let i = 0;
                     let isCircleOnAruco = false;
 
+                    // Check if it's on an ArUco
                     while (i < robots.length && !isCircleOnAruco) {
                         let robotPosition = robots[i].position;
                         let dist = distanceBetweenPoints(robotPosition, circleCenter);
 
-                        // If the circle is too close to aruco
                         if (dist <= ballRadius * 3) {
                             isCircleOnAruco = true;
                         }
                         i++;
                     }
-                    perimeterColor = isCircleOnAruco ? [255, 0, 0, 255] : [0, 255, 0, 255];
-                    ballsPositions.push(circleCenter);
+
+                    if (isCircleOnAruco) {
+                        perimeterColor = [255, 0, 0, 255];
+                    } else {
+                        perimeterColor = [0, 255, 0, 255];
+                        ballsPositions.push(circleCenter);
+                    }
                 }
             } else {
-                perimeterColor = [255, 0, 0, 255] // color of balls outside the table (red)
+                perimeterColor = [255, 0, 0, 255]; // color of balls outside the table (red)
             }
         }
         cv.circle(frame, circleCenter, circle[2], perimeterColor, 3);
         cv.circle(frame, circleCenter, 3, [255, 255, 0, 255], -1);
     }
+}
+
+export function drawCircle(frame, center, color) {
+    cv.circle(frame, center, 15, color, -1);
 }
 
 export function getRealBalls() {
