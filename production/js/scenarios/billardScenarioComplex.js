@@ -1,7 +1,7 @@
 import {getBalls, getHoles, getRobot} from "../elements-manager.js";
-import {MIN_ORDER_DURATION, ROBOT_MAX_SPEED} from "../brain/brain-parameters.js";
+import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 import {getNearestBallToHoles, normalize, sleep} from "./scenario-functions.js";
-import {createOrder, isRobotFacing, isRobotNear, moveRobotTo, turnRobot} from "../brain/brain.js";
+import {isRobotFacing, isRobotNear, moveRobotTo, turnRobot} from "../brain/brain.js";
 import {isActive} from "../index.js";
 
 export let robotDestX;
@@ -82,8 +82,8 @@ export async function startBillardScenarioComplex(socket, robotIp) {
                     robot = getRobot(0);
 
                     if (robot !== undefined) {
-                        //moveRobotTo(socket, robotIp, robotX, robotY);
-                        socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, 500, robotIp));
+                        moveRobotTo(socket, robotIp, robotDestX, robotDestY);
+                        //socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, 500, robotIp));
                     }
                     await sleep(MIN_ORDER_DURATION);
                 }

@@ -1,4 +1,4 @@
-import {currentRobotId, simulatorSpeed} from "../events/parameters.js";
+import {simulatorSpeed} from "../events/parameters.js";
 import {getRobot} from "../elements-manager.js";
 import {
     ANGLE_THRESHOLD,
@@ -55,7 +55,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
     let direction = "Left";
 
     currentInterval = setInterval(() => {
-        let robot = getRobot(currentRobotId - 1);
+        let robot = getRobot(0);
 
         if (robot !== undefined) {
             let robotPosition = robot.position;
