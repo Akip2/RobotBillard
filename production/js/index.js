@@ -94,20 +94,23 @@ socket.on('connect', function () {
     });
 
     socket.on("robots-list", function (robots) {
-        console.log("navigateur : socket on robot-list");
-        selectRobots.innerHTML = "";
+        if (currentView !== "simulator") {
+            console.log("navigateur : socket on robot-list");
 
-        if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
-            robots.forEach(function (robot) {
-                addRobot(robot);
-            });
+            selectRobots.innerHTML = "";
 
-            if (currentRobotId === null) {
-                setCurrentRobotId(robots[0])
+            if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
+                robots.forEach(function (robot) {
+                    addRobot(robot);
+                });
+
+                if (currentRobotId === null) {
+                    setCurrentRobotId(robots[0])
+                }
+                addRobot("Broadcast");
+            } else {
+                addRobot("Aucun robot disponible");
             }
-            addRobot("Broadcast");
-        } else {
-            addRobot("Aucun robot disponible");
         }
     });
 });

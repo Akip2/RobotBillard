@@ -1,11 +1,12 @@
-import {simulatorSpeed} from "../events/parameters.js";
+import {currentRobotId, simulatorSpeed} from "../events/parameters.js";
 import {getRobot} from "../elements-manager.js";
 import {
     ANGLE_THRESHOLD,
     BALL_REAL_SIZE,
     DISTANCE_THRESHOLD,
     MIN_ORDER_DURATION,
-    ROBOT_MAX_SPEED, ROBOT_MIN_SPEED,
+    ROBOT_MAX_SPEED,
+    ROBOT_MIN_SPEED,
     TABLE_REAL_SIZE
 } from "./brain-parameters.js";
 import {isSimulator} from "../events/view-manager.js";
@@ -13,7 +14,7 @@ import {isSimulator} from "../events/view-manager.js";
 let currentInterval = null;
 
 export function turnRobot(socket, robotIp, x, y) {
-    if(currentInterval !== null) {
+    if (currentInterval !== null) {
         clearInterval(currentInterval);
     }
 
@@ -25,14 +26,14 @@ export function turnRobot(socket, robotIp, x, y) {
 
         angleDifference > 0 ? direction = "Left" : direction = "Right";
 
-        if(Math.abs(angleDifference) <= ANGLE_THRESHOLD) {
+        if (Math.abs(angleDifference) <= ANGLE_THRESHOLD) {
             clearInterval(currentInterval);
         }
 
         let rotationSpeed = Math.abs(angleDifference) * 2;
-        if(rotationSpeed > ROBOT_MAX_SPEED) {
+        if (rotationSpeed > ROBOT_MAX_SPEED) {
             rotationSpeed = ROBOT_MAX_SPEED;
-        } else if(rotationSpeed < ROBOT_MIN_SPEED) {
+        } else if (rotationSpeed < ROBOT_MIN_SPEED) {
             rotationSpeed = ROBOT_MIN_SPEED;
         }
 
@@ -54,7 +55,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
     let direction = "Left";
 
     currentInterval = setInterval(() => {
-        let robot = getRobot(0);
+        let robot = getRobot(currentRobotId - 1);
 
         if (robot !== undefined) {
             let robotPosition = robot.position;
