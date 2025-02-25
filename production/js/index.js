@@ -31,8 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
     goBtn.addEventListener("click", (event) => {
         isActive = !isActive;
 
-        if(isActive) {
+        if (isActive) {
             goBtn.textContent = "STOP";
+            goBtn.style.backgroundColor = "#FF99CC";
 
             //Starting scenario
             switch (currentScenario) {
@@ -48,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } else {
             goBtn.textContent = "GO";
+            goBtn.style.backgroundColor = "#99FFCC";
             stopRobots(socket);
         }
     });

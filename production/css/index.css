@@ -8,7 +8,7 @@
 
 html {
     height: 100%;
-
+    background-color: #FAF8F6;
 }
 
 body {
@@ -128,7 +128,7 @@ header {
     left: 0;
     height: 100%;
     width: 25%;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 30px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0 10px 30px;
 }
 
 #header-menu-options {
@@ -221,7 +221,7 @@ select {
 }
 
 .param > label, output {
-    padding: 0rem 0.5rem 0rem 0.5rem;
+    padding: 0 0.5rem 0 0.5rem;
 }
 
 #reload-btn:hover, #btn-options:hover {
@@ -242,7 +242,6 @@ select {
 
 #robots-go-scenarios {
     flex-direction: column;
-    /*align-items: center;*/
     justify-content: space-evenly;
 }
 
@@ -265,6 +264,7 @@ select {
     /* style */
     border: none;
     box-shadow: 10px 10px 10px 1px grey;
+    background-color: #99FFCC;
 
     transition: all ease 0.2s;
 }
@@ -283,20 +283,6 @@ select {
     font-size: 1.5rem;
     padding: 1rem;
 }
-
-/*select {*/
-
-/*    padding: 0.5rem;*/
-
-/*    !* style *!*/
-/*    border: none;*/
-/*    border-radius: 5px;*/
-/*    background-color: #F0F0F0;*/
-/*    box-shadow: 3px 3px 5px 1px #a8a8a8;*/
-/*    font-size: 1rem;*/
-
-/*    transition: all ease 0.2s;*/
-/*}*/
 
 #select-scenarios:hover {
     background: lightgrey;
@@ -359,8 +345,7 @@ select {
     width: 66%;
     border: 2px solid grey;
     border-radius: 0.5rem;
-    padding: 0.5rem;
-    padding-right: 0;
+    padding: 0.5rem 0 0.5rem 0.5rem;
 }
 
 .arrow {
@@ -455,7 +440,7 @@ footer {
     height: 3rem;
 
     /* style */
-    background: #F0F0F0;
+    background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
