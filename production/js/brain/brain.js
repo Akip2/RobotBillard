@@ -12,6 +12,31 @@ import {isSimulator} from "../events/view-manager.js";
 
 let currentInterval = null;
 
+export function turnRobot(socket, robotIp, x, y) {
+    if(currentInterval !== null) {
+        clearInterval(currentInterval);
+    }
+
+    let direction = "Left";
+
+    currentInterval = setInterval(() => {
+        const robot = getRobot(0);
+        const angleDifference = getAngleDifference(robot, x, y);
+
+        angleDifference > 0 ? direction = "Left" : direction = "Right";
+
+        if(Math.abs(angleDifference) <= ANGLE_THRESHOLD) {
+            clearInterval(currentInterval);
+        }
+
+        if (direction === "Left") {
+            socket.emit('motor', createOrder(-60, 60, MIN_ORDER_DURATION, robotIp));
+        } else {
+            socket.emit('motor', createOrder(60, -60, MIN_ORDER_DURATION, robotIp));
+        }
+    }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1))
+}
+
 export function moveRobotTo(socket, robotIp, x, y) {
     if (currentInterval !== null) {
         clearInterval(currentInterval);
@@ -90,6 +115,23 @@ export function stopRobots(socket) {
     socket.emit('motor', createOrder(0, 0, 100, "Broadcast"));
 }
 
+export function getAngleDifference(robot, x, y) {
+    const robotPosition = robot.position;
+
+    const robotAngle = robot.orientation;
+    const baseAngle = Math.atan2(robotPosition.y - y, x - robotPosition.x) * (180 / Math.PI);
+    const targetAngle = baseAngle < 0 ? baseAngle + 360 : baseAngle;
+    let angleDifference = (targetAngle - robotAngle) + 360 % 360;
+
+    if (angleDifference < -180) {
+        angleDifference += 360;
+    } else if (angleDifference > 180) {
+        angleDifference -= 360;
+    }
+
+    return angleDifference;
+}
+
 export function isRobotNear(robotIp, x, y, deltaMax) {
     let robot = getRobot(0);
 
@@ -98,6 +140,20 @@ export function isRobotNear(robotIp, x, y, deltaMax) {
         let delta = distanceBetweenPoints(robotPosition, {x: x, y: y});
 
         return delta < deltaMax;
+    }
+    return false;
+}
+
+export function isRobotFacing(robotIp, x, y) {
+    const robot = getRobot(0);
+    if (robot !== undefined) {
+        let robotPosition = robot.position;
+        let robotAngle = robot.orientation;
+        let baseAngle = Math.atan2(robotPosition.y - y, x - robotPosition.x) * (180 / Math.PI);
+        let targetAngle = baseAngle < 0 ? baseAngle + 360 : baseAngle;
+        let angleDifference = (targetAngle - robotAngle) + 360 % 360;
+
+        return Math.abs(angleDifference) <= ANGLE_THRESHOLD;
     }
     return false;
 }

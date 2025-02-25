@@ -1,7 +1,7 @@
 import {getBalls, getHoles, getRobot} from "../elements-manager.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
-import {getNearestBall, getNearestBallToHoles, normalize, sleep} from "./scenario-functions.js";
-import {moveRobotTo} from "../brain/brain.js";
+import {getNearestBall, getNearestHole, normalize, sleep} from "./scenario-functions.js";
+import {isRobotFacing, isRobotNear, moveRobotTo, turnRobot} from "../brain/brain.js";
 import {isActive} from "../index.js";
 
 
@@ -23,10 +23,11 @@ export async function startBillardScenarioComplex(socket, robotIp) {
         holes = getHoles();
         robot = getRobot(0);
 
-        const alpha = 2;
+        const alpha = 60;
         
         if (robot !== undefined) {
-            const [ballToPush, hole] = getNearestBallToHoles(holes, balls);
+            const ballToPush = getNearestBall(balls, robot.position);
+            const hole = getNearestHole(holes, ballToPush)
 
             if (ballToPush !== undefined) {
                 const pushVector = {
@@ -36,15 +37,42 @@ export async function startBillardScenarioComplex(socket, robotIp) {
 
                 const normalizedPushVector = normalize(pushVector);
 
-                const robotX = ballToPush.x - alpha*normalizedPushVector.x;
-                const robotY = ballToPush.y - alpha*normalizedPushVector.y;
+                // Calculate position behind the ball
+                let robotX = ballToPush.x - alpha * normalizedPushVector.x;
+                let robotY = ballToPush.y - alpha * normalizedPushVector.y;
 
-                console.log(normalizedPushVector);
+                while(isActive && !isRobotNear(robotIp, robotX, robotY, 10)) {
+                    robot = getRobot(0);
 
-                moveRobotTo(socket, robotIp, robotX, robotY);
-                //await sleep(1000);
-                //await sleep(1000);
-                //moveRobotTo(socket, robotIp, hole.x, hole.y);
+                    if (robot !== undefined) {
+                        moveRobotTo(socket, robotIp, robotX, robotY);
+                    }
+                    await sleep(MIN_ORDER_DURATION);
+                }
+                if(!isActive) {
+                    break;
+                }
+
+                turnRobot(socket, robotIp, ballToPush.x, ballToPush.y);
+                while(isActive && !isRobotFacing(robotIp, ballToPush.x, ballToPush.y)){
+                    await sleep(MIN_ORDER_DURATION);
+                }
+
+                await sleep(750);
+                if(!isActive) {
+                    break;
+                }
+
+                robotX = ballToPush.x;
+                robotY = ballToPush.y;
+                while(isActive && !isRobotNear(robotIp, robotX, robotY, 10)) {
+                    robot = getRobot(0);
+
+                    if (robot !== undefined) {
+                        moveRobotTo(socket, robotIp, robotX, robotY);
+                    }
+                    await sleep(MIN_ORDER_DURATION);
+                }
             }
         }
         await sleep(MIN_ORDER_DURATION);
