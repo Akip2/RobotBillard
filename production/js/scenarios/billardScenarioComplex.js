@@ -26,7 +26,7 @@ export async function startBillardScenarioComplex(socket, robotIp) {
         const alpha = 60;
         
         if (robot !== undefined) {
-            const [ballToPush, hole] = getNearestBallToHoles(holes, balls);
+            let [ballToPush, hole] = getNearestBallToHoles(holes, balls);
             //const hole = getNearestHole(holes, ballToPush)
 
             if (ballToPush !== undefined) {
@@ -41,7 +41,7 @@ export async function startBillardScenarioComplex(socket, robotIp) {
                 let robotX = ballToPush.x - alpha * normalizedPushVector.x;
                 let robotY = ballToPush.y - alpha * normalizedPushVector.y;
 
-                while(isActive && !isRobotNear(robotIp, robotX, robotY, 10)) {
+                while(isActive && !isRobotNear(robotIp, robotX, robotY, 30)) {
                     robot = getRobot(0);
 
                     if (robot !== undefined) {
