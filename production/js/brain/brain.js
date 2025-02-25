@@ -66,10 +66,6 @@ export function moveRobotTo(socket, robotIp, x, y) {
                 y: y
             });
 
-            if (distanceDifference < DISTANCE_THRESHOLD) {
-                clearInterval(currentInterval);
-            }
-
             let baseAngle = Math.atan2(robotPosition.y - y, x - robotPosition.x) * (180 / Math.PI);
             let targetAngle = baseAngle < 0 ? baseAngle + 360 : baseAngle;
             let angleDifference = (targetAngle - robotAngle) + 360 % 360;
@@ -116,6 +112,10 @@ export function moveRobotTo(socket, robotIp, x, y) {
                     }
                 }
             }
+
+            if (distanceDifference < DISTANCE_THRESHOLD) {
+                clearInterval(currentInterval);
+            }
         }
     }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1));
 }
@@ -126,20 +126,21 @@ export function stopRobots(socket) {
 }
 
 export function getAngleDifference(robot, x, y) {
-    const robotPosition = robot.position;
+    if (robot !== undefined) {
+        const robotPosition = robot.position;
+        const robotAngle = robot.orientation;
+        const baseAngle = Math.atan2(robotPosition.y - y, x - robotPosition.x) * (180 / Math.PI);
+        const targetAngle = baseAngle < 0 ? baseAngle + 360 : baseAngle;
+        let angleDifference = (targetAngle - robotAngle) + 360 % 360;
 
-    const robotAngle = robot.orientation;
-    const baseAngle = Math.atan2(robotPosition.y - y, x - robotPosition.x) * (180 / Math.PI);
-    const targetAngle = baseAngle < 0 ? baseAngle + 360 : baseAngle;
-    let angleDifference = (targetAngle - robotAngle) + 360 % 360;
+        if (angleDifference < -180) {
+            angleDifference += 360;
+        } else if (angleDifference > 180) {
+            angleDifference -= 360;
+        }
 
-    if (angleDifference < -180) {
-        angleDifference += 360;
-    } else if (angleDifference > 180) {
-        angleDifference -= 360;
+        return angleDifference;
     }
-
-    return angleDifference;
 }
 
 export function isRobotNear(robotIp, x, y, deltaMax) {

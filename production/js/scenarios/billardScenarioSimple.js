@@ -18,7 +18,7 @@ export async function startBillardScenarioSimple(socket, robotIp) {
     let robot = getRobot(currentRobotId - 1);
     let ballToPush;
 
-    while (isActive/*!isEmpty(balls)*/) {
+    while (isActive) {
         balls = getBalls();
         robot = getRobot(currentRobotId - 1);
 
