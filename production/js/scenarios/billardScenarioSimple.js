@@ -28,8 +28,6 @@ export async function startBillardScenarioSimple(socket, robotIp) {
             if (ballToPush !== undefined) {
                 moveRobotTo(socket, robotIp, ballToPush.x, ballToPush.y);
             }
-        } else {
-            alert("Impossible de lancer le scénario avec Broadcast");
         }
         await sleep(MIN_ORDER_DURATION);
     }

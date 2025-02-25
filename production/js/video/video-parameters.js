@@ -23,4 +23,4 @@ export const DEFAULT_BALL_RADIUS = 10;
 export const MAXIMUM_HOLES = 12;
 
 // The factor (multiplied by the radius of a ball) for a detected circle to be considered a hole
-export const HOLE_DISTANCE_FACTOR = 3;
+export const HOLE_DISTANCE_FACTOR = 2.5;
