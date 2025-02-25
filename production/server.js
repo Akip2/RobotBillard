@@ -3,9 +3,10 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 
-const robotSockets = [];
-const socketIps = [];
+let robotSockets = []; // use to stock robots sockets (all data about a robot)
+let socketIps = []; // use to stock robots ip (example : ::ffff:192.168.137.100)
 let isSimulator = false;
+let socketInterface = null; // socket to communicate with the navigator
 
 const io = require('socket.io').listen(server, {
     pingInterval: 30000,
@@ -29,15 +30,10 @@ io.sockets.on("connection", function (socket) {
     console.log("Socket connected: " + socket.conn.remoteAddress);
     socket.emit("ask-identity");
 
-    console.log(socket.handshake.address);
-
     if (!socketIps.includes(socket.handshake.address)) {
-        robotSockets.push(socket); // We assume the connecting socket is a robot
-        socketIps.push(socket.handshake.address);
+        addNewSocket(socket);
     } else { // Socket with this ip already exists, we replace it with the new one
-        let index = socketIps.indexOf(socket.handshake.address);
-        robotSockets[index] = socket
-        console.log("Socket replaced: " + socket.handshake.address);
+        updateSocket(socket);
     }
 
     socket.on("motor", function (val) {
@@ -75,49 +71,51 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on("is-interface", function (mode) { // We learn that the socket is the interface
-        robotSockets.splice(robotSockets.indexOf(socket), 1);
         isSimulator = (mode === "simulator");
-        updateRobotsList(socket);
+        socketInterface = socket;
+        removeSocket(socket);
         console.log("remove interface");
     });
 
     socket.on("change-mode", function (val) { // User is changing the mode of the interface (simulator, manual, camera...)
         isSimulator = (val === "simulator");
-        // updateRobotsList(socket);
     });
 
     socket.on("disconnect", function () {
         console.log("Socket disconnected : ", socket.handshake.address);
-
-        if (socketIps.includes(socket.handshake.address)) { // The disconnecting socket is a robot
-            let index = socketIps.indexOf(socket.handshake.address);
-            const removed = robotSockets.splice(index, 1);
-            socketIps.splice(index, 1);
-
-            console.log(index);
-            console.log("retiré : ");
-            console.log(removed);
-        }
-        updateRobotsList(socket);
+        removeSocket(socket);
     });
 });
 
-function updateRobotsList(socket) {
-    let robots = [];
+function addNewSocket(socket) {
+    robotSockets.push(socket); // We assume the connecting socket is a robot
+    socketIps.push(socket.handshake.address);
+    sendRobotListToNavigator();
+}
 
-    console.log("updateRobotsList + " + socket.handshake.address);
+function updateSocket(socket) {
+    let index = socketIps.indexOf(socket.handshake.address);
+    robotSockets[index] = socket;
+    sendRobotListToNavigator()
+}
 
-    // We check if the robot has already been listed, if not, we add it to the robots list
-    robotSockets.forEach(robotSocket => {
-        let adresseIp = robotSocket.handshake.address;
+function removeSocket(socket) {
+    let indexRS = robotSockets.indexOf(socket);
+    if (indexRS !== -1) {
+        robotSockets.splice(indexRS, 1);
+    }
 
-        if (!robots.includes(adresseIp)) {
-            robots.push(adresseIp);
-        }
-    })
+    let indexSI = socketIps.indexOf(socket.handshake.address);
+    if (indexSI !== -1) {
+        socketIps.splice(indexSI, 1);
+    }
+    sendRobotListToNavigator();
+}
 
-    socket.emit("robots-list", robots);
-    console.log("apres le emit de updateRobotsList");
+function sendRobotListToNavigator() {
+    if (socketInterface !== null) {
+        socketInterface.emit("robots-list", socketIps);
+    }
 }
 
 console.log(`Server is running on http://localhost:${port}`);
