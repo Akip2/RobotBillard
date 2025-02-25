@@ -34,7 +34,7 @@ io.sockets.on("connection", function (socket) {
     if (!socketIps.includes(socket.handshake.address)) {
         robotSockets.push(socket); // We assume the connecting socket is a robot
         socketIps.push(socket.handshake.address);
-    } else { //Socket with this ip already exists, we replace it with the new one
+    } else { // Socket with this ip already exists, we replace it with the new one
         let index = socketIps.indexOf(socket.handshake.address);
         robotSockets[index] = socket
         console.log("Socket replaced: " + socket.handshake.address);

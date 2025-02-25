@@ -114,6 +114,7 @@ header {
 
 /* LEFT PART */
 
+
 #fond {
     position: fixed;
     backdrop-filter: blur(0.15rem);
@@ -149,7 +150,11 @@ header {
     display: flex;
     flex-direction: column;
     padding: 1rem;
+}
 
+#visible-options {
+    display: flex;
+    flex-direction: row;
 }
 
 #canvas-container {

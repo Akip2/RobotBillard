@@ -5,27 +5,6 @@ import {selectRobots, selectRobotsSim} from "./index.js";
 
 export function getRobot(index) {
     if (currentView === "simulator") {
-        /* Old Matter.js code, we use OpenCV now
-        let angle = table.robots[index].body.angle;
-
-        // Matter.js angle range from -infinity to +infinity
-        // we convert them to be between -180 to 180
-        if (angle > 0) {
-            angle = 360 - ((Math.abs(table.robots[index].body.angle) * (180 / Math.PI)) % 360);
-        } else {
-            angle = (Math.abs(table.robots[index].body.angle) * (180 / Math.PI)) % 360;
-        }
-
-        return {
-            position:
-                {
-                    x: table.robots[index].body.position.x,
-                    y: table.robots[index].body.position.y
-                },
-            orientation: angle
-        };
-        */
-
         let robot = table.getRobotsDetected()[index];
 
         if (robot !== undefined) {
