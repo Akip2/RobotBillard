@@ -29,7 +29,7 @@ export async function startBillardScenarioSimple(socket, robotIp) {
                 moveRobotTo(socket, robotIp, ballToPush.x, ballToPush.y);
             }
         } else {
-            console.log("Impossible de lancer le scénario avec Broadcast");
+            alert("Impossible de lancer le scénario avec Broadcast");
         }
         await sleep(MIN_ORDER_DURATION);
     }
