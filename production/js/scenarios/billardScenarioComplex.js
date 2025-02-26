@@ -1,7 +1,7 @@
 import {getBalls, getHoles, getRobot} from "../elements-manager.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 import {getNearestBall, getNearestBallToHoles, getNearestHole, normalize, sleep} from "./scenario-functions.js";
-import {isRobotFacing, isRobotNear, moveRobotTo, turnRobot} from "../brain/brain.js";
+import {isRobotFacing, isRobotNear, moveRobotsTo, turnRobots} from "../brain/brain.js";
 import {isActive} from "../index.js";
 import {FPS} from "../video/video-parameters.js";
 
@@ -31,7 +31,7 @@ export async function startBillardScenarioComplex(socket, robotIp) {
 
 async function hitTarget(socket, robotIp) {
     if (isActive) {
-        moveRobotTo(socket, robotIp, robotDestX, robotDestY);
+        moveRobotsTo(socket, robotIp, robotDestX, robotDestY);
         await sleep(1000);
         //socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, 500, robotIp));
         //await sleep(500);
@@ -40,7 +40,7 @@ async function hitTarget(socket, robotIp) {
 
 async function turnToTarget(socket, robotIp) {
     if (isActive) {
-        turnRobot(socket, robotIp, robotDestX, robotDestY);
+        turnRobots(socket, robotIp, robotDestX, robotDestY);
         while (isActive && !isRobotFacing(robotIp, robotDestX, robotDestY)) {
             await sleep(MIN_ORDER_DURATION);
         }
@@ -98,7 +98,7 @@ async function goBehindBall(socket, robotIp) {
                         robotDestX = ballToPush.x - alpha * normalizedPushVector.x;
                         robotDestY = ballToPush.y - alpha * normalizedPushVector.y;
 
-                        moveRobotTo(socket, robotIp, robotDestX, robotDestY);
+                        moveRobotsTo(socket, robotIp, robotDestX, robotDestY);
                     }
                     await sleep(MIN_ORDER_DURATION);
                 }
