@@ -6,7 +6,7 @@ export const HEIGHT = 400;
 // ids of the aruco placed at the corners of the table
 export const TOP_LEFT_ARUCO_ID = 757;
 export const TOP_RIGHT_ARUCO_ID = 1;
-export const BOTTOM_LEFT_ARUCO_ID = 157;
+export const BOTTOM_LEFT_ARUCO_ID = 357;
 export const BOTTOM_RIGHT_ARUCO_ID = 10;
 
 // Aruco ids that we don't want to detect (they might get detected too easily)
@@ -23,4 +23,4 @@ export const DEFAULT_BALL_RADIUS = 10;
 export const MAXIMUM_HOLES = 12;
 
 // The factor (multiplied by the radius of a ball) for a detected circle to be considered a hole
-export const HOLE_DISTANCE_FACTOR = 3;
+export const HOLE_DISTANCE_FACTOR = 2.8;

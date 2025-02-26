@@ -1,5 +1,4 @@
 import {getAvailableRobots, getBalls, getRobot} from "../elements-manager.js";
-import {moveRobotsTo} from "../brain/brain.js";
 import {BROADCAST, MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 import {getNearestBall, sleep} from "./scenario-functions.js";
 import {isActive} from "../index.js";
@@ -43,7 +42,7 @@ async function moveRobot(socket, robotIp, robot) {
         let ballToPush = getNearestBall(balls, robot.position);
 
         if (ballToPush !== undefined) {
-            moveRobotsTo(socket, robotIp, ballToPush.x, ballToPush.y);
+            moveRobotTo(socket, robotIp, ballToPush.x, ballToPush.y);
         }
     }
     await sleep(MIN_ORDER_DURATION);
