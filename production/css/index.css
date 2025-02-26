@@ -463,6 +463,10 @@ footer {
         background-color: white;
     }
 
+    #views-list {
+        display: none;
+    }
+
     #titre {
         display: none;
     }
@@ -488,6 +492,10 @@ footer {
         display: none;
     }
 
+    #btn-options {
+        display: none;
+    }
+
     #cursor-direction-motor-mobile {
         writing-mode: horizontal-tb;
         width: auto;
@@ -495,6 +503,10 @@ footer {
 
     #right-part-mobile {
         display: block;
+        align-self: center;
+    }
+
+    #visible-options {
         align-self: center;
     }
 
