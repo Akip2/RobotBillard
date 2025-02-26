@@ -55,50 +55,32 @@ async function turnToTarget(socket, robotIp) {
  */
 async function goBehindBall(socket, robotIp) {
     if (isActive) {
-        const balls = getBalls();
-        const holes = getHoles();
-        const robot = getRobot(0);
+        let balls = getBalls();
+        let robot = getRobot(0);
 
         let ballToPush, hole;
         if (robot !== undefined) {
-            if (useClosestBallToRobot) {
-                ballToPush = getNearestBall(balls, robot.position);
-                hole = getNearestHole(holes, ballToPush);
-            } else {
-                [ballToPush, hole] = getNearestBallToHoles(holes, balls);
-            }
+            ballToPush = getNearestBall(balls, robot.position);
 
             if (ballToPush !== undefined) {
-                let pushVector = {
-                    x: hole.x - ballToPush.x,
-                    y: hole.y - ballToPush.y,
-                }
-
-                let normalizedPushVector = normalize(pushVector);
-
-                // Calculate position behind the ball
-                robotDestX = ballToPush.x - alpha * normalizedPushVector.x;
-                robotDestY = ballToPush.y - alpha * normalizedPushVector.y;
+                let pointToGo = getPositionBehindBall(ballToPush);
+                robotDestX = pointToGo.x;
+                robotDestY = pointToGo.y;
 
                 while (isActive && !isRobotNear(robotIp, robotDestX, robotDestY, 30)) {
-                    if (useClosestBallToRobot) {
+                    balls = getBalls();
+                    robot = getRobot(0);
+
+                    if(robot !== undefined) {
                         ballToPush = getNearestBall(balls, robot.position);
-                        hole = getNearestHole(holes, ballToPush);
-                    } else {
-                        [ballToPush, hole] = getNearestBallToHoles(holes, balls);
-                    }
 
-                    if (ballToPush !== undefined) {
-                        pushVector = {
-                            x: hole.x - ballToPush.x,
-                            y: hole.y - ballToPush.y,
+                        if (ballToPush !== undefined) {
+                            pointToGo = getPositionBehindBall(ballToPush);
+                            robotDestX = pointToGo.x;
+                            robotDestY = pointToGo.y;
+
+                            moveRobotTo(socket, robotIp, robotDestX, robotDestY);
                         }
-                        let normalizedPushVector = normalize(pushVector);
-
-                        robotDestX = ballToPush.x - alpha * normalizedPushVector.x;
-                        robotDestY = ballToPush.y - alpha * normalizedPushVector.y;
-
-                        moveRobotTo(socket, robotIp, robotDestX, robotDestY);
                     }
                     await sleep(MIN_ORDER_DURATION);
                 }
@@ -111,4 +93,22 @@ async function goBehindBall(socket, robotIp) {
             await goBehindBall(socket, robotIp);
         }
     }
+}
+
+function getPositionBehindBall(ballToPush) {
+    const holes = getHoles();
+    const hole = getNearestHole(holes, ballToPush);
+
+    const pushVector = {
+        x: hole.x - ballToPush.x,
+        y: hole.y - ballToPush.y,
+    }
+
+    const normalizedPushVector = normalize(pushVector);
+
+    // Calculate position behind the ball
+    return {
+        x: ballToPush.x - alpha * normalizedPushVector.x,
+        y: ballToPush.y - alpha * normalizedPushVector.y,
+    };
 }
