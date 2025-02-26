@@ -28,11 +28,6 @@
                 <label for="checkbox-affichage">Affichage</label>
                 <input type="checkbox" id="checkbox-affichage" class="input-checkbox" name="affichage" checked/>
             </div>
-            
-            <select name="robots" id="select-robot" class="select-top-table-container displayFlex">
-                <!-- here some robots which are available to control (added with javascript) -->
-                <option value="default" class="option" selected>Broadcast</option>
-            </select>
 
             <select name="robots" id="select-robot-sim" class="select-top-table-container displayNone">
                 <option value="default" class="option">Aucun robot disponible</option>
@@ -68,20 +63,25 @@
     <!-- Left part which contains canvas and buttons to change view -->
     <div class="part displayFlex" id="left-part">
 
-
         <div id="visible-options">
             <button id="reload-btn" class="param displayNone">Recharger</button>
 
             <select name="scenarios" id="select-configuration" class="select-top-table-container displayNone">
                 <option value="Billard" class="option" selected>Billard</option>
                 <option value="Random" class="option">Random</option>
+                <option value="Duel" class="option">Duel</option>
                 <option value="Filled" class="option">Remplie</option>
                 <option value="Foot" class="option">Foot</option>
                 <option value="Facile" class="option">Facile</option>
             </select>
+            
+            <select name="robots" id="select-robot" class="select-top-table-container displayFlex">
+                <!-- here some robots which are available to control (added with javascript) -->
+                <option value="default" class="option" selected>Broadcast</option>
+            </select>
+
             <button id="btn-options" class="param">Options supplémentaires</button>
         </div>
-
 
         <div id="canvas-container">
             <!-- <input type="number" id="tmp-1" min="10" max="300" step="10" value="100"> -->
@@ -144,6 +144,7 @@
                     <option value="default" class="option">Test</option>
                     <option value="SimpleBillard" class="option">Billard Simple</option>
                     <option value="ComplexBillard" class="option">Billard Complexe</option>
+                    <option value="DuelBillard" class="option">Billard Duel</option>
                 </select>
             </div>
         </div>

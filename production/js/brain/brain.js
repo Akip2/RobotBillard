@@ -1,8 +1,9 @@
-import {simulatorSpeed} from "../events/parameters.js";
-import {getRobot} from "../elements-manager.js";
+import {currentRobotId, simulatorSpeed} from "../events/parameters.js";
+import {getAvailableRobots, getRobot} from "../elements-manager.js";
 import {
     ANGLE_THRESHOLD,
     BALL_REAL_SIZE,
+    BROADCAST,
     DISTANCE_THRESHOLD,
     MIN_ORDER_DURATION,
     ROBOT_MAX_SPEED,
@@ -13,15 +14,31 @@ import {isSimulator} from "../events/view-manager.js";
 
 let currentInterval = null;
 
-export function turnRobot(socket, robotIp, x, y) {
+// Méthode qui permet de détérminer si on envoie les ordres de rotation au robot courant
+// ou à tous les robots en même temps si l'utilisateur choisit le broadcast
+export function turnRobots(socket, robotIp, x, y) {
     if (currentInterval !== null) {
         clearInterval(currentInterval);
     }
 
+    currentInterval = setInterval(() => {
+        if (robotIp === BROADCAST) {
+            for (let i = 0; i < getAvailableRobots().length - 1; i++) {
+                let robot = getRobot(i);
+                turnRobot(socket, robot, robotIp, x, y);
+            }
+        } else {
+            let robot = getRobot(currentRobotId - 1);
+            turnRobot(socket, robot, robotIp, x, y);
+        }
+    }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1));
+}
+
+// Méthode qui permet d'envoyer l'ordre de rotation à un robot en particulier
+export function turnRobot(socket, robot, robotIp, x, y) {
     let direction = "Left";
 
-    currentInterval = setInterval(() => {
-        const robot = getRobot(0);
+    if (robot !== undefined) {
         const angleDifference = getAngleDifference(robot, x, y);
         angleDifference > 0 ? direction = "Left" : direction = "Right";
 
@@ -42,65 +59,80 @@ export function turnRobot(socket, robotIp, x, y) {
         } else {
             socket.emit('motor', createOrder(rotationSpeed, -rotationSpeed, MIN_ORDER_DURATION, robotIp));
         }
-    }, (MIN_ORDER_DURATION) / (isSimulator ? simulatorSpeed : 1))
+    }
 }
 
-export function moveRobotTo(socket, robotIp, x, y) {
+
+// Méthode qui permet de détérminer si on envoie les ordres de déplacement au robot courant
+// ou à tous les robots en même temps si l'utilisateur choisit le broadcast
+export function moveRobotsTo(socket, robotIp, x, y) {
     if (currentInterval !== null) {
         clearInterval(currentInterval);
     }
 
-    let direction = "Left";
-
     currentInterval = setInterval(() => {
-        let robot = getRobot(0);
-
-        if (robot !== undefined) {
-            let angleDifference = getAngleDifference(robot, x, y);
-            angleDifference > 0 ? direction = "Left" : direction = "Right";
-
-            let distanceDifference = distanceBetweenPoints(robot.position, {
-                x: x,
-                y: y
-            });
-
-            const isTargetForward = (angleDifference <= ANGLE_THRESHOLD) && (angleDifference >= -ANGLE_THRESHOLD);
-            const isTargetBackward = (angleDifference <= -180 + ANGLE_THRESHOLD) || (angleDifference >= 180 - ANGLE_THRESHOLD);
-
-            if (isTargetForward) {
-                socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, robotIp));
-            } else if (isTargetBackward) {
-                socket.emit('motor', createOrder(-ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, MIN_ORDER_DURATION, robotIp));
-            } else {
-                // Tries to turn and go forward / backward smoothly
-                const isTargetBehind = angleDifference > 90 || angleDifference < -90;
-
-                let otherMotorSpeed = Math.abs(90 - Math.abs(angleDifference)) / 180 * ROBOT_MAX_SPEED;
-                let fullSpeedMotor = ROBOT_MAX_SPEED;
-
-                // Needs to turn before moving if too close to the target
-                if (distanceDifference < DISTANCE_THRESHOLD * 2) {
-                    turnRobot(socket, robotIp, x, y);
-                }
-                if (direction === "Left") {
-                    if (isTargetBehind) {
-                        socket.emit('motor', createOrder(-otherMotorSpeed, -fullSpeedMotor, MIN_ORDER_DURATION, robotIp));
-                    } else {
-                        socket.emit('motor', createOrder(otherMotorSpeed, fullSpeedMotor, MIN_ORDER_DURATION, robotIp));
-                    }
-                } else {
-                    if (isTargetBehind) {
-                        socket.emit('motor', createOrder(-fullSpeedMotor, -otherMotorSpeed, MIN_ORDER_DURATION, robotIp));
-                    } else {
-                        socket.emit('motor', createOrder(fullSpeedMotor, otherMotorSpeed, MIN_ORDER_DURATION, robotIp));
-                    }
-                }
+        if (robotIp === BROADCAST) {
+            for (let i = 0; i < getAvailableRobots().length - 1; i++) {
+                let robot = getRobot(i);
+                moveRobotTo(socket, robot, robotIp, x, y);
             }
-            if (distanceDifference < DISTANCE_THRESHOLD) {
-                clearInterval(currentInterval);
-            }
+        } else {
+            let robot = getRobot(robotIp);
+            moveRobotTo(socket, robot, robotIp, x, y);
         }
     }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1));
+}
+
+// Méthode qui permet d'envoyer l'ordre de déplacement à un robot en particulier
+export function moveRobotTo(socket, robot, robotIp, x, y) {
+
+    let direction = "Left";
+
+    if (robot !== undefined) {
+        let angleDifference = getAngleDifference(robot, x, y);
+        angleDifference > 0 ? direction = "Left" : direction = "Right";
+
+        let distanceDifference = distanceBetweenPoints(robot.position, {
+            x: x,
+            y: y
+        });
+
+        const isTargetForward = (angleDifference <= ANGLE_THRESHOLD) && (angleDifference >= -ANGLE_THRESHOLD);
+        const isTargetBackward = (angleDifference <= -180 + ANGLE_THRESHOLD) || (angleDifference >= 180 - ANGLE_THRESHOLD);
+
+        if (isTargetForward) {
+            socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, robotIp));
+        } else if (isTargetBackward) {
+            socket.emit('motor', createOrder(-ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, MIN_ORDER_DURATION, robotIp));
+        } else {
+            // Tries to turn and go forward / backward smoothly
+            const isTargetBehind = angleDifference > 90 || angleDifference < -90;
+
+            let otherMotorSpeed = Math.abs(90 - Math.abs(angleDifference)) / 180 * ROBOT_MAX_SPEED;
+            let fullSpeedMotor = ROBOT_MAX_SPEED;
+
+            // Needs to turn before moving if too close to the target
+            if (distanceDifference < DISTANCE_THRESHOLD * 2) {
+                turnRobots(socket, robotIp, x, y);
+            }
+            if (direction === "Left") {
+                if (isTargetBehind) {
+                    socket.emit('motor', createOrder(-otherMotorSpeed, -fullSpeedMotor, MIN_ORDER_DURATION, robotIp));
+                } else {
+                    socket.emit('motor', createOrder(otherMotorSpeed, fullSpeedMotor, MIN_ORDER_DURATION, robotIp));
+                }
+            } else {
+                if (isTargetBehind) {
+                    socket.emit('motor', createOrder(-fullSpeedMotor, -otherMotorSpeed, MIN_ORDER_DURATION, robotIp));
+                } else {
+                    socket.emit('motor', createOrder(fullSpeedMotor, otherMotorSpeed, MIN_ORDER_DURATION, robotIp));
+                }
+            }
+        }
+        if (distanceDifference < DISTANCE_THRESHOLD) {
+            clearInterval(currentInterval);
+        }
+    }
 }
 
 export function stopRobots(socket) {

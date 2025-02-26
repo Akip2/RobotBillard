@@ -1,5 +1,5 @@
 import {getBalls, getRobot} from "../elements-manager.js";
-import {moveRobotTo} from "../brain/brain.js";
+import {moveRobotsTo} from "../brain/brain.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 import {getNearestBall, sleep} from "./scenario-functions.js";
 import {isActive} from "../index.js";
@@ -15,18 +15,18 @@ import {currentRobotId} from "../events/parameters.js";
  */
 export async function startBillardScenarioSimple(socket, robotIp) {
     let balls = getBalls();
-    let robot = getRobot(currentRobotId - 1);
+    let robot = getRobot(0);
     let ballToPush;
 
-    while (isActive) {
+    while (isActive/*!isEmpty(balls)*/) {
         balls = getBalls();
-        robot = getRobot(currentRobotId - 1);
+        robot = getRobot(currentRobotId);
 
         if (robot !== undefined) {
             ballToPush = getNearestBall(balls, robot.position);
 
             if (ballToPush !== undefined) {
-                moveRobotTo(socket, robotIp, ballToPush.x, ballToPush.y);
+                moveRobotsTo(socket, robotIp, ballToPush.x, ballToPush.y);
             }
         }
         await sleep(MIN_ORDER_DURATION);

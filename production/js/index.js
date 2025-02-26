@@ -5,8 +5,9 @@ import {addRobot, isInsideTable} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
-import {moveRobotTo, stopRobots} from "./brain/brain.js";
+import {moveRobotsTo, stopRobots} from "./brain/brain.js";
 import {startBillardScenarioComplex} from "./scenarios/billardScenarioComplex.js";
+import {startBillardScenarioDuel} from "./scenarios/billardScenarioDuel.js";
 
 export const socket = io(); // Connection to server
 
@@ -43,6 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 case "ComplexBillard":
                     startBillardScenarioComplex(socket, currentRobotId);
                     break;
+                case "DuelBillard":
+                    startBillardScenarioDuel(socket, currentRobotId);
+                    break;
                 case "default":
                     startTestScenario(socket, currentRobotId);
                     break;
@@ -70,11 +74,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (isSimulator) {
             // Get the position of a click on the simulator
-            moveRobotTo(socket, currentRobotId, x, y);
+            moveRobotsTo(socket, currentRobotId, x, y);
             // turnRobotInCircle(socket, 0);
         } else {
             // Get the position of a click on the camera
-            moveRobotTo(socket, currentRobotId, x, y);
+            moveRobotsTo(socket, currentRobotId, x, y);
         }
     });
 
