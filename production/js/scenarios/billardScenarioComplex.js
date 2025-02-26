@@ -1,6 +1,6 @@
 import {getBalls, getHoles, getRobot} from "../elements-manager.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
-import {getNearestBallToHoles, normalize, sleep} from "./scenario-functions.js";
+import {getNearestBall, getNearestBallToHoles, getNearestHole, normalize, sleep} from "./scenario-functions.js";
 import {isRobotFacing, isRobotNear, moveRobotTo, turnRobot} from "../brain/brain.js";
 import {isActive} from "../index.js";
 import {FPS} from "../video/video-parameters.js";
@@ -8,6 +8,8 @@ import {FPS} from "../video/video-parameters.js";
 export let robotDestX;
 export let robotDestY;
 export let ballPush = {x: 0, y: 0};
+
+const useClosestBallToRobot = true;
 
 const alpha = 60;
 
@@ -28,7 +30,7 @@ export async function startBillardScenarioComplex(socket, robotIp) {
 }
 
 async function hitTarget(socket, robotIp) {
-    if(isActive) {
+    if (isActive) {
         moveRobotTo(socket, robotIp, robotDestX, robotDestY);
         await sleep(1000);
         //socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, 500, robotIp));
@@ -37,7 +39,7 @@ async function hitTarget(socket, robotIp) {
 }
 
 async function turnToTarget(socket, robotIp) {
-    if(isActive) {
+    if (isActive) {
         turnRobot(socket, robotIp, robotDestX, robotDestY);
         while (isActive && !isRobotFacing(robotIp, robotDestX, robotDestY)) {
             await sleep(MIN_ORDER_DURATION);
@@ -52,13 +54,19 @@ async function turnToTarget(socket, robotIp) {
  * @returns {Promise<*>} ball chosen to push
  */
 async function goBehindBall(socket, robotIp) {
-    if(isActive) {
+    if (isActive) {
         const balls = getBalls();
         const holes = getHoles();
         const robot = getRobot(0);
 
+        let ballToPush, hole;
         if (robot !== undefined) {
-            let [ballToPush, hole] = getNearestBallToHoles(holes, balls);
+            if (useClosestBallToRobot) {
+                ballToPush = getNearestBall(balls, robot.position);
+                hole = getNearestHole(holes, ballToPush);
+            } else {
+                [ballToPush, hole] = getNearestBallToHoles(holes, balls);
+            }
 
             if (ballToPush !== undefined) {
                 let pushVector = {
@@ -73,9 +81,15 @@ async function goBehindBall(socket, robotIp) {
                 robotDestY = ballToPush.y - alpha * normalizedPushVector.y;
 
                 while (isActive && !isRobotNear(robotIp, robotDestX, robotDestY, 30)) {
-                    [ballToPush, hole] = getNearestBallToHoles(holes, balls);
+                    if (useClosestBallToRobot) {
+                        ballToPush = getNearestBall(balls, robot.position);
+                        hole = getNearestHole(holes, ballToPush);
+                    } else {
+                        [ballToPush, hole] = getNearestBallToHoles(holes, balls);
+                    }
+
                     if (ballToPush !== undefined) {
-                         pushVector = {
+                        pushVector = {
                             x: hole.x - ballToPush.x,
                             y: hole.y - ballToPush.y,
                         }
