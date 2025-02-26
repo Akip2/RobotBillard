@@ -1,7 +1,8 @@
-import {currentView, table} from "./events/view-manager.js";
+import {currentView, isSimulator, table} from "./events/view-manager.js";
 import {getRealRobot} from "./video/video.js";
-import {getRealBalls, getRealHoles} from "./video/video-functions.js";
+import {getDistanceFromBorder, getRealBalls, getRealHoles} from "./video/video-functions.js";
 import {selectRobots, selectRobotsSim} from "./index.js";
+import {height, wallSize, width} from "../simulateur/params.js";
 
 export function getRobot(index) {
     if (currentView === "simulator") {
@@ -72,5 +73,22 @@ export function addRobot(robotName) {
         selectRobotsSim.appendChild(option);
     } else {
         selectRobots.appendChild(option);
+    }
+}
+
+export function isInsideTable(x, y) {
+    let minX, maxX, minY, maxY;
+    if (isSimulator) {
+        minX = wallSize;
+        maxX = width - wallSize;
+
+        minY = wallSize;
+        maxY = height - wallSize;
+
+        return (x >= minX && x <= maxX) && (y >= minY && y <= maxY);
+    } else {
+        const dist = getDistanceFromBorder(x,y);
+
+        return dist >= 30;
     }
 }

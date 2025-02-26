@@ -1,7 +1,7 @@
 // Billard configurations
 import {currentConfig, currentRobotId, currentScenario, initParams, setCurrentRobotId} from "./events/parameters.js";
 import {currentView, initView, loadSimulator, table} from "./events/view-manager.js";
-import {addRobot} from "./elements-manager.js";
+import {addRobot, isInsideTable} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
@@ -65,6 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let x = event.offsetX;
         let y = event.offsetY;
+
+        console.log(isInsideTable(x,y));
 
         if (isSimulator) {
             // Get the position of a click on the simulator
