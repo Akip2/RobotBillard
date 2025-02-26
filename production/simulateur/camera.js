@@ -33,33 +33,25 @@ class Camera {
             let circleCenter = new cv.Point(circle[0], circle[1]);
 
             const robots = this.table.getRobotsDetected();
-            const holes = this.table.holes;
 
-            if (robots !== undefined) {
-                for (let j = 0; j < robots.length; j++) {
-                    // Check if circle is not on Aruco
-                    if (distanceBetweenPoints(circleCenter, robots[j].position) > ballRadius * 3) {
-                        let k = 0;
-                        let isNearHole = false;
+            let isNearRobot = false;
+            for (let j = 0; j < robots.length && !isNearRobot; j++) {
+                isNearRobot = distanceBetweenPoints(circleCenter, robots[j].position) < ballRadius * 3;
+            }
 
-                        while ((k < holes.length) && !isNearHole) {
-                            const hole = holes[k].body;
+            if (!isNearRobot) {
+                const holes = this.table.holes;
 
-                            // Check if circle is not near holes
-                            if (distanceBetweenPoints(circleCenter, hole.position) < ballRadius * 2) {
-                                isNearHole = true;
-                            }
-                            k++;
-                        }
+                let isNearHole = false;
+                for (let j = 0; j < holes.length && !isNearHole; j++) {
+                    const hole = holes[j].body;
+                    isNearHole = distanceBetweenPoints(circleCenter, hole.position) < ballRadius * 2;
+                }
 
-                        if (!isNearHole) {
-                            ballsDetected.push(circleCenter);
-                        }
-                    }
+                if (!isNearHole) {
+                    ballsDetected.push(circleCenter);
                 }
             }
-            circle = null;
-            circleCenter = null;
         }
         circles.delete();
 
