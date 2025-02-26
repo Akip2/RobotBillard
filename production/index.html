@@ -93,6 +93,12 @@
     </div>
 
     <!-- Right part which contains different views (one or more) -->
+    <!-- Mobile Interface -->
+    <div class="part displayNone" id="right-part-mobile">
+        <input type="range" class="cursor-motor" id="cursor-direction-motor-mobile" min="-128" max="128">
+        <input type="range" class="cursor-motor" id="cursor-speed-motor-mobile" min="-255" max="255">
+    </div>
+
     <div class="part displayFlex" id="right-part">
         <div class="part displayNone" id="arrow-controls">
             <input type="range" class="cursor-motor" id="cursor-left-motor" min="0" max="255" list="steps">
@@ -115,7 +121,7 @@
                          xml:space="preserve" overflow="hidden"><g transform="translate(-626 -341)"><path d="M670.981 348.05 670.981 422.809 662.081 413.914C660.921 412.754 659.041 412.754 657.881 413.914 656.721 415.074 656.721 416.954 657.881 418.114L671.881 432.1C672.986 433.26 674.821 433.305 675.981 432.2 676.015 432.168 676.049 432.134 676.081 432.1L690.071 418.112C691.231 417.007 691.276 415.172 690.171 414.012 690.138 413.978 690.105 413.945 690.071 413.912 688.966 412.752 687.131 412.707 685.971 413.812 685.937 413.844 685.904 413.878 685.871 413.912L676.976 422.807 676.976 348.05C676.976 346.393 675.633 345.05 673.976 345.05 672.319 345.05 670.976 346.393 670.976 348.05Z"/></g></svg>
                 </button>
 
-                <input type="number" id="input-duration" min="100" max="10000" step="100" value="1000">
+                <input type="number" id="input-duration" min="100" max="10000" step="100" value="500">
             </div>
 
             <input type="range" class="cursor-motor" id="cursor-right-motor" min="0" max="255" list="steps">
@@ -158,5 +164,5 @@
 <script type="module" src="./js/video/video.js"></script>
 <script type="module" src="./js/index.js"></script>
 </body>
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 </html>
