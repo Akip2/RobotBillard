@@ -25,7 +25,6 @@ export function turnRobots(socket, robotIp, x, y) {
         if (robotIp === BROADCAST) {
             for (let i = 0; i < getAvailableRobots().length - 1; i++) {
                 let robot = getRobot(i);
-                console.log("ici broadcast + " + i);
                 turnRobot(socket, robot, robotIp, x, y);
             }
         } else {
@@ -75,18 +74,17 @@ export function moveRobotsTo(socket, robotIp, x, y) {
         if (robotIp === BROADCAST) {
             for (let i = 0; i < getAvailableRobots().length - 1; i++) {
                 let robot = getRobot(i);
-                console.log("ici broadcast + " + i);
                 moveRobotTo(socket, robot, robotIp, x, y);
             }
         } else {
-            let robot = getRobot(currentRobotId - 1);
+            let robot = getRobot(robotIp);
             moveRobotTo(socket, robot, robotIp, x, y);
         }
     }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1));
 }
 
 // Méthode qui permet d'envoyer l'ordre de déplacement à un robot en particulier
-function moveRobotTo(socket, robot, robotIp, x, y) {
+export function moveRobotTo(socket, robot, robotIp, x, y) {
 
     let direction = "Left";
 
