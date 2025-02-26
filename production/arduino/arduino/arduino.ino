@@ -32,8 +32,8 @@ SocketIOclient socketIO;
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Motors
-Adafruit_DCMotor* leftMotor = AFMS.getMotor(1);
-Adafruit_DCMotor* rightMotor = AFMS.getMotor(2);
+Adafruit_DCMotor* leftMotor = AFMS.getMotor(2);
+Adafruit_DCMotor* rightMotor = AFMS.getMotor(1);
 
 // === Robot variables =======================================================================
 
@@ -212,8 +212,6 @@ void loop() {
     leftMotor->run(RELEASE);
     rightMotor->run(RELEASE);
   }
-
-  
 
   if (now - messageTimestamp > 2000) {
     messageTimestamp = now;

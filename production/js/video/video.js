@@ -6,6 +6,8 @@ import {ballPush, robotDestX, robotDestY} from "../scenarios/billardScenarioComp
 let stillContinue = true;
 let robots = [];
 
+export let lastMv;
+
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("canvas-output-video");
     const canvasBrut = document.getElementById("canvas-output-video-brut");
@@ -109,6 +111,9 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                         mv.intPtr(idx, 0)[1] = y;
                     });
 
+                    lastMv?.delete();
+                    lastMv = mv.clone();
+
                     markersVector.push_back(mv);
                     cv.polylines(finalImage, markersVector, true, new cv.Scalar(0, 255, 0), 4);
 
@@ -136,6 +141,7 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                 imageData = null;
                 finalImage.delete();
                 preProcessedFrame.delete();
+                mv.delete();
 
                 arucos = null;
                 tableCorners = null;
@@ -144,7 +150,6 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                 bottomRight = null;
                 bottomLeft = null;
 
-                mv.delete();
                 circles.delete();
 
                 delay = 1000 / FPS - (Date.now() - begin);

@@ -14,6 +14,7 @@ import {
 } from "./video-parameters.js";
 import {convertCVPointToMathPoint, distanceBetweenPoints, middleOfPoints} from "../brain/brain.js";
 import {isSimulator, vue} from "../events/view-manager.js";
+import {lastMv} from "./video.js";
 
 let ballsPositions = [];
 let holesPositions = [];
@@ -205,6 +206,11 @@ export function detectCircles(frame, ballRadius = DEFAULT_BALL_RADIUS) {
         maxRadius
     );
     return circles;
+}
+
+export function getDistanceFromBorder(x,y) {
+    const point = new cv.Point(x,y);
+    return cv.pointPolygonTest(lastMv, point, true);
 }
 
 export function drawDetectedCircles(frame, circles, mv, robots, tableCorners, isPerimeterFound = false) {
