@@ -3,7 +3,6 @@ import {moveRobotTo} from "../brain/brain.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
 import {getNearestBall, sleep} from "./scenario-functions.js";
 import {isActive} from "../index.js";
-import {currentRobotId} from "../events/parameters.js";
 
 /**
  * méthode qui permet de lancer une simulation de partie de billard
@@ -15,12 +14,12 @@ import {currentRobotId} from "../events/parameters.js";
  */
 export async function startBillardScenarioSimple(socket, robotIp) {
     let balls = getBalls();
-    let robot = getRobot(currentRobotId - 1);
+    let robot = getRobot(0);
     let ballToPush;
 
     while (isActive) {
         balls = getBalls();
-        robot = getRobot(currentRobotId - 1);
+        robot = getRobot(0);
 
         if (robot !== undefined) {
             ballToPush = getNearestBall(balls, robot.position);

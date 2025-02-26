@@ -131,10 +131,14 @@ function processVideo(video, canvas, canvasBrut, ctx) {
 
                 // Draw the final result in the canvas
                 // preProcessedFrame / finalImage
-                drawCircle(finalImage, new cv.Point(robotDestX, robotDestY), [255, 0, 255, 255]);
-                drawCircle(finalImage, new cv.Point(ballPush.x, ballPush.y), [255, 255, 0, 255]);
+                drawCircle(finalImage, new cv.Point(robotDestX, robotDestY), [255, 0, 255, 20]);
+                drawCircle(finalImage, new cv.Point(ballPush.x, ballPush.y), [255, 255, 0, 20]);
 
-                cv.imshow(canvas, finalImage);
+                if (document.getElementById("checkbox-image-pretraitee").checked) {
+                    cv.imshow(canvas, preProcessedFrame);
+                } else {
+                    cv.imshow(canvas, finalImage);
+                }
 
                 // Clean memory
                 frame.delete();

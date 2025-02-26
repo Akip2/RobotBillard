@@ -7,6 +7,7 @@ import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
 import {moveRobotTo, stopRobots} from "./brain/brain.js";
 import {startBillardScenarioComplex} from "./scenarios/billardScenarioComplex.js";
+import {startBillardScenarioDuel} from "./scenarios/billardScenarioDuel.js";
 
 export const socket = io(); // Connection to server
 
@@ -42,6 +43,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     break;
                 case "ComplexBillard":
                     startBillardScenarioComplex(socket, currentRobotId);
+                    break;
+                case "DuelBillard":
+                    startBillardScenarioDuel(socket, currentRobotId);
                     break;
                 case "default":
                     startTestScenario(socket, currentRobotId);

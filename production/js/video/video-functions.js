@@ -306,7 +306,7 @@ export function drawDetectedCircles(frame, circles, mv, robots, tableCorners, is
 }
 
 export function drawCircle(frame, center, color) {
-    cv.circle(frame, center, 15, color, -1);
+    cv.circle(frame, center, 15, color, 4);
 }
 
 export function getRealBalls() {

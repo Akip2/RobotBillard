@@ -21,7 +21,6 @@ class CollisionController {
                 }
 
                 if (ballCenter != null) {
-                    console.log("BALL TOUCH HOLE");
                     const balls = table.getBalls();
 
                     balls.forEach(ball => {

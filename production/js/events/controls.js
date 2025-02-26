@@ -20,6 +20,9 @@ const cursorLeftMotor = document.querySelector("#cursor-left-motor");
 const cursorRightMotor = document.querySelector("#cursor-right-motor");
 const inputDuration = document.querySelector("#input-duration");
 
+// Mobile
+const cursorDirectionMobile = document.querySelector("#cursor-direction-motor-mobile");
+const cursorSpeedMobile = document.querySelector("#cursor-speed-motor-mobile");
 
 export function initControls() {
     // Execution time of the motors
@@ -37,6 +40,20 @@ export function initControls() {
     });
 
     // Buttons to move robots
+
+    // Interface Mobile
+    cursorDirectionMobile.addEventListener("input", () => {
+        setLeftSpeed(-cursorDirectionMobile.value);
+        setRightSpeed(cursorDirectionMobile.value);
+        socket.emit('motor', createOrder(leftSpeed, rightSpeed, 10000, currentRobotId));
+    });
+    cursorSpeedMobile.addEventListener("input", () => {
+        setLeftSpeed(cursorSpeedMobile.value);
+        setRightSpeed(cursorSpeedMobile.value);
+        socket.emit('motor', createOrder(leftSpeed, rightSpeed, 10000, currentRobotId));
+    });
+
+    // Normal
     cursorLeftMotor.addEventListener("input", () => {
         setLeftSpeed(cursorLeftMotor.value);
     });

@@ -463,6 +463,10 @@ footer {
         background-color: white;
     }
 
+    #views-list {
+        display: none;
+    }
+
     #titre {
         display: none;
     }
@@ -488,8 +492,26 @@ footer {
         display: none;
     }
 
-    #input-duration {
-        background-color: white;
+    #btn-options {
+        display: none;
+    }
+
+    #cursor-direction-motor-mobile {
+        writing-mode: horizontal-tb;
+        width: auto;
+    }
+
+    #right-part-mobile {
+        display: block;
+        align-self: center;
+    }
+
+    #visible-options {
+        align-self: center;
+    }
+
+    #right-part {
+        display: none;
     }
 
     footer {

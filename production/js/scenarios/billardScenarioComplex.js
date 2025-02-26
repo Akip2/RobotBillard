@@ -1,6 +1,6 @@
 import {getBalls, getHoles, getRobot} from "../elements-manager.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
-import {getNearestBall, getNearestBallToHoles, getNearestHole, normalize, sleep} from "./scenario-functions.js";
+import {getNearestBall, getNearestHole, normalize, sleep} from "./scenario-functions.js";
 import {isRobotFacing, isRobotNear, moveRobotTo, turnRobot} from "../brain/brain.js";
 import {isActive} from "../index.js";
 import {FPS} from "../video/video-parameters.js";
@@ -81,6 +81,7 @@ async function goBehindBall(socket, robotIp) {
                             pointToGo = getPositionBehindBall(ballToPush);
                             robotDestX = pointToGo.x;
                             robotDestY = pointToGo.y;
+                            ballPush = ballToPush;
 
                             moveRobotTo(socket, robotIp, robotDestX, robotDestY);
                         }
@@ -88,8 +89,12 @@ async function goBehindBall(socket, robotIp) {
                     await sleep(MIN_ORDER_DURATION);
                 }
 
-                robotDestX = ballToPush.x;
-                robotDestY = ballToPush.y;
+                if (ballToPush !== undefined) {
+                    robotDestX = ballToPush.x;
+                    robotDestY = ballToPush.y;
+                } else {
+                    await goBehindBall(socket, robotIp)
+                }
             } else {
                 await sleep(1000 / FPS); //Wait for next frame
                 await goBehindBall(socket, robotIp);
