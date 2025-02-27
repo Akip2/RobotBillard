@@ -496,11 +496,6 @@ footer {
         display: none;
     }
 
-    #cursor-direction-motor-mobile {
-        writing-mode: horizontal-tb;
-        width: auto;
-    }
-
     #right-part-mobile {
         display: block;
         align-self: center;
