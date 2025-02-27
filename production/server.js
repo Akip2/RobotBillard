@@ -9,7 +9,7 @@ let isSimulator = false;
 let socketInterface = null; // socket to communicate with the navigator
 
 const io = require('socket.io').listen(server, {
-    pingInterval: 30000,
+    pingInterval: 5000,
     pingTimeout: 5000,
 });
 
@@ -96,7 +96,7 @@ function addNewSocket(socket) {
 function updateSocket(socket) {
     let index = socketIps.indexOf(socket.handshake.address);
     robotSockets[index] = socket;
-    sendRobotListToNavigator()
+    sendRobotListToNavigator();
 }
 
 function removeSocket(socket) {
