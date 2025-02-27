@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = event.offsetX;
         let y = event.offsetY;
 
-        console.log(isInsideTable(x,y));
+        console.log(isInsideTable(x, y));
 
         if (isSimulator) {
             // Get the position of a click on the simulator
@@ -106,14 +106,22 @@ socket.on('connect', function () {
             selectRobots.innerHTML = "";
 
             if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
+                let foundCurrentRobot = false;
+
                 robots.forEach(function (robot) {
                     addRobot(robot);
+
+                    if (robot === currentRobotId) {
+                        foundCurrentRobot = true;
+                    }
                 });
 
-                if (currentRobotId === null) {
-                    setCurrentRobotId(robots[0])
-                }
                 addRobot("Broadcast");
+
+                if ((currentRobotId === null) || !foundCurrentRobot) {
+                    console.log(selectRobots[selectRobots.childElementCount - 1].text)
+                    setCurrentRobotId(selectRobots[selectRobots.childElementCount - 1].text);
+                }
             } else {
                 addRobot("Aucun robot disponible");
             }

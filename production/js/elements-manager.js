@@ -3,6 +3,7 @@ import {getRealRobot} from "./video/video.js";
 import {getDistanceFromBorder, getRealBalls, getRealHoles} from "./video/video-functions.js";
 import {selectRobots, selectRobotsSim} from "./index.js";
 import {height, wallSize, width} from "../simulateur/params.js";
+import {currentRobotId} from "./events/parameters.js";
 
 export function getRobot(index) {
     if (currentView === "simulator") {
@@ -72,6 +73,9 @@ export function addRobot(robotName) {
     if (currentView === "simulator") {
         selectRobotsSim.appendChild(option);
     } else {
+        if (currentRobotId === robotName) {
+            option.selected = true;
+        }
         selectRobots.appendChild(option);
     }
 }
@@ -87,7 +91,7 @@ export function isInsideTable(x, y) {
 
         return (x >= minX && x <= maxX) && (y >= minY && y <= maxY);
     } else {
-        const dist = getDistanceFromBorder(x,y);
+        const dist = getDistanceFromBorder(x, y);
 
         return dist >= 30;
     }
