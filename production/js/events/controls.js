@@ -47,7 +47,7 @@ export function initControls() {
     };
 
     if (window.mobileCheck()) {
-        let joystick = new JoyStick("mobile-joystick", {"autoReturnToCenter": false});
+        let joystick = new JoyStick("mobile-joystick", /*{"autoReturnToCenter": false}*/);
 
         setInterval(function () {
             let dir = joystick.GetDir();
@@ -56,8 +56,8 @@ export function initControls() {
                 setLeftSpeed(joystick.GetY() / 100 * 255);
                 setRightSpeed(joystick.GetY() / 100 * 255);
             } else if (dir === "E" || dir === "W") {
-                setLeftSpeed(joystick.GetX() / 100 * 255);
-                setRightSpeed(-joystick.GetX() / 100 * 255);
+                setLeftSpeed(joystick.GetX() / 200 * 255);
+                setRightSpeed(-joystick.GetX() / 200 * 255);
             } else if (dir === "SW") {
                 setLeftSpeed(joystick.GetY() / 200 * 255);
                 setRightSpeed(joystick.GetX() / 100 * 255);
