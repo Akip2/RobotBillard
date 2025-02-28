@@ -33,11 +33,13 @@ class Ball extends SimulationObject {
             body = Body.create({
                 parts: [collisionCenter, core, circle],
                 restitution: 0.75,
+                mass: 7.5
             });
         } else {
             body = Body.create({
                 parts: [collisionCenter, core],
                 restitution: 0.75,
+                mass: 7.5
             });
         }
 

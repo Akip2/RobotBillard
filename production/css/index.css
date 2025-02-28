@@ -8,7 +8,7 @@
 
 html {
     height: 100%;
-
+    background-color: #FAF8F6;
 }
 
 body {
@@ -115,6 +115,48 @@ header {
 /* LEFT PART */
 
 
+#fond {
+    position: fixed;
+    backdrop-filter: blur(0.15rem);
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+}
+
+#menu-options {
+    position: absolute;
+    background-color: #CC99FF;
+    left: 0;
+    height: 100%;
+    width: 25%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0 10px 30px;
+}
+
+#header-menu-options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+    align-items: center;
+}
+
+#croix {
+    cursor: pointer;
+    width: 20px;
+    padding: 1rem;
+}
+
+#options-list {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+#visible-options {
+    display: flex;
+    flex-direction: row;
+}
+
 #canvas-container {
     display: flex;
     flex-direction: row;
@@ -158,30 +200,16 @@ canvas {
     flex-direction: row;
 }
 
-.select-top-table-container {
+select {
     background-color: lightgray;
     border: none;
     padding: 0.5em;
     margin: 0.8em;
     justify-content: center;
+    text-align: center;
     border-radius: 0.5rem;
     font-size: 1rem;
-}
-
-#reload-btn {
-    background-color: lightgray;
-    border: none;
-    padding: 0.5em;
-    margin: 0.8em;
-    justify-content: center;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    width: 7rem;
     box-shadow: 3px 3px 5px 1px #a8a8a8;
-}
-
-#reload-btn:hover {
-    background-color: darkgray;
 }
 
 .param {
@@ -190,14 +218,21 @@ canvas {
     padding: 0.5em;
     margin: 0.8em;
     justify-content: center;
+    text-align: center;
     border-radius: 0.5rem;
     font-size: 1rem;
     box-shadow: 3px 3px 5px 1px #a8a8a8;
+    width: auto;
 }
 
-.input-checkbox {
-    width: 2rem;
+.param > label, output {
+    padding: 0 0.5rem 0 0.5rem;
 }
+
+#reload-btn:hover, #btn-options:hover {
+    background-color: darkgray;
+}
+
 
 /* RIGHT PART */
 
@@ -212,7 +247,6 @@ canvas {
 
 #robots-go-scenarios {
     flex-direction: column;
-    /*align-items: center;*/
     justify-content: space-evenly;
 }
 
@@ -235,6 +269,7 @@ canvas {
     /* style */
     border: none;
     box-shadow: 10px 10px 10px 1px grey;
+    background-color: #99FFCC;
 
     transition: all ease 0.2s;
 }
@@ -254,27 +289,12 @@ canvas {
     padding: 1rem;
 }
 
-select {
-
-    padding: 0.5rem;
-
-    /* style */
-    border: none;
-    border-radius: 5px;
-    background-color: #F0F0F0;
-    box-shadow: 3px 3px 5px 1px #a8a8a8;
-    font-size: 1rem;
-
-    transition: all ease 0.2s;
-}
-
 #select-scenarios:hover {
     background: lightgrey;
 }
 
 .option {
     background-color: #F0F0F0;
-
     transition: all ease 0.2s;
 }
 
@@ -330,8 +350,7 @@ select {
     width: 66%;
     border: 2px solid grey;
     border-radius: 0.5rem;
-    padding: 0.5rem;
-    padding-right: 0;
+    padding: 0.5rem 0 0.5rem 0.5rem;
 }
 
 .arrow {
@@ -426,7 +445,7 @@ footer {
     height: 3rem;
 
     /* style */
-    background: #F0F0F0;
+    background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -444,13 +463,14 @@ footer {
         background-color: white;
     }
 
+    #views-list {
+        display: none;
+    }
+
     #titre {
         display: none;
     }
 
-    /*#grid-btns {*/
-    /*    display: block;*/
-    /*}*/
     main {
         justify-content: center;
         flex-direction: column;
@@ -472,8 +492,21 @@ footer {
         display: none;
     }
 
-    #input-duration {
-        background-color: white;
+    #btn-options {
+        display: none;
+    }
+
+    #right-part-mobile {
+        display: block;
+        align-self: center;
+    }
+
+    #visible-options {
+        align-self: center;
+    }
+
+    #right-part {
+        display: none;
     }
 
     footer {

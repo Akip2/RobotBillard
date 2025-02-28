@@ -16,6 +16,46 @@
     </div>
 </div>
 
+<!-- options menu -->
+<div id="fond" class="displayNone">
+    <div id="menu-options">
+        <div id="header-menu-options">
+            <h1 id="titre-menu-options">Menu d'options</h1>
+            <img src="./img/croix.png" alt="croix de fermeture" id="croix">
+        </div>
+        <div id="options-list">
+            <div class="param">
+                <label for="checkbox-affichage">Affichage Dessins</label>
+                <input type="checkbox" id="checkbox-affichage" class="input-checkbox" name="affichage" checked/>
+            </div>
+
+            <div class="param">
+                <label for="checkbox-image-pretraitee">Image prétraitée</label>
+                <input type="checkbox" id="checkbox-image-pretraitee" class="input-checkbox"
+                       name="affichage-pretraitee"/>
+            </div>
+
+            <select name="robots" id="select-robot-sim" class="select-top-table-container displayNone">
+                <option value="default" class="option">Aucun robot disponible</option>
+            </select>
+
+            <div id="noise-container" class="param displayNone">
+                <label for="noise">Bruit</label>
+                <input type="range" id="noise" min="0" max="8" value="1" step="1"
+                       oninput="this.nextElementSibling.value = this.value">
+                <output>1</output>
+            </div>
+
+            <div id="speed-container" class="param displayNone">
+                <label for="sim-speed">Vitesse</label>
+                <input type="range" id="sim-speed" min="0" max="2.0" value="1" step="0.1"
+                       oninput="this.nextElementSibling.value = this.value">
+                <output>1</output>
+            </div>
+        </div>
+    </div>
+</div>
+
 <header>
     <div id="views-list">
         <button class="btns-vue" id="camera">Caméra</button>
@@ -28,54 +68,42 @@
 <main>
     <!-- Left part which contains canvas and buttons to change view -->
     <div class="part displayFlex" id="left-part">
-        <div id="top-table-container">
-            <button id="reload-btn" class="displayNone">Recharger</button>
+
+        <div id="visible-options">
+            <button id="reload-btn" class="param displayNone">Recharger</button>
+
             <select name="scenarios" id="select-configuration" class="select-top-table-container displayNone">
-                <option value="Random" class="option">Random</option>
-                <option value="Filled" class="option">Remplie</option>
                 <option value="Billard" class="option" selected>Billard</option>
+                <option value="Random" class="option">Random</option>
+                <option value="Duel" class="option">Duel</option>
+                <option value="Filled" class="option">Remplie</option>
                 <option value="Foot" class="option">Foot</option>
                 <option value="Facile" class="option">Facile</option>
             </select>
-            <div>
-                <select name="robots" id="select-robot" class="select-top-table-container displayFlex">
-                    <!-- here some robots which are available to control (added with javascript) -->
-                    <option value="default" class="option" selected>Broadcast</option>
-                </select>
 
-                <select name="robots" id="select-robot-sim" class="select-top-table-container displayNone">
-                    <option value="default" class="option">Aucun robot disponible</option>
-                </select>
-            </div>
+            <select name="robots" id="select-robot" class="select-top-table-container displayFlex">
+                <!-- here some robots which are available to control (added with javascript) -->
+                <option value="default" class="option" selected>Broadcast</option>
+            </select>
 
-            <div id="noise-container" class="param displayNone">
-                <label for="noise">Bruit</label>
-                <input type="range" id="noise" min="0" max="8" value="1" step="1" oninput="this.nextElementSibling.value = this.value">
-                <output>1</output>
-            </div>
-
-            <div class="param">
-                <label for="checkbox-affichage">Affichage</label>
-                <input type="checkbox" id="checkbox-affichage" class="input-checkbox" name="affichage" checked/>
-            </div>
-
-            <div id="speed-container" class="param displayNone">
-                <label for="sim-speed">Vitesse</label>
-                <input type="range" id="sim-speed" min="0" max="2.0" value="1" step="0.1"
-                       oninput="this.nextElementSibling.value = this.value">
-                <output>1</output>
-            </div>
+            <button id="btn-options" class="param">Options supplémentaires</button>
         </div>
+
         <div id="canvas-container">
-            <!--            <input type="number" id="tmp-1" min="10" max="300" step="10" value="100">-->
-            <!--            <input type="number" id="tmp-2" min="100" max="10000" step="100" value="1000">-->
-            <!--                        <video autoplay loop muted id="canvas-input-video" width="700" height="400" src="./video/aruco.mp4"></video>-->
+            <!-- <input type="number" id="tmp-1" min="10" max="300" step="10" value="100"> -->
+            <!-- <input type="number" id="tmp-2" min="100" max="10000" step="100" value="1000"> -->
+            <!-- <video autoplay loop muted id="canvas-input-video" width="700" height="400" src="./video/aruco.mp4"></video> -->
             <canvas class="canvas-video displayNone" id="canvas-output-video-brut"></canvas>
             <canvas class="canvas-video displayFlex" id="canvas-output-video"></canvas>
         </div>
     </div>
 
     <!-- Right part which contains different views (one or more) -->
+    <!-- Mobile Interface -->
+    <div class="part displayNone" id="right-part-mobile">
+        <div id="mobile-joystick" style="width:300px;height:300px;margin-bottom:20px;"></div>
+    </div>
+
     <div class="part displayFlex" id="right-part">
         <div class="part displayNone" id="arrow-controls">
             <input type="range" class="cursor-motor" id="cursor-left-motor" min="0" max="255" list="steps">
@@ -98,7 +126,7 @@
                          xml:space="preserve" overflow="hidden"><g transform="translate(-626 -341)"><path d="M670.981 348.05 670.981 422.809 662.081 413.914C660.921 412.754 659.041 412.754 657.881 413.914 656.721 415.074 656.721 416.954 657.881 418.114L671.881 432.1C672.986 433.26 674.821 433.305 675.981 432.2 676.015 432.168 676.049 432.134 676.081 432.1L690.071 418.112C691.231 417.007 691.276 415.172 690.171 414.012 690.138 413.978 690.105 413.945 690.071 413.912 688.966 412.752 687.131 412.707 685.971 413.812 685.937 413.844 685.904 413.878 685.871 413.912L676.976 422.807 676.976 348.05C676.976 346.393 675.633 345.05 673.976 345.05 672.319 345.05 670.976 346.393 670.976 348.05Z"/></g></svg>
                 </button>
 
-                <input type="number" id="input-duration" min="100" max="10000" step="100" value="1000">
+                <input type="number" id="input-duration" min="100" max="10000" step="100" value="500">
             </div>
 
             <input type="range" class="cursor-motor" id="cursor-right-motor" min="0" max="255" list="steps">
@@ -121,6 +149,7 @@
                     <option value="default" class="option">Test</option>
                     <option value="SimpleBillard" class="option">Billard Simple</option>
                     <option value="ComplexBillard" class="option">Billard Complexe</option>
+                    <option value="DuelBillard" class="option">Billard Duel</option>
                 </select>
             </div>
         </div>
@@ -135,11 +164,13 @@
     </p>
 </footer>
 
+<script async src="./lib/openCV.js" type="text/javascript"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="./lib/matter_0.17.0.js"></script>
-<script async src="./lib/openCV.js" type="text/javascript"></script>
+<script src="./lib/joy.js"></script>
+
 <script type="module" src="./js/video/video.js"></script>
 <script type="module" src="./js/index.js"></script>
 </body>
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 </html>

@@ -1,12 +1,13 @@
 // Billard configurations
 import {currentConfig, currentRobotId, currentScenario, initParams, setCurrentRobotId} from "./events/parameters.js";
 import {currentView, initView, loadSimulator, table} from "./events/view-manager.js";
-import {addRobot} from "./elements-manager.js";
+import {addRobot, isInsideTable} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
-import {moveRobotTo} from "./brain/brain.js";
+import {moveRobotTo, stopRobots} from "./brain/brain.js";
 import {startBillardScenarioComplex} from "./scenarios/billardScenarioComplex.js";
+import {startBillardScenarioDuel} from "./scenarios/billardScenarioDuel.js";
 
 export const socket = io(); // Connection to server
 
@@ -21,22 +22,39 @@ export const selectRobots = document.querySelector("#select-robot");
 export const selectRobotsSim = document.querySelector("#select-robot-sim");
 const goBtn = document.querySelector("#go-btn");
 
+export let isActive = false;
+
 document.addEventListener("DOMContentLoaded", () => {
     initView();
     initControls();
     initParams();
 
-    goBtn.addEventListener("click", () => {
-        switch (currentScenario) {
-            case "SimpleBillard":
-                startBillardScenarioSimple(socket, currentRobotId);
-                break;
-            case "ComplexBillard":
-                startBillardScenarioComplex(socket, currentRobotId);
-                break;
-            case "default":
-                startTestScenario(socket, currentRobotId);
-                break;
+    goBtn.addEventListener("click", (event) => {
+        isActive = !isActive;
+
+        if (isActive) {
+            goBtn.textContent = "STOP";
+            goBtn.style.backgroundColor = "#FF99CC";
+
+            //Starting scenario
+            switch (currentScenario) {
+                case "SimpleBillard":
+                    startBillardScenarioSimple(socket, currentRobotId);
+                    break;
+                case "ComplexBillard":
+                    startBillardScenarioComplex(socket, currentRobotId);
+                    break;
+                case "DuelBillard":
+                    startBillardScenarioDuel(socket, currentRobotId);
+                    break;
+                case "default":
+                    startTestScenario(socket, currentRobotId);
+                    break;
+            }
+        } else {
+            goBtn.textContent = "GO";
+            goBtn.style.backgroundColor = "#99FFCC";
+            stopRobots(socket);
         }
     });
 
@@ -51,6 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let x = event.offsetX;
         let y = event.offsetY;
+
+        console.log(isInsideTable(x, y));
 
         if (isSimulator) {
             // Get the position of a click on the simulator
@@ -80,20 +100,31 @@ socket.on('connect', function () {
     });
 
     socket.on("robots-list", function (robots) {
-        console.log("navigateur : socket on robot-list");
-        selectRobots.innerHTML = "";
+        if (currentView !== "simulator") {
+            console.log("navigateur : socket on robot-list");
 
-        if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
-            robots.forEach(function (robot) {
-                addRobot(robot);
-            });
+            selectRobots.innerHTML = "";
 
-            if (currentRobotId === null) {
-                setCurrentRobotId(robots[0])
+            if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
+                let foundCurrentRobot = false;
+
+                robots.forEach(function (robot) {
+                    addRobot(robot);
+
+                    if (robot === currentRobotId) {
+                        foundCurrentRobot = true;
+                    }
+                });
+
+                addRobot("Broadcast");
+
+                if ((currentRobotId === null) || !foundCurrentRobot) {
+                    console.log(selectRobots[selectRobots.childElementCount - 1].text)
+                    setCurrentRobotId(selectRobots[selectRobots.childElementCount - 1].text);
+                }
+            } else {
+                addRobot("Aucun robot disponible");
             }
-            addRobot("Broadcast");
-        } else {
-            addRobot("Aucun robot disponible");
         }
     });
 });

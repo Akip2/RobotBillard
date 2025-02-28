@@ -1,0 +1,105 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36" version="26.0.16">
+  <diagram name="Page-1" id="c9S-1aY9rrm_AWkoHk47">
+    <mxGraphModel dx="1621" dy="1581" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-28" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PvQULL0t2w4rYe3ImrRs-2" target="PvQULL0t2w4rYe3ImrRs-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-2" value="Recherche de la boule la plus proche du robot" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="320" y="-15" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PvQULL0t2w4rYe3ImrRs-3" target="PvQULL0t2w4rYe3ImrRs-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-3" value="Recherche du trou le plus proche de cette boule" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="320" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PvQULL0t2w4rYe3ImrRs-5" target="PvQULL0t2w4rYe3ImrRs-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-5" value="&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Déplacer le robot derrière la boule pour l&#39;aligner avec le trou&lt;/span&gt;" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="150" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PvQULL0t2w4rYe3ImrRs-7" target="PvQULL0t2w4rYe3ImrRs-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-7" value="Tourner le robot pour faire face à la boule" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="-10" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-9" value="Frapper la boule avec le robot" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="-170" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PvQULL0t2w4rYe3ImrRs-12" target="PvQULL0t2w4rYe3ImrRs-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-12" value="Début" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-70" y="-15" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PvQULL0t2w4rYe3ImrRs-14" target="PvQULL0t2w4rYe3ImrRs-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-16" value="Oui" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="PvQULL0t2w4rYe3ImrRs-15">
+          <mxGeometry x="-0.3667" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PvQULL0t2w4rYe3ImrRs-14" target="PvQULL0t2w4rYe3ImrRs-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-29" value="Non" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="PvQULL0t2w4rYe3ImrRs-18">
+          <mxGeometry x="-0.2549" relative="1" as="geometry">
+            <mxPoint y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-14" value="Boule trouvée ?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="332.5" y="100" width="95" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-17" value="Attendre une frame" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="120" y="115" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PvQULL0t2w4rYe3ImrRs-21" target="PvQULL0t2w4rYe3ImrRs-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-24" value="Non" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="PvQULL0t2w4rYe3ImrRs-23">
+          <mxGeometry x="-0.68" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-21" value="Robot(s) trouvé(s) ?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="132.5" y="-30" width="95" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-26" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="PvQULL0t2w4rYe3ImrRs-21" target="PvQULL0t2w4rYe3ImrRs-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="320" y="120" as="sourcePoint" />
+            <mxPoint x="370" y="70" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-27" value="Oui" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="PvQULL0t2w4rYe3ImrRs-26">
+          <mxGeometry x="-0.6577" relative="1" as="geometry">
+            <mxPoint x="-3" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-30" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="PvQULL0t2w4rYe3ImrRs-9" target="PvQULL0t2w4rYe3ImrRs-12">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="350" y="250" as="sourcePoint" />
+            <mxPoint x="-120" y="-20" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-110" y="15" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PvQULL0t2w4rYe3ImrRs-34" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="PvQULL0t2w4rYe3ImrRs-17" target="PvQULL0t2w4rYe3ImrRs-12">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="350" y="250" as="sourcePoint" />
+            <mxPoint x="400" y="200" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-10" y="145" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

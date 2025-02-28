@@ -14,7 +14,7 @@ const ballColors = [
     "#8B0000", // brown
 ];
 
-const holeRadius = 14.25;
+const holeRadius = 17;
 
 const robotWidth = 38;
 const robotHeight = 38;

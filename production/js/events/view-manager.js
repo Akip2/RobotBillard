@@ -12,6 +12,7 @@ import {BROADCAST} from "../brain/brain-parameters.js";
 import {canvasContainer, reload, selectRobots, selectRobotsSim, socket} from "../index.js";
 import {setStillContinue} from "../video/video.js";
 import FilledConfig from "../../simulateur/configurations/filled-config.js";
+import BillardDuelConfig from "../../simulateur/configurations/billard-duel.js";
 
 let camera = null;
 export let vue = null;
@@ -167,6 +168,9 @@ export function loadSimulator(configurationName, robotId) {
         case "Facile":
             table = new EasyConfig(vue);
             break;
+        case "Duel":
+            table = new BillardDuelConfig(vue);
+            break;
         default:
             setCurrentConfig("Random");
             table = new RandomConfig(vue);
@@ -200,7 +204,6 @@ export function updateRobotList() {
         let lastChar = option.value[option.value.length - 1] === "t" ? "Broadcast" : option.value[option.value.length - 1];
         if (lastChar === currentRobotId) {
             option.selected = true;
-            console.log("option.selected : " + option);
             found = true;
             break;
         }

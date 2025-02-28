@@ -1,0 +1,6 @@
+Fonctionnalités et cas d'utilisations développés :
+	- Programmer un scénario de billard complexe : FONTANEZ Antoine (100%)
+	- Bouton STOP arrêtant le scénario en cours : FONTANEZ Antoine (100%)
+	- Actualisation en temps réel de la liste des robots connectés : PIERROT Nathan (100%)
+	- Menu d'options : PIERROT Nathan (100%)
+	- Amélioration de l'interface mobile avec un joystick : FROGER Corentin (100%)

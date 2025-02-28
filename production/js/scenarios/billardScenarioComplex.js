@@ -1,8 +1,15 @@
 import {getBalls, getHoles, getRobot} from "../elements-manager.js";
 import {MIN_ORDER_DURATION} from "../brain/brain-parameters.js";
-import {getNearestBall, sleep} from "./scenario-functions.js";
-import {moveRobotTo} from "../brain/brain.js";
+import {getNearestBall, getNearestHole, normalize, sleep} from "./scenario-functions.js";
+import {isRobotFacing, isRobotNear, moveRobotTo, turnRobot} from "../brain/brain.js";
+import {isActive} from "../index.js";
+import {FPS} from "../video/video-parameters.js";
 
+export let robotDestX;
+export let robotDestY;
+export let ballPush = {x: 0, y: 0};
+
+const alpha = 60;
 
 /**
  * méthode qui permet de lancer une simulation de partie de billard
@@ -13,28 +20,106 @@ import {moveRobotTo} from "../brain/brain.js";
  * @returns {Promise<void>}
  */
 export async function startBillardScenarioComplex(socket, robotIp) {
-    let balls = getBalls();
-    let holes = getHoles();
-    let robot = getRobot(0);
-    let ballToPush;
+    while (isActive/*!isEmpty(balls)*/) {
+        await goBehindBall(socket, robotIp);
+        await turnToTarget(socket, robotIp);
+        await hitTarget(socket, robotIp);
+    }
+}
 
-    // TODO btn stop
-    while (true/*!isEmpty(balls)*/) {
-        balls = getBalls();
-        holes = getHoles();
-        robot = getRobot(0);
+async function hitTarget(socket, robotIp) {
+    if (isActive) {
+        moveRobotTo(socket, robotIp, robotDestX, robotDestY);
 
+        while(isActive && !isRobotNear(robotIp, robotDestX, robotDestY, 20)){
+            await sleep(MIN_ORDER_DURATION);
+            moveRobotTo(socket, robotIp, robotDestX, robotDestY);
+        }
+        //socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, 500, robotIp));
+        //await sleep(500);
+    }
+}
+
+async function turnToTarget(socket, robotIp) {
+    if (isActive) {
+        turnRobot(socket, robotIp, robotDestX, robotDestY);
+        while (isActive && !isRobotFacing(robotIp, robotDestX, robotDestY)) {
+            await sleep(MIN_ORDER_DURATION);
+            turnRobot(socket, robotIp, robotDestX, robotDestY);
+        }
+    }
+}
+
+/**
+ *
+ * @param socket
+ * @param robotIp
+ * @returns {Promise<*>} ball chosen to push
+ */
+async function goBehindBall(socket, robotIp) {
+    if (isActive) {
+        let balls = getBalls();
+        let robot = getRobot(0);
+
+        let ballToPush, hole;
         if (robot !== undefined) {
             ballToPush = getNearestBall(balls, robot.position);
 
-            // getNearestHole();
-            console.log(holes);
-            console.log()
-
             if (ballToPush !== undefined) {
-                moveRobotTo(socket, robotIp, ballToPush.x, ballToPush.y);
+                let pointToGo = getPositionBehindBall(ballToPush);
+                robotDestX = pointToGo.x;
+                robotDestY = pointToGo.y;
+
+                while (isActive && !isRobotNear(robotIp, robotDestX, robotDestY, 30)) {
+                    balls = getBalls();
+                    robot = getRobot(0);
+
+                    if(robot !== undefined) {
+                        ballToPush = getNearestBall(balls, robot.position);
+
+                        if (ballToPush !== undefined) {
+                            pointToGo = getPositionBehindBall(ballToPush);
+                            robotDestX = pointToGo.x;
+                            robotDestY = pointToGo.y;
+                            ballPush = ballToPush;
+
+                            moveRobotTo(socket, robotIp, robotDestX, robotDestY);
+                        }
+                    }
+                    await sleep(MIN_ORDER_DURATION);
+                }
+
+                if (ballToPush !== undefined) {
+                    robotDestX = ballToPush.x;
+                    robotDestY = ballToPush.y;
+                } else {
+                    await goBehindBall(socket, robotIp)
+                }
+            } else {
+                await sleep(1000 / FPS); //Wait for next frame
+                await goBehindBall(socket, robotIp);
             }
+        } else {
+            await sleep(1000 / FPS); //Wait for next frame
+            await goBehindBall(socket, robotIp);
         }
-        await sleep(MIN_ORDER_DURATION);
     }
+}
+
+function getPositionBehindBall(ballToPush) {
+    const holes = getHoles();
+    const hole = getNearestHole(holes, ballToPush);
+
+    const pushVector = {
+        x: hole.x - ballToPush.x,
+        y: hole.y - ballToPush.y,
+    }
+
+    const normalizedPushVector = normalize(pushVector);
+
+    // Calculate position behind the ball
+    return {
+        x: ballToPush.x - alpha * normalizedPushVector.x,
+        y: ballToPush.y - alpha * normalizedPushVector.y,
+    };
 }

@@ -1,9 +1,12 @@
-import {detectAndDrawArucos, detectCircles, drawDetectedCircles, preProcess} from "./video-functions.js";
+import {detectAndDrawArucos, detectCircles, drawCircle, drawDetectedCircles, preProcess} from "./video-functions.js";
 import {calculateBallSize, distanceBetweenPoints} from "../brain/brain.js";
 import {DEFAULT_BALL_RADIUS, FPS, HEIGHT, WIDTH} from "./video-parameters.js";
+import {ballPush, robotDestX, robotDestY} from "../scenarios/billardScenarioComplex.js";
 
 let stillContinue = true;
 let robots = [];
+
+export let lastMv;
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("canvas-output-video");
@@ -58,20 +61,20 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function processVideo(video, canvas, canvasBrut, ctx) {
-    let delay;
-    const frame = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
-
     function processFrame() {
+        let delay;
+
         if (stillContinue) {
             try {
                 let begin = Date.now();
 
                 // frame brut
+                const frame = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
                 cv.imshow(canvasBrut, frame);
 
                 // Capture the frame of the video in a temporary canvas
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
                 // Convert the frame in an OpenCV matrix
                 frame.data.set(imageData.data);
@@ -82,8 +85,8 @@ function processVideo(video, canvas, canvasBrut, ctx) {
 
                 // AruCo detection
                 let arucos = detectAndDrawArucos(finalImage);
-                const tableCorners = arucos.slice(0, 4);
-                const [topLeft, topRight, bottomRight, bottomLeft] = tableCorners;
+                let tableCorners = arucos.slice(0, 4);
+                let [topLeft, topRight, bottomRight, bottomLeft] = tableCorners;
 
                 robots = arucos.slice(4, arucos.length);
 
@@ -108,12 +111,18 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                         mv.intPtr(idx, 0)[1] = y;
                     });
 
+                    lastMv?.delete();
+                    lastMv = mv.clone();
+
                     markersVector.push_back(mv);
                     cv.polylines(finalImage, markersVector, true, new cv.Scalar(0, 255, 0), 4);
 
                     // We can deduce some parameters as well
                     ballRadius = calculateBallSize(distanceBetweenPoints(topLeft, bottomLeft));
                     isPerimeterFound = true;
+
+                    markersVector.delete();
+                    points = null;
                 }
 
                 // Detect and draw the circles
@@ -121,13 +130,30 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                 drawDetectedCircles(finalImage, circles, mv, robots, tableCorners, isPerimeterFound);
 
                 // Draw the final result in the canvas
-                // preProcessedFrame
-                cv.imshow(canvas, finalImage);
+                // preProcessedFrame / finalImage
+                drawCircle(finalImage, new cv.Point(robotDestX, robotDestY), [255, 0, 255, 20]);
+                drawCircle(finalImage, new cv.Point(ballPush.x, ballPush.y), [255, 255, 0, 20]);
+
+                if (document.getElementById("checkbox-image-pretraitee").checked) {
+                    cv.imshow(canvas, preProcessedFrame);
+                } else {
+                    cv.imshow(canvas, finalImage);
+                }
 
                 // Clean memory
+                frame.delete();
+                imageData = null;
                 finalImage.delete();
                 preProcessedFrame.delete();
                 mv.delete();
+
+                arucos = null;
+                tableCorners = null;
+                topLeft = null;
+                topRight = null;
+                bottomRight = null;
+                bottomLeft = null;
+
                 circles.delete();
 
                 delay = 1000 / FPS - (Date.now() - begin);

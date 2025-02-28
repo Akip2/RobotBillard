@@ -1,31 +1,12 @@
-import {currentView, table} from "./events/view-manager.js";
+import {currentView, isSimulator, table} from "./events/view-manager.js";
 import {getRealRobot} from "./video/video.js";
-import {getRealBalls, getRealHoles} from "./video/video-functions.js";
+import {getDistanceFromBorder, getRealBalls, getRealHoles} from "./video/video-functions.js";
 import {selectRobots, selectRobotsSim} from "./index.js";
+import {height, wallSize, width} from "../simulateur/params.js";
+import {currentRobotId} from "./events/parameters.js";
 
 export function getRobot(index) {
     if (currentView === "simulator") {
-        /* Old Matter.js code, we use OpenCV now
-        let angle = table.robots[index].body.angle;
-
-        // Matter.js angle range from -infinity to +infinity
-        // we convert them to be between -180 to 180
-        if (angle > 0) {
-            angle = 360 - ((Math.abs(table.robots[index].body.angle) * (180 / Math.PI)) % 360);
-        } else {
-            angle = (Math.abs(table.robots[index].body.angle) * (180 / Math.PI)) % 360;
-        }
-
-        return {
-            position:
-                {
-                    x: table.robots[index].body.position.x,
-                    y: table.robots[index].body.position.y
-                },
-            orientation: angle
-        };
-        */
-
         let robot = table.getRobotsDetected()[index];
 
         if (robot !== undefined) {
@@ -86,11 +67,32 @@ export function getHoles() {
 
 export function addRobot(robotName) {
     let option = document.createElement("option");
+    option.className = "option";
     option.text = robotName;
 
     if (currentView === "simulator") {
         selectRobotsSim.appendChild(option);
     } else {
+        if (currentRobotId === robotName) {
+            option.selected = true;
+        }
         selectRobots.appendChild(option);
+    }
+}
+
+export function isInsideTable(x, y) {
+    let minX, maxX, minY, maxY;
+    if (isSimulator) {
+        minX = wallSize;
+        maxX = width - wallSize;
+
+        minY = wallSize;
+        maxY = height - wallSize;
+
+        return (x >= minX && x <= maxX) && (y >= minY && y <= maxY);
+    } else {
+        const dist = getDistanceFromBorder(x, y);
+
+        return dist >= 30;
     }
 }
