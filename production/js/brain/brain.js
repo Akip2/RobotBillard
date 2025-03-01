@@ -11,18 +11,14 @@ import {
 } from "./brain-parameters.js";
 import {isSimulator} from "../events/view-manager.js";
 
-let currentInterval = null;
+const intervals = new Map();
 
 export function turnRobot(socket, robotIp, x, y) {
     let direction;
 
-    const robot = getRobot(0);
+    const robot = getRobot(robotIp);
     const angleDifference = getAngleDifference(robot, x, y);
     angleDifference > 0 ? direction = "Left" : direction = "Right";
-
-    if (Math.abs(angleDifference) <= ANGLE_THRESHOLD) {
-        clearInterval(currentInterval);
-    }
 
     let rotationSpeed = Math.abs(angleDifference) * 2;
 
@@ -40,14 +36,12 @@ export function turnRobot(socket, robotIp, x, y) {
 }
 
 export function moveRobotTo(socket, robotIp, x, y) {
-    if (currentInterval !== null) {
-        clearInterval(currentInterval);
-    }
+    clearInterval(intervals.get(robotIp));
 
     let direction = "Left";
 
-    currentInterval = setInterval(() => {
-        let robot = getRobot(0);
+    const currentInterval = setInterval(() => {
+        let robot = getRobot(robotIp);
 
         if (robot !== undefined) {
             let angleDifference = getAngleDifference(robot, x, y);
@@ -97,10 +91,15 @@ export function moveRobotTo(socket, robotIp, x, y) {
             }
         }
     }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1));
+
+    intervals.set(robotIp, currentInterval);
 }
 
 export function stopRobots(socket) {
-    clearInterval(currentInterval);
+    intervals.forEach(interval => {
+        clearInterval(interval);
+    });
+
     socket.emit('motor', createOrder(0, 0, 100, "Broadcast"));
 }
 
@@ -124,7 +123,7 @@ export function getAngleDifference(robot, x, y) {
 }
 
 export function isRobotFacing(robotIp, x, y) {
-    const robot = getRobot(0);
+    const robot = getRobot(robotIp);
 
     if (robot !== undefined) {
         let angleDifference = getAngleDifference(robot, x, y);
@@ -135,7 +134,7 @@ export function isRobotFacing(robotIp, x, y) {
 }
 
 export function isRobotNear(robotIp, x, y, deltaMax) {
-    let robot = getRobot(0);
+    let robot = getRobot(robotIp);
 
     if (robot !== undefined) {
         let robotPosition = robot.position;

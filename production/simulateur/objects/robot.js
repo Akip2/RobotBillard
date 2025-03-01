@@ -4,7 +4,7 @@ import {Wheel, WHEEL_SIDE} from "./wheel.js";
 import {simulatorSpeed} from "../../js/events/parameters.js";
 
 class Robot extends SimulationObject {
-    constructor(width, height, wheelWidth, wheelHeight, x = 0, y = 0, angle = 0) {
+    constructor(width, height, wheelWidth, wheelHeight, x = 0, y = 0, angle = 0, arucoId = 1) {
         const core = Bodies.rectangle(x, y, width, height, {
             render: {
                 fillStyle: "#B6423F", // real color of our robot
@@ -52,13 +52,14 @@ class Robot extends SimulationObject {
         this.wheelLeft = wheel1;
         this.wheelRight = wheel2;
 
+        this.id = arucoId;
         this.aruco = Bodies.rectangle(x, y, width, height, {
             collisionFilter: {
                 mask: 0x0000 //ignore collisions and mouse drag
             },
             render: {
                 sprite: {
-                    texture: "../../img/aruco-marker-ID-457.svg",
+                    texture: `../../img/aruco-marker-ID-${arucoId}.svg`,
                     xScale: 0.1,
                     yScale: 0.1,
                 }

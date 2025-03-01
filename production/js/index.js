@@ -1,13 +1,14 @@
 // Billard configurations
 import {currentConfig, currentRobotId, currentScenario, initParams, setCurrentRobotId} from "./events/parameters.js";
 import {currentView, initView, loadSimulator, table} from "./events/view-manager.js";
-import {addRobot, isInsideTable} from "./elements-manager.js";
+import {addRobot, getRobotsIps} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
 import {moveRobotTo, stopRobots} from "./brain/brain.js";
 import {startBillardScenarioComplex} from "./scenarios/billardScenarioComplex.js";
 import {startBillardScenarioDuel} from "./scenarios/billardScenarioDuel.js";
+import {BROADCAST} from "./brain/brain-parameters.js";
 
 export const socket = io(); // Connection to server
 
@@ -70,11 +71,17 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = event.offsetX;
         let y = event.offsetY;
 
-        console.log(isInsideTable(x, y));
-
         if (isSimulator) {
             // Get the position of a click on the simulator
-            moveRobotTo(socket, currentRobotId, x, y);
+            if(currentRobotId === BROADCAST) {
+                const ips = getRobotsIps();
+
+                ips.forEach(ip => {
+                    moveRobotTo(socket, ip, x, y);
+                });
+            } else {
+                moveRobotTo(socket, currentRobotId, x, y);
+            }
             // turnRobotInCircle(socket, 0);
         } else {
             // Get the position of a click on the camera

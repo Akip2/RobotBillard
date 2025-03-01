@@ -4,16 +4,18 @@ import {getDistanceFromBorder, getRealBalls, getRealHoles} from "./video/video-f
 import {selectRobots, selectRobotsSim} from "./index.js";
 import {height, wallSize, width} from "../simulateur/params.js";
 import {currentRobotId} from "./events/parameters.js";
+import {BROADCAST} from "./brain/brain-parameters.js";
 
-export function getRobot(index) {
+export function getRobot(id) {
     if (currentView === "simulator") {
-        let robot = table.getRobotsDetected()[index];
+        const detected = table.getRobotsDetected();
+        const robot = detected.find(r => r.id === id);
 
         if (robot !== undefined) {
             return robot;
         }
     }
-    return getRealRobot(index);
+    return getRealRobot(0); //A CHANGER
 }
 
 export function getAvailableRobots() {
@@ -95,4 +97,24 @@ export function isInsideTable(x, y) {
 
         return dist >= 30;
     }
+}
+
+export function getRobotsIps() {
+    const ips = [];
+
+    const options = isSimulator ? selectRobotsSim.options : selectRobots.options;
+    if (isSimulator) {
+        for (let i = 1; i < options.length; i++) {
+            ips.push(i);
+        }
+    } else {
+        for(let i = 0; i < options.length; i++) {
+            const currentOption =  options[i].text;
+            if(currentOption !== BROADCAST) {
+                ips.push(currentOption);
+            }
+        }
+    }
+
+    return ips;
 }
