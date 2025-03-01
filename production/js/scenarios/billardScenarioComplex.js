@@ -59,7 +59,7 @@ async function turnToTarget(socket, robotIp) {
 async function goBehindBall(socket, robotIp) {
     if (isActive) {
         let balls = getBalls();
-        let robot = getRobot(0);
+        let robot = getRobot(robotIp);
 
         let ballToPush, hole;
         if (robot !== undefined) {
@@ -72,7 +72,7 @@ async function goBehindBall(socket, robotIp) {
 
                 while (isActive && !isRobotNear(robotIp, robotDestX, robotDestY, 30)) {
                     balls = getBalls();
-                    robot = getRobot(0);
+                    robot = getRobot(robotIp);
 
                     if(robot !== undefined) {
                         ballToPush = getNearestBall(balls, robot.position);

@@ -14,12 +14,12 @@ import {isActive} from "../index.js";
  */
 export async function startBillardScenarioSimple(socket, robotIp) {
     let balls = getBalls();
-    let robot = getRobot(0);
+    let robot = getRobot(robotIp);
     let ballToPush;
 
     while (isActive) {
         balls = getBalls();
-        robot = getRobot(0);
+        robot = getRobot(robotIp);
 
         if (robot !== undefined) {
             ballToPush = getNearestBall(balls, robot.position);

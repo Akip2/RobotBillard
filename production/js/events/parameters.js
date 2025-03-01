@@ -57,7 +57,7 @@ export function initParams() {
 
     selectRobotsSimulator.addEventListener("change", (event) => {
         const optionName = event.target.value;
-        currentRobotId = optionName === "Broadcast" ? BROADCAST : optionName[optionName.length - 1];
+        currentRobotId = optionName === "Broadcast" ? BROADCAST : Number(optionName[optionName.length - 1]);
     });
 
     // Choose a configuration for the simulator

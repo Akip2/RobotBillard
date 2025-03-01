@@ -37,19 +37,34 @@ document.addEventListener("DOMContentLoaded", () => {
             goBtn.textContent = "STOP";
             goBtn.style.backgroundColor = "#FF99CC";
 
+            let ids;
             //Starting scenario
+            if(currentRobotId === BROADCAST) {
+                ids = getRobotsIps();
+            } else {
+                ids = [currentRobotId];
+            }
+
             switch (currentScenario) {
                 case "SimpleBillard":
-                    startBillardScenarioSimple(socket, currentRobotId);
+                    ids.forEach(id => {
+                        startBillardScenarioSimple(socket, id);
+                    })
                     break;
                 case "ComplexBillard":
-                    startBillardScenarioComplex(socket, currentRobotId);
+                    ids.forEach(id => {
+                        startBillardScenarioComplex(socket, id);
+                    })
                     break;
                 case "DuelBillard":
-                    startBillardScenarioDuel(socket, currentRobotId);
+                    ids.forEach(id => {
+                        startBillardScenarioDuel(socket, id);
+                    })
                     break;
                 case "default":
-                    startTestScenario(socket, currentRobotId);
+                    ids.forEach(id => {
+                        startTestScenario(socket, id);
+                    })
                     break;
             }
         } else {
