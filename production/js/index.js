@@ -7,7 +7,7 @@ import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
 import {moveRobotTo, stopRobots} from "./brain/brain.js";
 import {startBillardScenarioComplex} from "./scenarios/billardScenarioComplex.js";
-import {startBillardScenarioDuel} from "./scenarios/billardScenarioDuel.js";
+import {startBillardScenarioCollaboration} from "./scenarios/billardScenarioCollaboration.js";
 import {BROADCAST} from "./brain/brain-parameters.js";
 
 export const socket = io(); // Connection to server
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let ids;
             //Starting scenario
-            if(currentRobotId === BROADCAST) {
+            if (currentRobotId === BROADCAST) {
                 ids = getRobotsIps();
             } else {
                 ids = [currentRobotId];
@@ -56,10 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         startBillardScenarioComplex(socket, id);
                     })
                     break;
-                case "DuelBillard":
-                    ids.forEach(id => {
-                        startBillardScenarioDuel(socket, id);
-                    })
+                case "CollaborationBillard":
+                    startBillardScenarioCollaboration(socket);
                     break;
                 case "default":
                     ids.forEach(id => {
@@ -88,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (isSimulator) {
             // Get the position of a click on the simulator
-            if(currentRobotId === BROADCAST) {
+            if (currentRobotId === BROADCAST) {
                 const ips = getRobotsIps();
 
                 ips.forEach(ip => {

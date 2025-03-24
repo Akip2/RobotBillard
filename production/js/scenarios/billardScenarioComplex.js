@@ -31,12 +31,10 @@ async function hitTarget(socket, robotIp) {
     if (isActive) {
         moveRobotTo(socket, robotIp, robotDestX, robotDestY);
 
-        while(isActive && !isRobotNear(robotIp, robotDestX, robotDestY, 20)){
+        while (isActive && !isRobotNear(robotIp, robotDestX, robotDestY, 20)) {
             await sleep(MIN_ORDER_DURATION);
             moveRobotTo(socket, robotIp, robotDestX, robotDestY);
         }
-        //socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, 500, robotIp));
-        //await sleep(500);
     }
 }
 
@@ -74,7 +72,7 @@ async function goBehindBall(socket, robotIp) {
                     balls = getBalls();
                     robot = getRobot(robotIp);
 
-                    if(robot !== undefined) {
+                    if (robot !== undefined) {
                         ballToPush = getNearestBall(balls, robot.position);
 
                         if (ballToPush !== undefined) {
