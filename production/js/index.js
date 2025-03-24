@@ -112,14 +112,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 socket.on('connect', function () {
     console.log("Connected to server with ID : ", socket.id);
+    socket.emit("identification", {
+        type: "interface"
+    });
 
     socket.on("motor", function (order) {
         table.sendRobotOrder(order, order.ipRobot); // Send order to simulator
     });
 
+    /*
     socket.on("ask-identity", function () {
         socket.emit("is-interface", currentView);
     });
+     */
 
     socket.on("robots-list", function (robots) {
         if (currentView !== "simulator") {

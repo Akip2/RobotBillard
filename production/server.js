@@ -3,10 +3,12 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 
-let robotSockets = []; // use to stock robots sockets (all data about a robot)
+let robotsSockets = []; // use to stock robots sockets (all data about a robot)
 let socketIps = []; // use to stock robots ip (example : ::ffff:192.168.137.100)
 let isSimulator = false;
 let socketInterface = null; // socket to communicate with the navigator
+
+const relationTable = new Map();
 
 const io = require('socket.io').listen(server, {
     pingInterval: 5000,
@@ -28,7 +30,6 @@ server.listen(port);
 
 io.sockets.on("connection", function (socket) {
     console.log("Socket connected: " + socket.conn.remoteAddress);
-    socket.emit("ask-identity");
 
     if (!socketIps.includes(socket.handshake.address)) {
         addNewSocket(socket);
@@ -53,8 +54,8 @@ io.sockets.on("connection", function (socket) {
                 let found = false;
                 let robotSocket;
 
-                while (i < robotSockets.length && !found) {
-                    robotSocket = robotSockets[i];
+                while (i < robotsSockets.length && !found) {
+                    robotSocket = robotsSockets[i];
                     if (robotSocket.handshake.address === ipRobot) {
                         found = true;
                     }
@@ -70,12 +71,29 @@ io.sockets.on("connection", function (socket) {
         }
     });
 
+    socket.on("identification", function (data) {
+        if(data["type"] === "interface") { //Socket is the interface
+            console.log("interface");
+
+            removeSocket(socket);
+            isSimulator = (data["mode"] === "simulator");
+            socketInterface = socket;
+        } else { //Socket is robot
+            console.log("new robot with id : "+data["id"]);
+            relationTable.set(data["id"], socket.handshake.address);
+            console.log(relationTable);
+            sendRobotTableToNavigator();
+        }
+    });
+
+    /*
     socket.on("is-interface", function (mode) { // We learn that the socket is the interface
         isSimulator = (mode === "simulator");
         socketInterface = socket;
         removeSocket(socket);
         console.log("remove interface");
     });
+     */
 
     socket.on("change-mode", function (val) { // User is changing the mode of the interface (simulator, manual, camera...)
         isSimulator = (val === "simulator");
@@ -88,31 +106,38 @@ io.sockets.on("connection", function (socket) {
 });
 
 function addNewSocket(socket) {
-    robotSockets.push(socket); // We assume the connecting socket is a robot
+    robotsSockets.push(socket); // We assume the connecting socket is a robot
     socketIps.push(socket.handshake.address);
-    sendRobotListToNavigator();
+    sendRobotTableToNavigator();
 }
 
 function updateSocket(socket) {
     let index = socketIps.indexOf(socket.handshake.address);
-    robotSockets[index] = socket;
-    sendRobotListToNavigator();
+    robotsSockets[index] = socket;
+    sendRobotTableToNavigator();
 }
 
 function removeSocket(socket) {
-    let indexRS = robotSockets.indexOf(socket);
+    let indexRS = robotsSockets.indexOf(socket);
     if (indexRS !== -1) {
-        robotSockets.splice(indexRS, 1);
+        robotsSockets.splice(indexRS, 1);
+    }
+
+    for (const [key, value] of relationTable) {
+        if (value === socket.handshake.address) {
+            relationTable.delete(key);
+            break;
+        }
     }
 
     let indexSI = socketIps.indexOf(socket.handshake.address);
     if (indexSI !== -1) {
         socketIps.splice(indexSI, 1);
     }
-    sendRobotListToNavigator();
+    sendRobotTableToNavigator();
 }
 
-function sendRobotListToNavigator() {
+function sendRobotTableToNavigator() {
     if (socketInterface !== null) {
         socketInterface.emit("robots-list", socketIps);
     }
