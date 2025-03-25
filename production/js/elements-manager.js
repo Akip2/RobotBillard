@@ -6,6 +6,8 @@ import {height, wallSize, width} from "../simulateur/params.js";
 import {currentRobotId} from "./events/parameters.js";
 import {BROADCAST} from "./brain/brain-parameters.js";
 
+export let relationTable = new Map();
+
 export function getRobot(id) {
     if (currentView === "simulator") {
         const detected = table.getRobotsDetected();
@@ -15,7 +17,7 @@ export function getRobot(id) {
             return robot;
         }
     }
-    return getRealRobot(0); //A CHANGER
+    return getRealRobot(id);
 }
 
 export function getAvailableRobots() {
@@ -67,6 +69,18 @@ export function getHoles() {
     return getRealHoles();
 }
 
+export function setRelationTable(relTab) {
+    relationTable = relTab;
+}
+
+export function getRobotIp(id) {
+    if(isSimulator) {
+        return id;
+    } else {
+        return relationTable.get(id);
+    }
+}
+
 export function addRobot(robotName) {
     let option = document.createElement("option");
     option.className = "option";
@@ -99,7 +113,7 @@ export function isInsideTable(x, y) {
     }
 }
 
-export function getRobotsIps() {
+export function getRobotsIds() {
     const ips = [];
 
     const options = isSimulator ? selectRobotsSim.options : selectRobots.options;

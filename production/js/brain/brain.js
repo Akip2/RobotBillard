@@ -1,5 +1,5 @@
 import {simulatorSpeed} from "../events/parameters.js";
-import {getRobot} from "../elements-manager.js";
+import {getRobot, getRobotIp} from "../elements-manager.js";
 import {
     ANGLE_THRESHOLD,
     BALL_REAL_SIZE,
@@ -13,10 +13,10 @@ import {isSimulator} from "../events/view-manager.js";
 
 const intervals = new Map();
 
-export function turnRobot(socket, robotIp, x, y) {
+export function turnRobot(socket, robotId, x, y) {
     let direction;
 
-    const robot = getRobot(robotIp);
+    const robot = getRobot(robotId);
     const angleDifference = getAngleDifference(robot, x, y);
     angleDifference > 0 ? direction = "Left" : direction = "Right";
 
@@ -29,19 +29,19 @@ export function turnRobot(socket, robotIp, x, y) {
     }
 
     if (direction === "Left") {
-        socket.emit('motor', createOrder(-rotationSpeed, rotationSpeed, MIN_ORDER_DURATION, robotIp));
+        socket.emit('motor', createOrder(-rotationSpeed, rotationSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
     } else {
-        socket.emit('motor', createOrder(rotationSpeed, -rotationSpeed, MIN_ORDER_DURATION, robotIp));
+        socket.emit('motor', createOrder(rotationSpeed, -rotationSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
     }
 }
 
-export function moveRobotTo(socket, robotIp, x, y) {
-    clearInterval(intervals.get(robotIp));
+export function moveRobotTo(socket, robotId, x, y) {
+    clearInterval(intervals.get(robotId));
 
     let direction = "Left";
 
     const currentInterval = setInterval(() => {
-        let robot = getRobot(robotIp);
+        let robot = getRobot(robotId);
 
         if (robot !== undefined) {
             let angleDifference = getAngleDifference(robot, x, y);
@@ -56,9 +56,9 @@ export function moveRobotTo(socket, robotIp, x, y) {
             const isTargetBackward = (angleDifference <= -180 + ANGLE_THRESHOLD) || (angleDifference >= 180 - ANGLE_THRESHOLD);
 
             if (isTargetForward) {
-                socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, robotIp));
+                socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
             } else if (isTargetBackward) {
-                socket.emit('motor', createOrder(-ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, MIN_ORDER_DURATION, robotIp));
+                socket.emit('motor', createOrder(-ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
             } else {
                 // Tries to turn and go forward / backward smoothly
                 const isTargetBehind = angleDifference > 90 || angleDifference < -90;
@@ -68,19 +68,19 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
                 // Needs to turn before moving if too close to the target
                 if (distanceDifference < DISTANCE_THRESHOLD * 2) {
-                    turnRobot(socket, robotIp, x, y);
+                    turnRobot(socket, robotId, x, y);
                 } else {
                     if (direction === "Left") {
                         if (isTargetBehind) {
-                            socket.emit('motor', createOrder(-otherMotorSpeed, -fullSpeedMotor, MIN_ORDER_DURATION, robotIp));
+                            socket.emit('motor', createOrder(-otherMotorSpeed, -fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
-                            socket.emit('motor', createOrder(otherMotorSpeed, fullSpeedMotor, MIN_ORDER_DURATION, robotIp));
+                            socket.emit('motor', createOrder(otherMotorSpeed, fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
                     } else {
                         if (isTargetBehind) {
-                            socket.emit('motor', createOrder(-fullSpeedMotor, -otherMotorSpeed, MIN_ORDER_DURATION, robotIp));
+                            socket.emit('motor', createOrder(-fullSpeedMotor, -otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
-                            socket.emit('motor', createOrder(fullSpeedMotor, otherMotorSpeed, MIN_ORDER_DURATION, robotIp));
+                            socket.emit('motor', createOrder(fullSpeedMotor, otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
                     }
                 }
@@ -92,7 +92,7 @@ export function moveRobotTo(socket, robotIp, x, y) {
         }
     }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1));
 
-    intervals.set(robotIp, currentInterval);
+    intervals.set(robotId, currentInterval);
 }
 
 export function stopRobots(socket) {
@@ -122,8 +122,8 @@ export function getAngleDifference(robot, x, y) {
     return false;
 }
 
-export function isRobotFacing(robotIp, x, y) {
-    const robot = getRobot(robotIp);
+export function isRobotFacing(robotId, x, y) {
+    const robot = getRobot(robotId);
 
     if (robot !== undefined) {
         let angleDifference = getAngleDifference(robot, x, y);
@@ -133,8 +133,8 @@ export function isRobotFacing(robotIp, x, y) {
     return false;
 }
 
-export function isRobotNear(robotIp, x, y, deltaMax) {
-    let robot = getRobot(robotIp);
+export function isRobotNear(robotId, x, y, deltaMax) {
+    let robot = getRobot(robotId);
 
     if (robot !== undefined) {
         let robotPosition = robot.position;

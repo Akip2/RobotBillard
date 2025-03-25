@@ -139,7 +139,8 @@ function removeSocket(socket) {
 
 function sendRobotTableToNavigator() {
     if (socketInterface !== null) {
-        socketInterface.emit("robots-list", socketIps);
+        //socketInterface.emit("robots-list", socketIps);
+        socketInterface.emit("robots-list", relationTable);
     }
 }
 
