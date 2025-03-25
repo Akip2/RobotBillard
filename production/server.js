@@ -72,14 +72,14 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on("identification", function (data) {
-        if(data["type"] === "interface") { //Socket is the interface
+        if (data["type"] === "interface") { //Socket is the interface
             console.log("interface");
 
             removeSocket(socket);
             isSimulator = (data["mode"] === "simulator");
             socketInterface = socket;
         } else { //Socket is robot
-            console.log("new robot with id : "+data["id"]);
+            console.log("new robot with id : " + data["id"]);
             relationTable.set(data["id"], socket.handshake.address);
             sendRobotTableToNavigator();
         }
