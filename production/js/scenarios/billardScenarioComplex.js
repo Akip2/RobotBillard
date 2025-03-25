@@ -27,7 +27,7 @@ export async function startBillardScenarioComplex(socket, robotIp) {
     }
 }
 
-async function hitTarget(socket, robotIp) {
+export async function hitTarget(socket, robotIp) {
     if (isActive) {
         moveRobotTo(socket, robotIp, robotDestX, robotDestY);
 
@@ -38,7 +38,7 @@ async function hitTarget(socket, robotIp) {
     }
 }
 
-async function turnToTarget(socket, robotIp) {
+export async function turnToTarget(socket, robotIp) {
     if (isActive) {
         turnRobot(socket, robotIp, robotDestX, robotDestY);
         while (isActive && !isRobotFacing(robotIp, robotDestX, robotDestY)) {
@@ -54,7 +54,7 @@ async function turnToTarget(socket, robotIp) {
  * @param robotIp
  * @returns {Promise<*>} ball chosen to push
  */
-async function goBehindBall(socket, robotIp) {
+export async function goBehindBall(socket, robotIp) {
     if (isActive) {
         let balls = getBalls();
         let robot = getRobot(robotIp);

@@ -15,7 +15,7 @@ export async function startBillardScenarioCollaboration(socket) {
         let assignedBalls = new Set(); // Pour éviter les doublons
 
         for (let [index, ip] of robotsIps.entries()) {
-            let robot = getRobot(index + 1); // Récupération du robot correspondant
+            let robot = getRobot(index + 1);
             if (!robot) continue;
 
             // Trouver la boule la plus proche non attribuée
@@ -31,9 +31,39 @@ export async function startBillardScenarioCollaboration(socket) {
             if (!ballToPush) continue; // Si plus de boules disponibles, on arrête
 
             assignedBalls.add(ballToPush); // Marquer la boule comme prise
+
+            if (isRobotInPath(robot, robotsIps)) {
+                // affichage
+                console.log("robot sur le chemin");
+                // TODO
+            }
+
             moveRobotTo(socket, ip, ballToPush.x, ballToPush.y);
         }
 
         await sleep(MIN_ORDER_DURATION);
     }
+}
+
+function isRobotInPath(robot, robots, x, y) {
+    let robotFound = false;
+
+    let availableRobots = removeRobot(robot, robots);
+
+    for (let [index, ip] of robots.entries()) {
+        let otherRobot = getRobot(index + 1);
+        // TODO
+    }
+
+    return robotFound;
+}
+
+function removeRobot(robot, robots) {
+    let availableRobots = [];
+    for (let r of robots) {
+        if (r !== robot) {
+            availableRobots.push(r);
+        }
+    }
+    return availableRobots;
 }
