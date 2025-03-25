@@ -81,7 +81,6 @@ io.sockets.on("connection", function (socket) {
         } else { //Socket is robot
             console.log("new robot with id : " + data["id"]);
             relationTable.set(data["id"], socket.handshake.address);
-            console.log(relationTable);
             sendRobotTableToNavigator();
         }
     });
@@ -140,7 +139,8 @@ function removeSocket(socket) {
 function sendRobotTableToNavigator() {
     if (socketInterface !== null) {
         //socketInterface.emit("robots-list", socketIps);
-        socketInterface.emit("robots-list", relationTable);
+        const stringifiedTable = JSON.stringify(Array.from(relationTable));
+        socketInterface.emit("robots-list", stringifiedTable);
     }
 }
 

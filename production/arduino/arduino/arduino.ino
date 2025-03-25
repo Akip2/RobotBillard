@@ -18,12 +18,18 @@
 
 // === MODIFY ACCORDING TO THE NETWORK ========================================
 char* SERVER_ADDRESS = "192.168.137.1";
-// char* SERVER_ADDRESS = "192.168.137.214";
 int SERVER_PORT = 8001;
 char* URL = "/socket.io/?EIO=4";
 
 char* NETWORK_NAME = "TP-LINK_7A134E";
 char* NETWORK_PASSWORD = "C27A134E";
+
+// 957: Tranis
+// 857: Ninho
+// 457: SCH (ses roues sont à l'envers)
+// 157: Zola
+int ARUCO_ID = 957;
+
 // ============================================================================
 
 ESP8266WiFiMulti WiFiMulti;
@@ -36,6 +42,8 @@ Adafruit_DCMotor* leftMotor = AFMS.getMotor(2);
 Adafruit_DCMotor* rightMotor = AFMS.getMotor(1);
 
 // === Robot variables =======================================================================
+bool isConnected = false;
+bool hasSentIdentity = false;
 
 long lastTimestamp = -1;
 long delayTime = -1;
@@ -61,10 +69,13 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length) 
   switch (type) {
     case sIOtype_DISCONNECT:
       USE_SERIAL.printf("[IOc] Disconnected!\n");
+      isConnected = false;
+      hasSentIdentity = false;
       break;
     case sIOtype_CONNECT:
       USE_SERIAL.printf("[IOc] Connected to url: %s\n", payload);
 
+      isConnected = true;
       // join default namespace (no auto join in Socket.IO V3)
       socketIO.send(sIOtype_CONNECT, "/");
       break;
@@ -184,19 +195,11 @@ void setup() {
       ;
   }
   Serial.println("Motor Shield found.");
-
-  // Set the speed to start, from 0 (off) to 255 (max speed)
-  leftMotor->setSpeed(150);
-  leftMotor->run(FORWARD);
-  // turn on motor
-  leftMotor->run(RELEASE);
 }
 
 // ############################################################################
 // #                                LOOP                                      #
 // ############################################################################
-
-unsigned long messageTimestamp = 0;
 
 void loop() {
   socketIO.loop();
@@ -208,33 +211,53 @@ void loop() {
     rightMotor->run(rightMotorDirection);
     leftMotor->setSpeed(leftMotorSpeed);
     rightMotor->setSpeed(rightMotorSpeed);
+
+    // Smoothes the movement
+    /*int i = 0, j = 0;
+
+    while (i < leftMotorSpeed || j < rightMotorSpeed) {
+      USE_SERIAL.println(i);
+      USE_SERIAL.println(j);
+
+      if ((now - timeLastOrder) < motorDuration) {
+        leftMotor->setSpeed(i);
+        rightMotor->setSpeed(j);
+        delay(10);
+      } else {
+        break;
+      }
+
+      if (i < leftMotorSpeed) {
+        i++;
+      }
+      if (j < rightMotorSpeed) {
+        j++;
+      }
+    }*/
   } else {
     leftMotor->run(RELEASE);
     rightMotor->run(RELEASE);
   }
 
-  if (now - messageTimestamp > 2000) {
-    messageTimestamp = now;
-
-    // create JSON message for Socket.IO (event)
+  if (!hasSentIdentity && isConnected) {
+    // Send a socket to the server to identify itself
     JsonDocument doc;
-
     JsonArray array = doc.to<JsonArray>();
 
-    // add event name
-    // Hint: socket.on('event_name', ....
-    array.add("event_name");
+    // Event name
+    array.add("identification");
 
-    // add payload (parameters) for the event
-    JsonObject param1 = array.createNestedObject();
-    param1["now"] = (uint32_t)now;
+    // Event content
+    JsonObject param = array.createNestedObject();
+    param["type"] = "robot";
+    param["id"] = ARUCO_ID;
 
     // JSON to String (serializion)
     String output;
     serializeJson(doc, output);
-
     socketIO.sendEVENT(output);
-
     USE_SERIAL.println(output);
+
+    hasSentIdentity = true;
   }
 }
