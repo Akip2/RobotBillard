@@ -8,7 +8,7 @@ import {
     setCurrentRobotId
 } from "./events/parameters.js";
 import {currentView, initView, loadSimulator, table} from "./events/view-manager.js";
-import {addRobot, getRobotsIds} from "./elements-manager.js";
+import {addRobot, getRobotsIds, setRelationTable} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
@@ -131,6 +131,9 @@ socket.on('connect', function () {
             console.log("navigateur : socket on robot-list");
 
             selectRobots.innerHTML = "";
+
+            console.log(robots);
+            setRelationTable(robots);
 
             if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
                 let foundCurrentRobot = false;
