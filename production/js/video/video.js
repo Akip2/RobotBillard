@@ -4,7 +4,7 @@ import {DEFAULT_BALL_RADIUS, FPS, HEIGHT, WIDTH} from "./video-parameters.js";
 import {ballPush, robotDestX, robotDestY} from "../scenarios/billardScenarioComplex.js";
 
 let stillContinue = true;
-let robots = [];
+export let robots = [];
 
 export let lastMv;
 
@@ -89,6 +89,7 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                 let [topLeft, topRight, bottomRight, bottomLeft] = tableCorners;
 
                 robots = arucos.slice(4, arucos.length);
+                // console.log(robots);
 
                 const mv = new cv.Mat(tableCorners.length, 1, cv.CV_32SC2);
 

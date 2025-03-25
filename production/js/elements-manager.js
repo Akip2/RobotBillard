@@ -8,6 +8,8 @@ import {BROADCAST} from "./brain/brain-parameters.js";
 
 export let relationTable = new Map();
 
+export let robots = [];
+
 export function getRobot(id) {
     if (currentView === "simulator") {
         const detected = table.getRobotsDetected();
@@ -74,14 +76,14 @@ export function setRelationTable(relTab) {
 }
 
 export function getRobotIp(id) {
-    if(isSimulator) {
+    if (isSimulator) {
         return id;
     } else {
         return relationTable.get(id);
     }
 }
 
-export function addRobot(robotName) {
+export function addRobotToListOnNavigator(robotName) {
     let option = document.createElement("option");
     option.className = "option";
     option.text = robotName;
@@ -122,9 +124,9 @@ export function getRobotsIds() {
             ips.push(i);
         }
     } else {
-        for(let i = 0; i < options.length; i++) {
-            const currentOption =  options[i].text;
-            if(currentOption !== BROADCAST) {
+        for (let i = 0; i < options.length; i++) {
+            const currentOption = options[i].text;
+            if (currentOption !== BROADCAST) {
                 ips.push(currentOption);
             }
         }

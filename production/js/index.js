@@ -8,7 +8,7 @@ import {
     setCurrentRobotId
 } from "./events/parameters.js";
 import {currentView, initView, loadSimulator, table} from "./events/view-manager.js";
-import {addRobot, getRobotsIds, setRelationTable} from "./elements-manager.js";
+import {addRobotToListOnNavigator, getRobotsIds, setRelationTable} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
@@ -140,19 +140,19 @@ socket.on('connect', function () {
                 let foundCurrentRobot = false;
 
                 for (const [arucoId, ip] of newTable) {
-                    addRobot(arucoId);
+                    addRobotToListOnNavigator(arucoId);
                     if (arucoId === currentRobotId) {
                         foundCurrentRobot = true;
                     }
                 }
-                addRobot("Broadcast");
+                addRobotToListOnNavigator("Broadcast");
 
                 if ((currentRobotId === null) || !foundCurrentRobot) {
                     console.log(selectRobots[selectRobots.childElementCount - 1].text)
                     setCurrentRobotId(selectRobots[selectRobots.childElementCount - 1].text);
                 }
             } else {
-                addRobot("Aucun robot disponible");
+                addRobotToListOnNavigator("Aucun robot disponible");
             }
 
 
