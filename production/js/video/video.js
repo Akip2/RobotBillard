@@ -172,6 +172,6 @@ export function setStillContinue(boolean) {
     stillContinue = boolean;
 }
 
-export function getRealRobot(index) {
-    return robots[index];
+export function getRealRobot(id) {
+    return robots.find((robot) => robot.id === id);
 }

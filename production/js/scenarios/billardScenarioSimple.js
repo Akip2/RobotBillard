@@ -9,23 +9,23 @@ import {isActive} from "../index.js";
  * socket et la connexion qui permet de communiquer avec le robot
  * index est d'index du robot à faire bouger (dans le tableau de robot)
  * @param socket
- * @param robotIp
+ * @param robotId
  * @returns {Promise<void>}
  */
-export async function startBillardScenarioSimple(socket, robotIp) {
+export async function startBillardScenarioSimple(socket, robotId) {
     let balls = getBalls();
-    let robot = getRobot(robotIp);
+    let robot = getRobot(robotId);
     let ballToPush;
 
     while (isActive) {
         balls = getBalls();
-        robot = getRobot(robotIp);
+        robot = getRobot(robotId);
 
         if (robot !== undefined) {
             ballToPush = getNearestBall(balls, robot.position);
 
             if (ballToPush !== undefined) {
-                moveRobotTo(socket, robotIp, ballToPush.x, ballToPush.y);
+                moveRobotTo(socket, robotId, ballToPush.x, ballToPush.y);
             }
         }
         await sleep(MIN_ORDER_DURATION);
