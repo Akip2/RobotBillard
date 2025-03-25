@@ -128,13 +128,12 @@ socket.on('connect', function () {
 
     socket.on("robots-list", function (robots) {
         const newTable = new Map(JSON.parse(robots));
-        setRelationTable(robots);
+        setRelationTable(newTable);
+
         if (currentView !== "simulator") {
             console.log("navigateur : socket on robot-list");
 
             selectRobots.innerHTML = "";
-
-            console.log(newTable);
 
             if (newTable != null && robots.length > 0) { // test that the number of detected robot in not null
                 let foundCurrentRobot = false;

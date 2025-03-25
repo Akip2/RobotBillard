@@ -77,7 +77,7 @@ export function getRobotIp(id) {
     if(isSimulator) {
         return id;
     } else {
-        return relationTable.get(id);
+        return id === BROADCAST ? BROADCAST : relationTable.get(id);
     }
 }
 
