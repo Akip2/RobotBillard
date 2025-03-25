@@ -1,12 +1,5 @@
 // Billard configurations
-import {
-    currentConfig,
-    currentRobotId,
-    currentRobotIp,
-    currentScenario,
-    initParams,
-    setCurrentRobotId
-} from "./events/parameters.js";
+import {currentConfig, currentRobotId, currentScenario, initParams, setCurrentRobotId} from "./events/parameters.js";
 import {currentView, initView, loadSimulator, table} from "./events/view-manager.js";
 import {addRobotToListOnNavigator, getRobotsIds, setRelationTable} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
@@ -55,12 +48,12 @@ document.addEventListener("DOMContentLoaded", () => {
             switch (currentScenario) {
                 case "SimpleBillard":
                     ids.forEach(id => {
-                        startBillardScenarioSimple(socket, id);
+                        startBillardScenarioSimple(socket, Number(id));
                     })
                     break;
                 case "ComplexBillard":
                     ids.forEach(id => {
-                        startBillardScenarioComplex(socket, id);
+                        startBillardScenarioComplex(socket, Number(id));
                     })
                     break;
                 case "CollaborationBillard":
@@ -68,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     break;
                 case "default":
                     ids.forEach(id => {
-                        startTestScenario(socket, id);
+                        startTestScenario(socket, Number(id));
                     })
                     break;
             }
@@ -106,7 +99,15 @@ document.addEventListener("DOMContentLoaded", () => {
             // turnRobotInCircle(socket, 0);
         } else {
             // Get the position of a click on the camera
-            moveRobotTo(socket, currentRobotIp, x, y);
+            if (currentRobotId === BROADCAST) {
+                const ids = getRobotsIds();
+
+                ids.forEach(id => {
+                    moveRobotTo(socket, id, x, y);
+                });
+            } else {
+                moveRobotTo(socket, currentRobotId, x, y);
+            }
         }
     });
 
@@ -128,56 +129,36 @@ socket.on('connect', function () {
 
     socket.on("robots-list", function (robots) {
         const newTable = new Map(JSON.parse(robots));
-        setRelationTable(robots);
+        setRelationTable(newTable);
+
         if (currentView !== "simulator") {
             console.log("navigateur : socket on robot-list");
 
             selectRobots.innerHTML = "";
 
-            console.log(newTable);
-
             if (newTable != null && robots.length > 0) { // test that the number of detected robot in not null
                 let foundCurrentRobot = false;
+                let index = 0;
 
                 for (const [arucoId, ip] of newTable) {
                     addRobotToListOnNavigator(arucoId);
-                    if (arucoId === currentRobotId) {
+                    if (arucoId == currentRobotId) {
+                        console.log(selectRobots[index].text);
+                        setCurrentRobotId(selectRobots[index].text);
+                        selectRobots.selectedIndex = index;
                         foundCurrentRobot = true;
                     }
+                    index++;
                 }
                 addRobotToListOnNavigator("Broadcast");
 
                 if ((currentRobotId === null) || !foundCurrentRobot) {
-                    console.log(selectRobots[selectRobots.childElementCount - 1].text)
                     setCurrentRobotId(selectRobots[selectRobots.childElementCount - 1].text);
+                    selectRobots.selectedIndex = selectRobots.childElementCount - 1;
                 }
             } else {
                 addRobotToListOnNavigator("Aucun robot disponible");
             }
-
-
-            /*
-            if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
-                let foundCurrentRobot = false;
-
-                robots.forEach(function (robot) {
-                    addRobot(robot);
-
-                    if (robot === currentRobotId) {
-                        foundCurrentRobot = true;
-                    }
-                });
-
-                addRobot("Broadcast");
-
-                if ((currentRobotId === null) || !foundCurrentRobot) {
-                    console.log(selectRobots[selectRobots.childElementCount - 1].text)
-                    setCurrentRobotId(selectRobots[selectRobots.childElementCount - 1].text);
-                }
-            } else {
-                addRobot("Aucun robot disponible");
-            }
-             */
         }
     });
 });

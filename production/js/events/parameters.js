@@ -50,8 +50,9 @@ export function initParams() {
 
     selectRobots.addEventListener("change", (event) => {
         const optionName = event.target.value;
-        currentRobotId = optionName === "Broadcast" ? BROADCAST : optionName;
+        currentRobotId = optionName === "Broadcast" ? BROADCAST : Number(optionName);
         currentRobotIp = getRobotIp(currentRobotId);
+        console.log(currentRobotIp);
     });
 
     speedSlider.addEventListener("change", (event) => {
@@ -90,6 +91,7 @@ export function setCurrentConfig(config) {
 
 export function setCurrentRobotId(id) {
     currentRobotId = id;
+    currentRobotIp = getRobotIp(id);
 }
 
 export function setAfficherDessins(affiche) {
