@@ -91,6 +91,7 @@ export function setCurrentConfig(config) {
 
 export function setCurrentRobotId(id) {
     currentRobotId = id;
+    currentRobotIp = getRobotIp(id);
 }
 
 export function setAfficherDessins(affiche) {
