@@ -3,7 +3,7 @@ import SimulationObject from "./simulation-object.js";
 import {Wheel, WHEEL_SIDE} from "./wheel.js";
 import {simulatorSpeed} from "../../js/events/parameters.js";
 
-class Robot extends SimulationObject {
+class RobotSimulator extends SimulationObject {
     constructor(width, height, wheelWidth, wheelHeight, x = 0, y = 0, angle = 0, arucoId = 1) {
         const core = Bodies.rectangle(x, y, width, height, {
             render: {
@@ -95,4 +95,4 @@ class Robot extends SimulationObject {
     }
 }
 
-export default Robot;
+export default RobotSimulator;
