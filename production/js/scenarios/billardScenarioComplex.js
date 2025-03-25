@@ -8,9 +8,7 @@ import {FPS} from "../video/video-parameters.js";
 
 export const robotsDest = new Map();
 
-export let robotDestX;
-export let robotDestY;
-export let ballPush = {x: 0, y: 0};
+export let ballsPush = new Map();
 
 const alpha = 60;
 
@@ -32,6 +30,7 @@ export async function startBillardScenarioComplex(socket, robotId) {
 
 export function cleanBillardComplex() {
     robotsDest.clear();
+    ballsPush.clear();
 }
 
 async function hitTarget(socket, robotId) {
@@ -72,8 +71,6 @@ async function goBehindBall(socket, robotId) {
 
             if (ballToPush !== undefined) {
                 let pointToGo = getPositionBehindBall(ballToPush);
-                robotDestX = pointToGo.x;
-                robotDestY = pointToGo.y;
 
                 robotsDest.set(robotId, pointToGo);
 
@@ -86,11 +83,9 @@ async function goBehindBall(socket, robotId) {
 
                         if (ballToPush !== undefined) {
                             pointToGo = getPositionBehindBall(ballToPush);
-                            robotDestX = pointToGo.x;
-                            robotDestY = pointToGo.y;
 
                             robotsDest.set(robotId, pointToGo);
-                            ballPush = ballToPush;
+                            ballsPush.set(robotId, ballToPush);
 
                             moveRobotTo(socket, robotId, pointToGo.x, pointToGo.y);
                         }
@@ -99,9 +94,6 @@ async function goBehindBall(socket, robotId) {
                 }
 
                 if (ballToPush !== undefined) {
-                    robotDestX = ballToPush.x;
-                    robotDestY = ballToPush.y;
-
                     robotsDest.set(robotId, ballToPush);
                 } else {
                     await goBehindBall(socket, robotId)
