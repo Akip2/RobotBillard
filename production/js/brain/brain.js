@@ -10,6 +10,7 @@ import {
     TABLE_REAL_SIZE
 } from "./brain-parameters.js";
 import {isSimulator} from "../events/view-manager.js";
+import {holeRadius} from "../../simulateur/params.js";
 
 const intervals = new Map();
 
@@ -54,13 +55,13 @@ export function moveRobotTo(socket, robotId, x, y) {
             });
 
             // Check if we arrived at destination or if the robot is near a hole
-            // TODO mettre vraie valeur
-            let isTargetValid = isPointNearHole(x, y, DISTANCE_THRESHOLD * 2) || isRobotNearHole(robotId, DISTANCE_THRESHOLD * 2);
+            // TODO : check values for the real robot (holeRadius * 5)
+            let robotIsNearTargetHole = isRobotNearHole(robotId, holeRadius * 5) && isRobotNear(robotId, x, y, holeRadius * 5);
 
-            if ((distanceDifference < DISTANCE_THRESHOLD) || isTargetValid) {
+            if ((distanceDifference < DISTANCE_THRESHOLD) || robotIsNearTargetHole) {
                 clearInterval(currentInterval);
-            } // TODO, le robot ne doit pas bouger du tout si la cible n'est pas valide, s'éloigner si près d'un trou
-            
+            }
+
             const isTargetForward = (angleDifference <= ANGLE_THRESHOLD) && (angleDifference >= -ANGLE_THRESHOLD);
             const isTargetBackward = (angleDifference <= -180 + ANGLE_THRESHOLD) || (angleDifference >= 180 - ANGLE_THRESHOLD);
 
