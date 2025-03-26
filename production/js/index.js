@@ -84,20 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = event.offsetX;
         let y = event.offsetY;
 
-        if (isSimulator) {
-            // Get the position of a click on the simulator
-            if (currentRobotId === BROADCAST) {
-                const ids = getRobotsIds();
-
-                ids.forEach(id => {
-                    moveRobotTo(socket, id, x, y);
-                });
-            } else {
-                console.log(currentRobotId);
-                moveRobotTo(socket, currentRobotId, x, y);
-            }
-            // turnRobotInCircle(socket, 0);
-        } else {
+        if (!isSimulator){
             // Get the position of a click on the camera
             if (currentRobotId === BROADCAST) {
                 const ids = getRobotsIds();
