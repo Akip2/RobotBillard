@@ -24,11 +24,12 @@ char* URL = "/socket.io/?EIO=4";
 char* NETWORK_NAME = "TP-LINK_7A134E";
 char* NETWORK_PASSWORD = "C27A134E";
 
-// 957: Tranis
-// 857: Ninho
-// 457: SCH (ses roues sont à l'envers)
 // 157: Zola
-int ARUCO_ID = 157;
+// 257: Kaaris
+// 457: SCH (ses roues sont à l'envers)
+// 857: Ninho
+// 957: Tranis
+int ARUCO_ID = 857;
 
 // ============================================================================
 
@@ -201,8 +202,8 @@ void setup() {
 // #                                LOOP                                      #
 // ############################################################################
 
-int i = 0;
-int j = 0;
+// int i = 0;
+// int j = 0;
 
 void loop() {
   socketIO.loop();
@@ -212,57 +213,55 @@ void loop() {
   if ((now - timeLastOrder) < motorDuration) {
     leftMotor->run(leftMotorDirection);
     rightMotor->run(rightMotorDirection);
-    //leftMotor->setSpeed(leftMotorSpeed);
-    //rightMotor->setSpeed(rightMotorSpeed);
+    leftMotor->setSpeed(leftMotorSpeed);
+    rightMotor->setSpeed(rightMotorSpeed);
 
     // Smoothes the movement
-    USE_SERIAL.println("Démarrage");
-    while ((i < leftMotorSpeed) || (j < rightMotorSpeed)) {
-      USE_SERIAL.println("IN BOUCLE");
-      USE_SERIAL.println(i);
-      USE_SERIAL.println(j);
-      if ((now - timeLastOrder) < motorDuration) {
-        leftMotor->setSpeed(i);
-        rightMotor->setSpeed(j);
-        delay(5);
-      } else {
-        break;
-      }
+    // while ((i < leftMotorSpeed) || (j < rightMotorSpeed)) {
+    //   if ((now - timeLastOrder) < motorDuration) {
+    //     leftMotor->setSpeed(i);
+    //     rightMotor->setSpeed(j);
+    //     delay(2);
+    //   } else {
+    //     break;
+    //   }
 
-      if (i < leftMotorSpeed) {
-        i++;
-      }
-      if (j < rightMotorSpeed) {
-        j++;
-      }
-    }
+    //   if (i < leftMotorSpeed) {
+    //     i++;
+    //   }
+    //   if (j < rightMotorSpeed) {
+    //     j++;
+    //   }
+    // }
   } else {
-    i = 0;
-    j = 0;
-    /*i = leftMotorSpeed, j = rightMotorSpeed;
+    // i = leftMotorSpeed;
+    // j = rightMotorSpeed;
 
     // Smoothes the end of a movement
-    if (!((now - timeLastOrder) < motorDuration)) {
-      while ((i > 0) || (j > 0)) {
-        if (!((now - timeLastOrder) < motorDuration)) {
-          leftMotor->setSpeed(i);
-          rightMotor->setSpeed(j);
-          delay(2);
-        } else {
-          break;
-        }
+    // USE_SERIAL.println("SLOWING");
+    // while ((i > 0) || (j > 0)) {
+    //   USE_SERIAL.println("IN BOUCLE");
+    //   USE_SERIAL.println(i);
+    //   USE_SERIAL.println(j);
+    //   if ((now - timeLastOrder) < motorDuration) {
+    //     break;
+    //   } else {
+    //     leftMotor->setSpeed(i);
+    //     rightMotor->setSpeed(j);
+    //     delay(2);
+    //   }
 
-        if (i > 0) {
-          i--;
-        }
-        if (j > 0) {
-          j--;
-        }
-      }
-    }*/
-
+    //   if (i > 0) {
+    //     i--;
+    //   }
+    //   if (j > 0) {
+    //     j--;
+    //   }
+    // }
     leftMotor->run(RELEASE);
     rightMotor->run(RELEASE);
+    // i = 0;
+    // j = 0;
   }
 
   if (!hasSentIdentity && isConnected) {

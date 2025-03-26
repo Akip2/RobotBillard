@@ -142,9 +142,9 @@ socket.on('connect', function () {
 
                 for (const [arucoId, ip] of newTable) {
                     addRobotToListOnNavigator(arucoId);
-                    if (arucoId == currentRobotId) {
+                    if (arucoId === currentRobotId) {
                         console.log(selectRobots[index].text);
-                        setCurrentRobotId(selectRobots[index].text);
+                        setCurrentRobotId(Number(selectRobots[index].text));
                         selectRobots.selectedIndex = index;
                         foundCurrentRobot = true;
                     }
@@ -153,7 +153,7 @@ socket.on('connect', function () {
                 addRobotToListOnNavigator("Broadcast");
 
                 if ((currentRobotId === null) || !foundCurrentRobot) {
-                    setCurrentRobotId(selectRobots[selectRobots.childElementCount - 1].text);
+                    setCurrentRobotId(BROADCAST);
                     selectRobots.selectedIndex = selectRobots.childElementCount - 1;
                 }
             } else {

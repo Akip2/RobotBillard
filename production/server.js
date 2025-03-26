@@ -11,8 +11,8 @@ let socketInterface = null; // socket to communicate with the navigator
 const relationTable = new Map();
 
 const io = require('socket.io').listen(server, {
-    pingInterval: 5000,
-    pingTimeout: 5000,
+    pingInterval: 10000,
+    pingTimeout: 30000,
 });
 
 const port = 8001;
