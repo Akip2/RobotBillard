@@ -29,7 +29,8 @@ char* NETWORK_PASSWORD = "C27A134E";
 // 457: SCH (ses roues sont à l'envers)
 // 857: Ninho
 // 957: Tranis
-int ARUCO_ID = 857;
+int ARUCO_ID = 257;
+int TIMER_LIMIT = 300;
 
 // ============================================================================
 
@@ -202,8 +203,9 @@ void setup() {
 // #                                LOOP                                      #
 // ############################################################################
 
-// int i = 0;
-// int j = 0;
+int i = 0;
+int j = 0;
+int timer = 0;
 
 void loop() {
   socketIO.loop();
@@ -211,57 +213,62 @@ void loop() {
   uint64_t now = millis();
 
   if ((now - timeLastOrder) < motorDuration) {
+    timer = 0;
     leftMotor->run(leftMotorDirection);
     rightMotor->run(rightMotorDirection);
     leftMotor->setSpeed(leftMotorSpeed);
     rightMotor->setSpeed(rightMotorSpeed);
 
     // Smoothes the movement
-    // while ((i < leftMotorSpeed) || (j < rightMotorSpeed)) {
-    //   if ((now - timeLastOrder) < motorDuration) {
-    //     leftMotor->setSpeed(i);
-    //     rightMotor->setSpeed(j);
-    //     delay(2);
-    //   } else {
-    //     break;
-    //   }
+    while ((i < leftMotorSpeed) || (j < rightMotorSpeed)) {
+      if ((now - timeLastOrder) < motorDuration) {
+        leftMotor->setSpeed(i);
+        rightMotor->setSpeed(j);
+        delay(2);
+      } else {
+        break;
+      }
 
-    //   if (i < leftMotorSpeed) {
-    //     i++;
-    //   }
-    //   if (j < rightMotorSpeed) {
-    //     j++;
-    //   }
-    // }
+      if (i < leftMotorSpeed) {
+        i++;
+      }
+      if (j < rightMotorSpeed) {
+        j++;
+      }
+    }
   } else {
-    // i = leftMotorSpeed;
-    // j = rightMotorSpeed;
+    /*i = leftMotorSpeed;
+    j = rightMotorSpeed;*/
 
     // Smoothes the end of a movement
-    // USE_SERIAL.println("SLOWING");
-    // while ((i > 0) || (j > 0)) {
-    //   USE_SERIAL.println("IN BOUCLE");
-    //   USE_SERIAL.println(i);
-    //   USE_SERIAL.println(j);
-    //   if ((now - timeLastOrder) < motorDuration) {
-    //     break;
-    //   } else {
-    //     leftMotor->setSpeed(i);
-    //     rightMotor->setSpeed(j);
-    //     delay(2);
-    //   }
+    /*while ((i > 0) || (j > 0)) {
+      if ((now - timeLastOrder) < motorDuration) {
+        break;
+      } else {
+        leftMotor->setSpeed(i);
+        rightMotor->setSpeed(j);
+        delay(2);
+      }
 
-    //   if (i > 0) {
-    //     i--;
-    //   }
-    //   if (j > 0) {
-    //     j--;
-    //   }
-    // }
+      if (i > 0) {
+        i--;
+      }
+      if (j > 0) {
+        j--;
+      }
+    }*/
     leftMotor->run(RELEASE);
     rightMotor->run(RELEASE);
-    // i = 0;
-    // j = 0;
+
+    // Only if no new order has been sent for 2s
+    if (timer < TIMER_LIMIT) {
+      timer++;
+      delay(1);
+    }
+    if (timer >= TIMER_LIMIT) {
+      i = 0;
+      j = 0;
+    }
   }
 
   if (!hasSentIdentity && isConnected) {

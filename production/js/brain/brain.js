@@ -24,7 +24,7 @@ export function turnRobot(socket, robotId, x, y) {
     let rotationSpeed = Math.abs(angleDifference) * 2;
 
     if (rotationSpeed > ROBOT_MAX_SPEED) {
-        rotationSpeed = ROBOT_MAX_SPEED;
+        rotationSpeed = ROBOT_MAX_SPEED / 2;
     } else if (rotationSpeed < ROBOT_MIN_SPEED) {
         rotationSpeed = ROBOT_MIN_SPEED;
     }
