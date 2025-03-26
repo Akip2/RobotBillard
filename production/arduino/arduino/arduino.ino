@@ -28,7 +28,7 @@ char* NETWORK_PASSWORD = "C27A134E";
 // 857: Ninho
 // 457: SCH (ses roues sont à l'envers)
 // 157: Zola
-int ARUCO_ID = 457;
+int ARUCO_ID = 857;
 
 // ============================================================================
 

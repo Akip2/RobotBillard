@@ -1,5 +1,5 @@
 import {simulatorSpeed} from "../events/parameters.js";
-import {getRobot, getRobotIp} from "../elements-manager.js";
+import {getHoles, getRobot, getRobotIp} from "../elements-manager.js";
 import {
     ANGLE_THRESHOLD,
     BALL_REAL_SIZE,
@@ -53,6 +53,14 @@ export function moveRobotTo(socket, robotId, x, y) {
                 y: y
             });
 
+            // Check if we arrived at destination or if the robot is near a hole
+            // TODO mettre vraie valeur
+            let isTargetValid = isPointNearHole(x, y, DISTANCE_THRESHOLD * 2) || isRobotNearHole(robotId, DISTANCE_THRESHOLD * 2);
+
+            if ((distanceDifference < DISTANCE_THRESHOLD) || isTargetValid) {
+                clearInterval(currentInterval);
+            } // TODO, le robot ne doit pas bouger du tout si la cible n'est pas valide, s'éloigner si près d'un trou
+            
             const isTargetForward = (angleDifference <= ANGLE_THRESHOLD) && (angleDifference >= -ANGLE_THRESHOLD);
             const isTargetBackward = (angleDifference <= -180 + ANGLE_THRESHOLD) || (angleDifference >= 180 - ANGLE_THRESHOLD);
 
@@ -85,10 +93,6 @@ export function moveRobotTo(socket, robotId, x, y) {
                         }
                     }
                 }
-
-            }
-            if (distanceDifference < DISTANCE_THRESHOLD) {
-                clearInterval(currentInterval);
             }
         }
     }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1));
@@ -142,6 +146,43 @@ export function isRobotNear(robotId, x, y, deltaMax) {
         let delta = distanceBetweenPoints(robotPosition, {x: x, y: y});
 
         return delta < deltaMax;
+    }
+    return false;
+}
+
+export function isPointNearHole(x, y, distanceMax) {
+    let holes = getHoles();
+
+    if (holes !== undefined) {
+        // Check for every hole if the robot is nearby
+        for (let i = 0; i < holes.length; i++) {
+            let distance = distanceBetweenPoints(holes[i], {x: x, y: y});
+
+            if (distance < distanceMax) {
+                console.log("Target near hole");
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+export function isRobotNearHole(robotIp, distanceMax) {
+    let robot = getRobot(robotIp);
+    let holes = getHoles();
+
+    if (robot !== undefined && holes !== undefined) {
+        let robotPosition = robot.position;
+
+        // Check for every hole if the robot is nearby
+        for (let i = 0; i < holes.length; i++) {
+            let distance = distanceBetweenPoints(holes[i], robotPosition);
+
+            if (distance < distanceMax) {
+                console.log("Robot near hole");
+                return true;
+            }
+        }
     }
     return false;
 }
