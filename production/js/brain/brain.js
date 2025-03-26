@@ -36,6 +36,16 @@ export function turnRobot(socket, robotId, x, y) {
     }
 }
 
+export function turnRobotWithAngle(socket, robotId, angle, direction) {
+    let rotationSpeed = 100
+
+    if (direction === "Left") {
+        socket.emit('motor', createOrder(-rotationSpeed, rotationSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
+    } else {
+        socket.emit('motor', createOrder(rotationSpeed, -rotationSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
+    }
+}
+
 export function moveRobotTo(socket, robotId, x, y) {
     robotId = Number(robotId);
     clearInterval(intervals.get(robotId));
@@ -160,7 +170,6 @@ export function isPointNearHole(x, y, distanceMax) {
             let distance = distanceBetweenPoints(holes[i], {x: x, y: y});
 
             if (distance < distanceMax) {
-                console.log("Target near hole");
                 return true;
             }
         }
@@ -180,7 +189,6 @@ export function isRobotNearHole(robotIp, distanceMax) {
             let distance = distanceBetweenPoints(holes[i], robotPosition);
 
             if (distance < distanceMax) {
-                console.log("Robot near hole");
                 return true;
             }
         }
