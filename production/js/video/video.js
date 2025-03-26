@@ -133,7 +133,7 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                 // Draw the final result in the canvas
                 // preProcessedFrame / finalImage
 
-                robotsDest.forEach((robotId, dest) => {
+                robotsDest.forEach((dest, robotId) => {
                     drawCircle(finalImage, new cv.Point(dest.x, dest.y), [255, 0, 255, 20]);
                 });
                 ballsPush.forEach((robotId, ballToPush) => {
