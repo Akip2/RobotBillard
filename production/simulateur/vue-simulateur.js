@@ -169,7 +169,7 @@ class VueSimulateur {
         const imageData = this.canvasContext.getImageData(0, 0, this.canvas.width, this.canvas.height);
         const pixels = imageData.data;
 
-        for (let i = 0; i < pixels.length; i += (9 - noise)*4) {
+        for (let i = 0; i < pixels.length; i += (9 - noise) * 4) {
             const noiseFactor = (Math.random() - 0.5) * 255 * (9 - noise);
             pixels[i] += noiseFactor;
             pixels[i + 1] += noiseFactor;

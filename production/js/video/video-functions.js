@@ -208,8 +208,8 @@ export function detectCircles(frame, ballRadius = DEFAULT_BALL_RADIUS) {
     return circles;
 }
 
-export function getDistanceFromBorder(x,y) {
-    const point = new cv.Point(x,y);
+export function getDistanceFromBorder(x, y) {
+    const point = new cv.Point(x, y);
     return cv.pointPolygonTest(lastMv, point, true);
 }
 

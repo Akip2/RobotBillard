@@ -28,7 +28,7 @@ char* NETWORK_PASSWORD = "C27A134E";
 // 857: Ninho
 // 457: SCH (ses roues sont à l'envers)
 // 157: Zola
-int ARUCO_ID = 957;
+int ARUCO_ID = 457;
 
 // ============================================================================
 
@@ -201,6 +201,8 @@ void setup() {
 // #                                LOOP                                      #
 // ############################################################################
 
+int i = 0, j = 0;
+
 void loop() {
   socketIO.loop();
 
@@ -209,20 +211,15 @@ void loop() {
   if ((now - timeLastOrder) < motorDuration) {
     leftMotor->run(leftMotorDirection);
     rightMotor->run(rightMotorDirection);
-    leftMotor->setSpeed(leftMotorSpeed);
-    rightMotor->setSpeed(rightMotorSpeed);
+    //leftMotor->setSpeed(leftMotorSpeed);
+    //rightMotor->setSpeed(rightMotorSpeed);
 
     // Smoothes the movement
-    /*int i = 0, j = 0;
-
-    while (i < leftMotorSpeed || j < rightMotorSpeed) {
-      USE_SERIAL.println(i);
-      USE_SERIAL.println(j);
-
+    while ((i < leftMotorSpeed) || (j < rightMotorSpeed)) {
       if ((now - timeLastOrder) < motorDuration) {
         leftMotor->setSpeed(i);
         rightMotor->setSpeed(j);
-        delay(10);
+        delay(2);
       } else {
         break;
       }
@@ -233,8 +230,30 @@ void loop() {
       if (j < rightMotorSpeed) {
         j++;
       }
-    }*/
+    }
   } else {
+    i = leftMotorSpeed, j = rightMotorSpeed;
+
+    // Smoothes the end of a movement
+    if (!((now - timeLastOrder) < motorDuration)) {
+      while ((i > 0) || (j > 0)) {
+        if (!((now - timeLastOrder) < motorDuration)) {
+          leftMotor->setSpeed(i);
+          rightMotor->setSpeed(j);
+          delay(2);
+        } else {
+          break;
+        }
+
+        if (i > 0) {
+          i--;
+        }
+        if (j > 0) {
+          j--;
+        }
+      }
+    }
+
     leftMotor->run(RELEASE);
     rightMotor->run(RELEASE);
   }

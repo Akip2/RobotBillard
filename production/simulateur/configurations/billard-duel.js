@@ -1,5 +1,5 @@
 import Table from "../table.js";
-import Robot from "../objects/robot.js";
+import Robot from "../objects/robotSimulator.js";
 import {height, robotHeight, robotWidth, wheelHeight, wheelWidth, width} from "../params.js";
 import {placerBoulesBillardConfiguration} from "./global-config.js";
 

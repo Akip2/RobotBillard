@@ -1,6 +1,6 @@
 // viewArrowControls
 import {
-    currentRobotId, currentRobotIp,
+    currentRobotIp,
     duration,
     leftSpeed,
     rightSpeed,

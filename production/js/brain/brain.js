@@ -56,9 +56,6 @@ export function moveRobotTo(socket, robotId, x, y) {
             const isTargetForward = (angleDifference <= ANGLE_THRESHOLD) && (angleDifference >= -ANGLE_THRESHOLD);
             const isTargetBackward = (angleDifference <= -180 + ANGLE_THRESHOLD) || (angleDifference >= 180 - ANGLE_THRESHOLD);
 
-
-
-            // console.log('IP : '+getRobotIp(robotId));
             if (isTargetForward) {
                 socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
             } else if (isTargetBackward) {
