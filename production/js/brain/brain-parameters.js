@@ -2,6 +2,8 @@
 export const BALL_REAL_SIZE = 4.5;
 export const TABLE_REAL_SIZE = 118.5;
 
+export const HANDLING_COLLISION = "HANDLING_COLLISION";
+
 // in milliseconds
 export const MIN_ORDER_DURATION = 100;
 export const MAX_ORDER_DURATION = 10000;

@@ -1,11 +1,11 @@
 // Billard configurations
 import {currentConfig, currentRobotId, currentScenario, initParams, setCurrentRobotId} from "./events/parameters.js";
 import {currentView, initView, loadSimulator, table} from "./events/view-manager.js";
-import {addRobotToListOnNavigator, getRobotsIds, setRelationTable} from "./elements-manager.js";
+import {addRobotToListOnNavigator, getRobot, getRobotsIds, setRelationTable} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
-import {moveRobotTo, stopRobots} from "./brain/brain.js";
+import {isInTheWay, moveRobotTo, stopRobots} from "./brain/brain.js";
 import {startBillardScenarioComplex} from "./scenarios/billardScenarioComplex.js";
 import {startBillardScenarioCollaboration} from "./scenarios/billardScenarioCollaboration.js";
 import {BROADCAST} from "./brain/brain-parameters.js";
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = event.offsetX;
         let y = event.offsetY;
 
-        if (!isSimulator){
+        if (/*!isSimulator*/true){
             // Get the position of a click on the camera
             if (currentRobotId === BROADCAST) {
                 const ids = getRobotsIds();
@@ -95,6 +95,9 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 moveRobotTo(socket, currentRobotId, x, y);
             }
+        } else {
+            const robot = getRobot(1);
+            console.log(isInTheWay(robot, x, y));
         }
     });
 

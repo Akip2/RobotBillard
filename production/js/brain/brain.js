@@ -1,9 +1,9 @@
 import {simulatorSpeed} from "../events/parameters.js";
-import {getHoles, getRobot, getRobotIp} from "../elements-manager.js";
+import {getHoles, getRobot, getRobotIp, getRobotsIds} from "../elements-manager.js";
 import {
     ANGLE_THRESHOLD,
     BALL_REAL_SIZE,
-    DISTANCE_THRESHOLD,
+    DISTANCE_THRESHOLD, HANDLING_COLLISION,
     MIN_ORDER_DURATION,
     ROBOT_MAX_SPEED,
     ROBOT_MIN_SPEED,
@@ -11,6 +11,7 @@ import {
 } from "./brain-parameters.js";
 import {isSimulator} from "../events/view-manager.js";
 import {holeRadius} from "../../simulateur/params.js";
+import {sleep} from "../scenarios/scenario-functions.js";
 
 const intervals = new Map();
 
@@ -46,13 +47,70 @@ export function turnRobotWithAngle(socket, robotId, angle, direction) {
     }
 }
 
+export function isInTheWay(robot, x, y, lookFront = true) {
+    const fov = Math.PI / 1.5;
+    const maxDist = 100;
+
+    const dirX = Math.cos(robot.orientation);
+    const dirY = Math.sin(robot.orientation);
+
+    const vecX = x - robot.position.x;
+    const vecY = y - robot.position.y;
+
+    const normVec = Math.sqrt(vecX ** 2 + vecY ** 2);
+
+    if (normVec <= maxDist) { //Obstacle is too far anyway
+        const dot = vecX * dirX + vecY * dirY;
+        const normDir = Math.sqrt(dirX * dirX + dirY * dirY);
+
+        const cosAlpha = dot / (normVec * normDir);
+        return cosAlpha > Math.cos(fov) && (lookFront ? dot > 0.25 : dot < -0.25);
+    } else {
+        console.log("obstacle is too far");
+        return false;
+    }
+}
+
+export async function handleCollision(socket, robotId, x, y) {
+    clearInterval(intervals.get(robotId));
+    intervals.set(robotId, HANDLING_COLLISION);
+
+    socket.emit('motor', createOrder(ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, 200, getRobotIp(robotId)));
+    await sleep(200);
+    socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, 200, getRobotIp(robotId)));
+    await sleep(500);
+
+    intervals.set(robotId, null);
+    moveRobotTo(socket, robotId, x, y);
+}
+
+export function areRobotsInTheWay(robotId, lookFront = true) {
+    const robotsIds = getRobotsIds();
+    const robot = getRobot(robotId);
+
+    let inTheWay = false;
+    for(let i =0; i < robotsIds.length && !inTheWay; i++) {
+        const id = robotsIds[i];
+
+        if(id !== robotId) {
+            const currentRobot = getRobot(id);
+            inTheWay = isInTheWay(robot, currentRobot.position.x, currentRobot.position.y);
+            console.log("intheway : "+inTheWay);
+        }
+    }
+
+    return inTheWay;
+}
+
 export function moveRobotTo(socket, robotId, x, y) {
     robotId = Number(robotId);
+    let currentInterval = intervals.get(robotId);
+    if(currentInterval === HANDLING_COLLISION) return;
+
     clearInterval(intervals.get(robotId));
 
     let direction = "Left";
-
-    const currentInterval = setInterval(() => {
+    currentInterval = setInterval(async () => {
         let robot = getRobot(robotId);
 
         if (robot !== undefined) {
@@ -76,9 +134,17 @@ export function moveRobotTo(socket, robotId, x, y) {
             const isTargetBackward = (angleDifference <= -180 + ANGLE_THRESHOLD) || (angleDifference >= 180 - ANGLE_THRESHOLD);
 
             if (isTargetForward) {
-                socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
+                if (areRobotsInTheWay(robotId)) {
+                    handleCollision(socket, robotId, x, y);
+                } else {
+                    socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
+                }
             } else if (isTargetBackward) {
-                socket.emit('motor', createOrder(-ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
+                if (areRobotsInTheWay(robotId, false)) {
+                    handleCollision(socket, robotId, x, y);
+                } else {
+                    socket.emit('motor', createOrder(-ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
+                }
             } else {
                 // Tries to turn and go forward / backward smoothly
                 const isTargetBehind = angleDifference > 90 || angleDifference < -90;
