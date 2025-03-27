@@ -1,11 +1,11 @@
 // Billard configurations
 import {currentConfig, currentRobotId, currentScenario, initParams, setCurrentRobotId} from "./events/parameters.js";
 import {currentView, initView, loadSimulator, table} from "./events/view-manager.js";
-import {addRobotToListOnNavigator, getRobot, getRobotsIds, setRelationTable} from "./elements-manager.js";
+import {addRobotToListOnNavigator, getRobotsIds, setRelationTable} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
-import {isInTheWay, moveRobotTo, stopRobots} from "./brain/brain.js";
+import {moveRobotTo, stopRobots} from "./brain/brain.js";
 import {startBillardScenarioComplex} from "./scenarios/billardScenarioComplex.js";
 import {startBillardScenarioCollaboration} from "./scenarios/billardScenarioCollaboration.js";
 import {BROADCAST} from "./brain/brain-parameters.js";
@@ -84,20 +84,15 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = event.offsetX;
         let y = event.offsetY;
 
-        if (/*!isSimulator*/true){
-            // Get the position of a click on the camera
-            if (currentRobotId === BROADCAST) {
-                const ids = getRobotsIds();
+        // Get the position of a click on the camera
+        if (currentRobotId === BROADCAST) {
+            const ids = getRobotsIds();
 
-                ids.forEach(id => {
-                    moveRobotTo(socket, id, x, y);
-                });
-            } else {
-                moveRobotTo(socket, currentRobotId, x, y);
-            }
+            ids.forEach(id => {
+                moveRobotTo(socket, id, x, y);
+            });
         } else {
-            const robot = getRobot(1);
-            console.log(isInTheWay(robot, x, y));
+            moveRobotTo(socket, currentRobotId, x, y);
         }
     });
 
@@ -126,7 +121,10 @@ socket.on('connect', function () {
 
             selectRobots.innerHTML = "";
 
-            if (newTable != null && robots.length > 0) { // test that the number of detected robot in not null
+            console.log("newTable");
+            console.log(newTable);
+
+            if (newTable.size > 0) { // test that the number of detected robot in not null
                 let foundCurrentRobot = false;
                 let index = 0;
 

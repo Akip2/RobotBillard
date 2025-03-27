@@ -73,7 +73,7 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("identification", function (data) {
         if (data["type"] === "interface") { //Socket is the interface
-            console.log("interface");
+            console.log("identification : interface");
 
             removeSocket(socket);
             isSimulator = (data["mode"] === "simulator");
@@ -84,15 +84,6 @@ io.sockets.on("connection", function (socket) {
             sendRobotTableToNavigator();
         }
     });
-
-    /*
-    socket.on("is-interface", function (mode) { // We learn that the socket is the interface
-        isSimulator = (mode === "simulator");
-        socketInterface = socket;
-        removeSocket(socket);
-        console.log("remove interface");
-    });
-     */
 
     socket.on("change-mode", function (val) { // User is changing the mode of the interface (simulator, manual, camera...)
         isSimulator = (val === "simulator");
@@ -105,9 +96,9 @@ io.sockets.on("connection", function (socket) {
 });
 
 function addNewSocket(socket) {
-    robotsSockets.push(socket); // We assume the connecting socket is a robot
+    robotsSockets.push(socket);
     socketIps.push(socket.handshake.address);
-    sendRobotTableToNavigator();
+    // sendRobotTableToNavigator();
 }
 
 function updateSocket(socket) {
@@ -138,7 +129,6 @@ function removeSocket(socket) {
 
 function sendRobotTableToNavigator() {
     if (socketInterface !== null) {
-        //socketInterface.emit("robots-list", socketIps);
         const stringifiedTable = JSON.stringify(Array.from(relationTable));
         socketInterface.emit("robots-list", stringifiedTable);
     }
