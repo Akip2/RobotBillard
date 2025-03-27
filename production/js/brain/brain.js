@@ -158,15 +158,27 @@ export function moveRobotTo(socket, robotId, x, y) {
                 } else {
                     if (direction === "Left") {
                         if (isTargetBehind) {
-                            socket.emit('motor', createOrder(-otherMotorSpeed, -fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
+                            if(areRobotsInTheWay(robotId, false))
+                                handleCollision(socket, robotId, x,y);
+                            else
+                                socket.emit('motor', createOrder(-otherMotorSpeed, -fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
-                            socket.emit('motor', createOrder(otherMotorSpeed, fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
+                            if(areRobotsInTheWay(robotId))
+                                handleCollision(socket, robotId, x,y);
+                            else
+                                socket.emit('motor', createOrder(otherMotorSpeed, fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
                     } else {
                         if (isTargetBehind) {
-                            socket.emit('motor', createOrder(-fullSpeedMotor, -otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
+                            if(areRobotsInTheWay(robotId, false))
+                                handleCollision(socket, robotId, x,y);
+                            else
+                                socket.emit('motor', createOrder(-fullSpeedMotor, -otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
-                            socket.emit('motor', createOrder(fullSpeedMotor, otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
+                            if(areRobotsInTheWay(robotId))
+                                handleCollision(socket, robotId, x,y);
+                            else
+                                socket.emit('motor', createOrder(fullSpeedMotor, otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
                     }
                 }
