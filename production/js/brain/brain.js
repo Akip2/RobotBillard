@@ -3,7 +3,8 @@ import {getHoles, getRobot, getRobotIp, getRobotsIds} from "../elements-manager.
 import {
     ANGLE_THRESHOLD,
     BALL_REAL_SIZE,
-    DISTANCE_THRESHOLD, HANDLING_COLLISION,
+    DISTANCE_THRESHOLD,
+    HANDLING_COLLISION,
     MIN_ORDER_DURATION,
     ROBOT_MAX_SPEED,
     ROBOT_MIN_SPEED,
@@ -89,13 +90,15 @@ export function areRobotsInTheWay(robotId, lookFront = true) {
     const robot = getRobot(robotId);
 
     let inTheWay = false;
-    for(let i =0; i < robotsIds.length && !inTheWay; i++) {
+    for (let i = 0; i < robotsIds.length && !inTheWay; i++) {
         const id = robotsIds[i];
 
-        if(id !== robotId) {
+        if (id !== robotId) {
             const currentRobot = getRobot(id);
-            inTheWay = isInTheWay(robot, currentRobot.position.x, currentRobot.position.y);
-            console.log("intheway : "+inTheWay);
+            if (currentRobot !== undefined) {
+                inTheWay = isInTheWay(robot, currentRobot.position.x, currentRobot.position.y);
+                console.log("intheway : " + inTheWay);
+            }
         }
     }
 
@@ -105,7 +108,7 @@ export function areRobotsInTheWay(robotId, lookFront = true) {
 export function moveRobotTo(socket, robotId, x, y) {
     robotId = Number(robotId);
     let currentInterval = intervals.get(robotId);
-    if(currentInterval === HANDLING_COLLISION) return;
+    if (currentInterval === HANDLING_COLLISION) return;
 
     clearInterval(intervals.get(robotId));
 
@@ -158,25 +161,25 @@ export function moveRobotTo(socket, robotId, x, y) {
                 } else {
                     if (direction === "Left") {
                         if (isTargetBehind) {
-                            if(areRobotsInTheWay(robotId, false))
-                                handleCollision(socket, robotId, x,y);
+                            if (areRobotsInTheWay(robotId, false))
+                                handleCollision(socket, robotId, x, y);
                             else
                                 socket.emit('motor', createOrder(-otherMotorSpeed, -fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
-                            if(areRobotsInTheWay(robotId))
-                                handleCollision(socket, robotId, x,y);
+                            if (areRobotsInTheWay(robotId))
+                                handleCollision(socket, robotId, x, y);
                             else
                                 socket.emit('motor', createOrder(otherMotorSpeed, fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
                     } else {
                         if (isTargetBehind) {
-                            if(areRobotsInTheWay(robotId, false))
-                                handleCollision(socket, robotId, x,y);
+                            if (areRobotsInTheWay(robotId, false))
+                                handleCollision(socket, robotId, x, y);
                             else
                                 socket.emit('motor', createOrder(-fullSpeedMotor, -otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
-                            if(areRobotsInTheWay(robotId))
-                                handleCollision(socket, robotId, x,y);
+                            if (areRobotsInTheWay(robotId))
+                                handleCollision(socket, robotId, x, y);
                             else
                                 socket.emit('motor', createOrder(fullSpeedMotor, otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
