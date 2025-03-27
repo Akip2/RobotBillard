@@ -84,17 +84,15 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = event.offsetX;
         let y = event.offsetY;
 
-        if (!isSimulator) {
-            // Get the position of a click on the camera
-            if (currentRobotId === BROADCAST) {
-                const ids = getRobotsIds();
+        // Get the position of a click on the camera
+        if (currentRobotId === BROADCAST) {
+            const ids = getRobotsIds();
 
-                ids.forEach(id => {
-                    moveRobotTo(socket, id, x, y);
-                });
-            } else {
-                moveRobotTo(socket, currentRobotId, x, y);
-            }
+            ids.forEach(id => {
+                moveRobotTo(socket, id, x, y);
+            });
+        } else {
+            moveRobotTo(socket, currentRobotId, x, y);
         }
     });
 
