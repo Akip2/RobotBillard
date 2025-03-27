@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = event.offsetX;
         let y = event.offsetY;
 
-        if (!isSimulator){
+        if (!isSimulator) {
             // Get the position of a click on the camera
             if (currentRobotId === BROADCAST) {
                 const ids = getRobotsIds();
@@ -123,7 +123,10 @@ socket.on('connect', function () {
 
             selectRobots.innerHTML = "";
 
-            if (newTable != null && robots.length > 0) { // test that the number of detected robot in not null
+            console.log("newTable");
+            console.log(newTable);
+
+            if (newTable.size > 0) { // test that the number of detected robot in not null
                 let foundCurrentRobot = false;
                 let index = 0;
 
