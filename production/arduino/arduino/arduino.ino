@@ -28,8 +28,8 @@ char* NETWORK_PASSWORD = "C27A134E";
 // 257: Kaaris
 // 457: SCH (ses roues sont à l'envers)
 // 857: Ninho
-// 957: Tranis
-int ARUCO_ID = 257;
+// 957: Koba (anciennement Travis)
+int ARUCO_ID = 957;
 int TIMER_LIMIT = 300;
 
 // ============================================================================

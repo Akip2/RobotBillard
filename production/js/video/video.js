@@ -179,5 +179,6 @@ export function setStillContinue(boolean) {
 }
 
 export function getRealRobot(id) {
-    return robots.find((robot) => robot.id === id);
+    // DO NOT change == to ===, because it might be a string and we're lazy to fix it ;)
+    return robots.find((robot) => robot.id == id);
 }
