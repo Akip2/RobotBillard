@@ -1,6 +1,6 @@
 // viewArrowControls
 import {
-    currentRobotId,
+    currentRobotIp,
     duration,
     leftSpeed,
     rightSpeed,
@@ -72,7 +72,7 @@ export function initControls() {
                 setRightSpeed(-joystick.GetX() / 100 * 255);
             }
 
-            socket.emit('motor', createOrder(leftSpeed, rightSpeed, 100, currentRobotId));
+            socket.emit('motor', createOrder(leftSpeed, rightSpeed, 100, currentRobotIp));
         }, 100);
     }
 
@@ -84,15 +84,15 @@ export function initControls() {
         setRightSpeed(cursorRightMotor.value);
     });
     btnForward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(leftSpeed, rightSpeed, duration, currentRobotId));
+        socket.emit('motor', createOrder(leftSpeed, rightSpeed, duration, currentRobotIp));
     });
     btnBackward.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-leftSpeed, -rightSpeed, duration, currentRobotId));
+        socket.emit('motor', createOrder(-leftSpeed, -rightSpeed, duration, currentRobotIp));
     });
     btnTurnRight.addEventListener("click", () => {
-        socket.emit('motor', createOrder(leftSpeed, -rightSpeed, duration, currentRobotId));
+        socket.emit('motor', createOrder(leftSpeed, -rightSpeed, duration, currentRobotIp));
     });
     btnTurnLeft.addEventListener("click", () => {
-        socket.emit('motor', createOrder(-leftSpeed, rightSpeed, duration, currentRobotId));
+        socket.emit('motor', createOrder(-leftSpeed, rightSpeed, duration, currentRobotIp));
     });
 }

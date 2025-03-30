@@ -6,7 +6,7 @@ import EasyConfig from "../../simulateur/configurations/easy-config.js";
 import FootConfig from "../../simulateur/configurations/foot-config.js";
 import RandomConfig from "../../simulateur/configurations/random-config.js";
 import VueSimulateur from "../../simulateur/vue-simulateur.js";
-import {addRobot} from "../elements-manager.js";
+import {addRobotToListOnNavigator} from "../elements-manager.js";
 import {afficherDessins, currentConfig, currentRobotId, setCurrentConfig, setCurrentRobotId} from "./parameters.js";
 import {BROADCAST} from "../brain/brain-parameters.js";
 import {canvasContainer, reload, selectRobots, selectRobotsSim, socket} from "../index.js";
@@ -195,9 +195,9 @@ export function updateRobotList() {
 
     for (let i = 1; i <= table.getRobots().length; i++) {
         let robotName = "Robot n°" + i;
-        addRobot(robotName);
+        addRobotToListOnNavigator(robotName);
     }
-    addRobot("Broadcast");
+    addRobotToListOnNavigator("Broadcast");
 
     // use and display the current option
     for (let option of selectRobotsSim.options) {

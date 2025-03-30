@@ -1,53 +1,120 @@
 import {simulatorSpeed} from "../events/parameters.js";
-import {getRobot} from "../elements-manager.js";
+import {getHoles, getRobot, getRobotIp, getRobotsIds} from "../elements-manager.js";
 import {
     ANGLE_THRESHOLD,
     BALL_REAL_SIZE,
     DISTANCE_THRESHOLD,
+    HANDLING_COLLISION,
     MIN_ORDER_DURATION,
     ROBOT_MAX_SPEED,
     ROBOT_MIN_SPEED,
     TABLE_REAL_SIZE
 } from "./brain-parameters.js";
 import {isSimulator} from "../events/view-manager.js";
+import {holeRadius} from "../../simulateur/params.js";
+import {sleep} from "../scenarios/scenario-functions.js";
 
-let currentInterval = null;
+const intervals = new Map();
 
-export function turnRobot(socket, robotIp, x, y) {
+export function turnRobot(socket, robotId, x, y) {
     let direction;
 
-    const robot = getRobot(0);
+    const robot = getRobot(robotId);
     const angleDifference = getAngleDifference(robot, x, y);
     angleDifference > 0 ? direction = "Left" : direction = "Right";
-
-    if (Math.abs(angleDifference) <= ANGLE_THRESHOLD) {
-        clearInterval(currentInterval);
-    }
 
     let rotationSpeed = Math.abs(angleDifference) * 2;
 
     if (rotationSpeed > ROBOT_MAX_SPEED) {
-        rotationSpeed = ROBOT_MAX_SPEED;
+        rotationSpeed = ROBOT_MAX_SPEED / 2;
     } else if (rotationSpeed < ROBOT_MIN_SPEED) {
         rotationSpeed = ROBOT_MIN_SPEED;
     }
 
     if (direction === "Left") {
-        socket.emit('motor', createOrder(-rotationSpeed, rotationSpeed, MIN_ORDER_DURATION, robotIp));
+        socket.emit('motor', createOrder(-rotationSpeed, rotationSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
     } else {
-        socket.emit('motor', createOrder(rotationSpeed, -rotationSpeed, MIN_ORDER_DURATION, robotIp));
+        socket.emit('motor', createOrder(rotationSpeed, -rotationSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
     }
 }
 
-export function moveRobotTo(socket, robotIp, x, y) {
-    if (currentInterval !== null) {
-        clearInterval(currentInterval);
+export function turnRobotWithAngle(socket, robotId, angle, direction) {
+    let rotationSpeed = 100
+
+    if (direction === "Left") {
+        socket.emit('motor', createOrder(-rotationSpeed, rotationSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
+    } else {
+        socket.emit('motor', createOrder(rotationSpeed, -rotationSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
+    }
+}
+
+export function isInTheWay(robot, x, y, lookFront = true) {
+    const fov = Math.PI / 1.5;
+    const maxDist = 100;
+
+    const dirX = Math.cos(robot.orientation);
+    const dirY = Math.sin(robot.orientation);
+
+    const vecX = x - robot.position.x;
+    const vecY = y - robot.position.y;
+
+    const normVec = Math.sqrt(vecX ** 2 + vecY ** 2);
+
+    if (normVec <= maxDist) { //Obstacle is too far anyway
+        const dot = vecX * dirX + vecY * dirY;
+        const normDir = Math.sqrt(dirX * dirX + dirY * dirY);
+
+        const cosAlpha = dot / (normVec * normDir);
+        return cosAlpha > Math.cos(fov) && (lookFront ? dot > 0.25 : dot < -0.25);
+    } else {
+        console.log("obstacle is too far");
+        return false;
+    }
+}
+
+export async function handleCollision(socket, robotId, x, y) {
+    clearInterval(intervals.get(robotId));
+    intervals.set(robotId, HANDLING_COLLISION);
+
+    socket.emit('motor', createOrder(ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, 200, getRobotIp(robotId)));
+    await sleep(200);
+    socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, 200, getRobotIp(robotId)));
+    await sleep(500);
+
+    intervals.set(robotId, null);
+    moveRobotTo(socket, robotId, x, y);
+}
+
+export function areRobotsInTheWay(robotId, lookFront = true) {
+    const robotsIds = getRobotsIds();
+    const robot = getRobot(robotId);
+
+    let inTheWay = false;
+    for (let i = 0; i < robotsIds.length && !inTheWay; i++) {
+        const id = robotsIds[i];
+
+        if (id !== robotId) {
+            const currentRobot = getRobot(id);
+            if (currentRobot !== undefined) {
+                inTheWay = isInTheWay(robot, currentRobot.position.x, currentRobot.position.y);
+                console.log("intheway : " + inTheWay);
+            }
+        }
     }
 
-    let direction = "Left";
+    return inTheWay;
+}
 
-    currentInterval = setInterval(() => {
-        let robot = getRobot(0);
+export function moveRobotTo(socket, robotId, x, y) {
+    robotId = Number(robotId);
+    let currentInterval = intervals.get(robotId);
+    if (currentInterval === HANDLING_COLLISION) return;
+
+    clearInterval(intervals.get(robotId));
+
+    let direction = "Left";
+    currentInterval = setInterval(async () => {
+        let robot = getRobot(robotId);
 
         if (robot !== undefined) {
             let angleDifference = getAngleDifference(robot, x, y);
@@ -58,13 +125,29 @@ export function moveRobotTo(socket, robotIp, x, y) {
                 y: y
             });
 
+            // Check if we arrived at destination or if the robot is near a hole
+            // TODO : check values for the real robot (holeRadius * 5)
+            let robotIsNearTargetHole = isRobotNearHole(robotId, holeRadius * 5) && isRobotNear(robotId, x, y, holeRadius * 5);
+
+            if ((distanceDifference < DISTANCE_THRESHOLD) || robotIsNearTargetHole) {
+                clearInterval(currentInterval);
+            }
+
             const isTargetForward = (angleDifference <= ANGLE_THRESHOLD) && (angleDifference >= -ANGLE_THRESHOLD);
             const isTargetBackward = (angleDifference <= -180 + ANGLE_THRESHOLD) || (angleDifference >= 180 - ANGLE_THRESHOLD);
 
             if (isTargetForward) {
-                socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, robotIp));
+                if (areRobotsInTheWay(robotId)) {
+                    handleCollision(socket, robotId, x, y);
+                } else {
+                    socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
+                }
             } else if (isTargetBackward) {
-                socket.emit('motor', createOrder(-ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, MIN_ORDER_DURATION, robotIp));
+                if (areRobotsInTheWay(robotId, false)) {
+                    handleCollision(socket, robotId, x, y);
+                } else {
+                    socket.emit('motor', createOrder(-ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
+                }
             } else {
                 // Tries to turn and go forward / backward smoothly
                 const isTargetBehind = angleDifference > 90 || angleDifference < -90;
@@ -74,33 +157,46 @@ export function moveRobotTo(socket, robotIp, x, y) {
 
                 // Needs to turn before moving if too close to the target
                 if (distanceDifference < DISTANCE_THRESHOLD * 2) {
-                    turnRobot(socket, robotIp, x, y);
+                    turnRobot(socket, robotId, x, y);
                 } else {
                     if (direction === "Left") {
                         if (isTargetBehind) {
-                            socket.emit('motor', createOrder(-otherMotorSpeed, -fullSpeedMotor, MIN_ORDER_DURATION, robotIp));
+                            if (areRobotsInTheWay(robotId, false))
+                                handleCollision(socket, robotId, x, y);
+                            else
+                                socket.emit('motor', createOrder(-otherMotorSpeed, -fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
-                            socket.emit('motor', createOrder(otherMotorSpeed, fullSpeedMotor, MIN_ORDER_DURATION, robotIp));
+                            if (areRobotsInTheWay(robotId))
+                                handleCollision(socket, robotId, x, y);
+                            else
+                                socket.emit('motor', createOrder(otherMotorSpeed, fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
                     } else {
                         if (isTargetBehind) {
-                            socket.emit('motor', createOrder(-fullSpeedMotor, -otherMotorSpeed, MIN_ORDER_DURATION, robotIp));
+                            if (areRobotsInTheWay(robotId, false))
+                                handleCollision(socket, robotId, x, y);
+                            else
+                                socket.emit('motor', createOrder(-fullSpeedMotor, -otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
-                            socket.emit('motor', createOrder(fullSpeedMotor, otherMotorSpeed, MIN_ORDER_DURATION, robotIp));
+                            if (areRobotsInTheWay(robotId))
+                                handleCollision(socket, robotId, x, y);
+                            else
+                                socket.emit('motor', createOrder(fullSpeedMotor, otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
                     }
                 }
-
-            }
-            if (distanceDifference < DISTANCE_THRESHOLD) {
-                clearInterval(currentInterval);
             }
         }
     }, (MIN_ORDER_DURATION / 2) / (isSimulator ? simulatorSpeed : 1));
+
+    intervals.set(robotId, currentInterval);
 }
 
 export function stopRobots(socket) {
-    clearInterval(currentInterval);
+    intervals.forEach(interval => {
+        clearInterval(interval);
+    });
+
     socket.emit('motor', createOrder(0, 0, 100, "Broadcast"));
 }
 
@@ -123,8 +219,8 @@ export function getAngleDifference(robot, x, y) {
     return false;
 }
 
-export function isRobotFacing(robotIp, x, y) {
-    const robot = getRobot(0);
+export function isRobotFacing(robotId, x, y) {
+    const robot = getRobot(robotId);
 
     if (robot !== undefined) {
         let angleDifference = getAngleDifference(robot, x, y);
@@ -134,14 +230,49 @@ export function isRobotFacing(robotIp, x, y) {
     return false;
 }
 
-export function isRobotNear(robotIp, x, y, deltaMax) {
-    let robot = getRobot(0);
+export function isRobotNear(robotId, x, y, deltaMax) {
+    let robot = getRobot(robotId);
 
     if (robot !== undefined) {
         let robotPosition = robot.position;
         let delta = distanceBetweenPoints(robotPosition, {x: x, y: y});
 
         return delta < deltaMax;
+    }
+    return false;
+}
+
+export function isPointNearHole(x, y, distanceMax) {
+    let holes = getHoles();
+
+    if (holes !== undefined) {
+        // Check for every hole if the robot is nearby
+        for (let i = 0; i < holes.length; i++) {
+            let distance = distanceBetweenPoints(holes[i], {x: x, y: y});
+
+            if (distance < distanceMax) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+export function isRobotNearHole(robotIp, distanceMax) {
+    let robot = getRobot(robotIp);
+    let holes = getHoles();
+
+    if (robot !== undefined && holes !== undefined) {
+        let robotPosition = robot.position;
+
+        // Check for every hole if the robot is nearby
+        for (let i = 0; i < holes.length; i++) {
+            let distance = distanceBetweenPoints(holes[i], robotPosition);
+
+            if (distance < distanceMax) {
+                return true;
+            }
+        }
     }
     return false;
 }

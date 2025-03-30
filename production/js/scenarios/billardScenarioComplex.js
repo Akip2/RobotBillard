@@ -5,9 +5,10 @@ import {isRobotFacing, isRobotNear, moveRobotTo, turnRobot} from "../brain/brain
 import {isActive} from "../index.js";
 import {FPS} from "../video/video-parameters.js";
 
-export let robotDestX;
-export let robotDestY;
-export let ballPush = {x: 0, y: 0};
+
+export const robotsDest = new Map();
+
+export let ballsPush = new Map();
 
 const alpha = 60;
 
@@ -16,36 +17,39 @@ const alpha = 60;
  * socket et la connexion qui permet de communiquer avec le robot
  * index est d'index du robot à faire bouger (dans le tableau de robot)
  * @param socket
- * @param robotIp
+ * @param robotId
  * @returns {Promise<void>}
  */
-export async function startBillardScenarioComplex(socket, robotIp) {
+export async function startBillardScenarioComplex(socket, robotId) {
     while (isActive/*!isEmpty(balls)*/) {
-        await goBehindBall(socket, robotIp);
-        await turnToTarget(socket, robotIp);
-        await hitTarget(socket, robotIp);
+        await goBehindBall(socket, robotId);
+        await turnToTarget(socket, robotId);
+        await hitTarget(socket, robotId);
     }
 }
 
-async function hitTarget(socket, robotIp) {
-    if (isActive) {
-        moveRobotTo(socket, robotIp, robotDestX, robotDestY);
+export function cleanBillardComplex() {
+    robotsDest.clear();
+    ballsPush.clear();
+}
 
-        while(isActive && !isRobotNear(robotIp, robotDestX, robotDestY, 20)){
+async function hitTarget(socket, robotId) {
+    if (isActive) {
+        moveRobotTo(socket, robotId, robotsDest.get(robotId).x, robotsDest.get(robotId).y);
+
+        while (isActive && !isRobotNear(robotId, robotsDest.get(robotId).x, robotsDest.get(robotId).y, 20)) {
             await sleep(MIN_ORDER_DURATION);
-            moveRobotTo(socket, robotIp, robotDestX, robotDestY);
+            moveRobotTo(socket, robotId, robotsDest.get(robotId).x, robotsDest.get(robotId).y);
         }
-        //socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, 500, robotIp));
-        //await sleep(500);
     }
 }
 
-async function turnToTarget(socket, robotIp) {
+async function turnToTarget(socket, robotId) {
     if (isActive) {
-        turnRobot(socket, robotIp, robotDestX, robotDestY);
-        while (isActive && !isRobotFacing(robotIp, robotDestX, robotDestY)) {
+        turnRobot(socket, robotId, robotsDest.get(robotId).x, robotsDest.get(robotId).y);
+        while (isActive && !isRobotFacing(robotId, robotsDest.get(robotId).x, robotsDest.get(robotId).y)) {
             await sleep(MIN_ORDER_DURATION);
-            turnRobot(socket, robotIp, robotDestX, robotDestY);
+            turnRobot(socket, robotId, robotsDest.get(robotId).x, robotsDest.get(robotId).y);
         }
     }
 }
@@ -53,55 +57,54 @@ async function turnToTarget(socket, robotIp) {
 /**
  *
  * @param socket
- * @param robotIp
+ * @param robotId
  * @returns {Promise<*>} ball chosen to push
  */
-async function goBehindBall(socket, robotIp) {
+async function goBehindBall(socket, robotId) {
     if (isActive) {
         let balls = getBalls();
-        let robot = getRobot(0);
+        let robot = getRobot(robotId);
 
-        let ballToPush, hole;
+        let ballToPush;
         if (robot !== undefined) {
             ballToPush = getNearestBall(balls, robot.position);
 
             if (ballToPush !== undefined) {
                 let pointToGo = getPositionBehindBall(ballToPush);
-                robotDestX = pointToGo.x;
-                robotDestY = pointToGo.y;
 
-                while (isActive && !isRobotNear(robotIp, robotDestX, robotDestY, 30)) {
+                robotsDest.set(robotId, pointToGo);
+
+                while (isActive && !isRobotNear(robotId, pointToGo.x, pointToGo.y, 30)) {
                     balls = getBalls();
-                    robot = getRobot(0);
+                    robot = getRobot(robotId);
 
-                    if(robot !== undefined) {
+                    if (robot !== undefined) {
                         ballToPush = getNearestBall(balls, robot.position);
 
                         if (ballToPush !== undefined) {
                             pointToGo = getPositionBehindBall(ballToPush);
-                            robotDestX = pointToGo.x;
-                            robotDestY = pointToGo.y;
-                            ballPush = ballToPush;
 
-                            moveRobotTo(socket, robotIp, robotDestX, robotDestY);
+                            robotsDest.set(robotId, pointToGo);
+                            ballsPush.set(robotId, ballToPush);
+
+                            moveRobotTo(socket, robotId, pointToGo.x, pointToGo.y);
                         }
                     }
                     await sleep(MIN_ORDER_DURATION);
                 }
 
                 if (ballToPush !== undefined) {
-                    robotDestX = ballToPush.x;
-                    robotDestY = ballToPush.y;
+                    robotsDest.set(robotId, ballToPush);
                 } else {
-                    await goBehindBall(socket, robotIp)
+                    await goBehindBall(socket, robotId)
                 }
             } else {
                 await sleep(1000 / FPS); //Wait for next frame
-                await goBehindBall(socket, robotIp);
+                await goBehindBall(socket, robotId);
             }
         } else {
             await sleep(1000 / FPS); //Wait for next frame
-            await goBehindBall(socket, robotIp);
+            await goBehindBall(socket, robotId);
         }
     }
 }

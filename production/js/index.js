@@ -1,13 +1,14 @@
 // Billard configurations
 import {currentConfig, currentRobotId, currentScenario, initParams, setCurrentRobotId} from "./events/parameters.js";
 import {currentView, initView, loadSimulator, table} from "./events/view-manager.js";
-import {addRobot, isInsideTable} from "./elements-manager.js";
+import {addRobotToListOnNavigator, getRobotsIds, setRelationTable} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
 import {moveRobotTo, stopRobots} from "./brain/brain.js";
 import {startBillardScenarioComplex} from "./scenarios/billardScenarioComplex.js";
-import {startBillardScenarioDuel} from "./scenarios/billardScenarioDuel.js";
+import {startBillardScenarioCollaboration} from "./scenarios/billardScenarioCollaboration.js";
+import {BROADCAST} from "./brain/brain-parameters.js";
 
 export const socket = io(); // Connection to server
 
@@ -36,19 +37,32 @@ document.addEventListener("DOMContentLoaded", () => {
             goBtn.textContent = "STOP";
             goBtn.style.backgroundColor = "#FF99CC";
 
+            let ids;
             //Starting scenario
+            if (currentRobotId === BROADCAST) {
+                ids = getRobotsIds();
+            } else {
+                ids = [currentRobotId];
+            }
+
             switch (currentScenario) {
                 case "SimpleBillard":
-                    startBillardScenarioSimple(socket, currentRobotId);
+                    ids.forEach(id => {
+                        startBillardScenarioSimple(socket, Number(id));
+                    })
                     break;
                 case "ComplexBillard":
-                    startBillardScenarioComplex(socket, currentRobotId);
+                    ids.forEach(id => {
+                        startBillardScenarioComplex(socket, Number(id));
+                    })
                     break;
-                case "DuelBillard":
-                    startBillardScenarioDuel(socket, currentRobotId);
+                case "CollaborationBillard":
+                    startBillardScenarioCollaboration(socket);
                     break;
                 case "default":
-                    startTestScenario(socket, currentRobotId);
+                    ids.forEach(id => {
+                        startTestScenario(socket, Number(id));
+                    })
                     break;
             }
         } else {
@@ -70,14 +84,14 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = event.offsetX;
         let y = event.offsetY;
 
-        console.log(isInsideTable(x, y));
+        // Get the position of a click on the camera
+        if (currentRobotId === BROADCAST) {
+            const ids = getRobotsIds();
 
-        if (isSimulator) {
-            // Get the position of a click on the simulator
-            moveRobotTo(socket, currentRobotId, x, y);
-            // turnRobotInCircle(socket, 0);
+            ids.forEach(id => {
+                moveRobotTo(socket, id, x, y);
+            });
         } else {
-            // Get the position of a click on the camera
             moveRobotTo(socket, currentRobotId, x, y);
         }
     });
@@ -90,40 +104,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
 socket.on('connect', function () {
     console.log("Connected to server with ID : ", socket.id);
+    socket.emit("identification", {
+        type: "interface"
+    });
 
     socket.on("motor", function (order) {
         table.sendRobotOrder(order, order.ipRobot); // Send order to simulator
     });
 
-    socket.on("ask-identity", function () {
-        socket.emit("is-interface", currentView);
-    });
-
     socket.on("robots-list", function (robots) {
+        const newTable = new Map(JSON.parse(robots));
+        setRelationTable(newTable);
+
         if (currentView !== "simulator") {
             console.log("navigateur : socket on robot-list");
 
             selectRobots.innerHTML = "";
 
-            if (robots != null && robots.length > 0) { // test that the number of detected robot in not null
+            console.log("newTable");
+            console.log(newTable);
+
+            if (newTable.size > 0) { // test that the number of detected robot in not null
                 let foundCurrentRobot = false;
+                let index = 0;
 
-                robots.forEach(function (robot) {
-                    addRobot(robot);
-
-                    if (robot === currentRobotId) {
+                for (const [arucoId, ip] of newTable) {
+                    addRobotToListOnNavigator(arucoId);
+                    if (arucoId === currentRobotId) {
+                        console.log(selectRobots[index].text);
+                        setCurrentRobotId(Number(selectRobots[index].text));
+                        selectRobots.selectedIndex = index;
                         foundCurrentRobot = true;
                     }
-                });
-
-                addRobot("Broadcast");
+                    index++;
+                }
+                addRobotToListOnNavigator("Broadcast");
 
                 if ((currentRobotId === null) || !foundCurrentRobot) {
-                    console.log(selectRobots[selectRobots.childElementCount - 1].text)
-                    setCurrentRobotId(selectRobots[selectRobots.childElementCount - 1].text);
+                    setCurrentRobotId(BROADCAST);
+                    selectRobots.selectedIndex = selectRobots.childElementCount - 1;
                 }
             } else {
-                addRobot("Aucun robot disponible");
+                addRobotToListOnNavigator("Aucun robot disponible");
             }
         }
     });

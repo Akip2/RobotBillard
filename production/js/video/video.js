@@ -1,10 +1,10 @@
 import {detectAndDrawArucos, detectCircles, drawCircle, drawDetectedCircles, preProcess} from "./video-functions.js";
 import {calculateBallSize, distanceBetweenPoints} from "../brain/brain.js";
 import {DEFAULT_BALL_RADIUS, FPS, HEIGHT, WIDTH} from "./video-parameters.js";
-import {ballPush, robotDestX, robotDestY} from "../scenarios/billardScenarioComplex.js";
+import {ballsPush, robotsDest} from "../scenarios/billardScenarioComplex.js";
 
 let stillContinue = true;
-let robots = [];
+export let robots = [];
 
 export let lastMv;
 
@@ -89,6 +89,7 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                 let [topLeft, topRight, bottomRight, bottomLeft] = tableCorners;
 
                 robots = arucos.slice(4, arucos.length);
+                // console.log(robots);
 
                 const mv = new cv.Mat(tableCorners.length, 1, cv.CV_32SC2);
 
@@ -131,8 +132,13 @@ function processVideo(video, canvas, canvasBrut, ctx) {
 
                 // Draw the final result in the canvas
                 // preProcessedFrame / finalImage
-                drawCircle(finalImage, new cv.Point(robotDestX, robotDestY), [255, 0, 255, 20]);
-                drawCircle(finalImage, new cv.Point(ballPush.x, ballPush.y), [255, 255, 0, 20]);
+
+                robotsDest.forEach((dest, robotId) => {
+                    drawCircle(finalImage, new cv.Point(dest.x, dest.y), [255, 0, 255, 20]);
+                });
+                ballsPush.forEach((ballToPush, robotId) => {
+                    drawCircle(finalImage, new cv.Point(ballToPush.x, ballToPush.y), [255, 255, 0, 20]);
+                })
 
                 if (document.getElementById("checkbox-image-pretraitee").checked) {
                     cv.imshow(canvas, preProcessedFrame);
@@ -172,6 +178,7 @@ export function setStillContinue(boolean) {
     stillContinue = boolean;
 }
 
-export function getRealRobot(index) {
-    return robots[index];
+export function getRealRobot(id) {
+    // DO NOT change == to ===, because it might be a string and we're lazy to fix it ;)
+    return robots.find((robot) => robot.id == id);
 }

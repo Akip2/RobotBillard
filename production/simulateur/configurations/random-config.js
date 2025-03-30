@@ -1,5 +1,5 @@
 import Table from "../table.js";
-import Robot from "../objects/robot.js";
+import Robot from "../objects/robotSimulator.js";
 import {
     ballColors,
     ballRadius,
