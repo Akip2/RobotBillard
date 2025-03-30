@@ -52,8 +52,10 @@ export function isInTheWay(robot, x, y, lookFront = true) {
     const fov = FOV;
     const maxDist = MAX_DIST;
 
-    const dirX = Math.cos(robot.orientation);
-    const dirY = Math.sin(robot.orientation);
+    const orientationRad = -(robot.orientation * Math.PI) / 180;
+
+    const dirX = Math.cos(orientationRad);
+    const dirY = Math.sin(orientationRad);
 
     const vecX = x - robot.position.x;
     const vecY = y - robot.position.y;
