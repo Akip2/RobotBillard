@@ -24,7 +24,7 @@ export let currentScenario = "default";
 
 export let afficherDessins = true;
 export let simulatorSpeed = 1;
-export let afficherVisionAntiCollision = true;
+export let afficherVisionAntiCollision;
 
 export let leftSpeed = 130;
 export let rightSpeed = 130;
@@ -33,6 +33,8 @@ export let duration = 1000;
 export let noise = 1;
 
 export function initParams() {
+
+    afficherVisionAntiCollision = affichageVision.checked;
 
     btnOptions.addEventListener("click", () => {
         fond.classList.remove("displayNone");
@@ -121,4 +123,9 @@ export function setLeftSpeed(speed) {
 
 export function setRightSpeed(speed) {
     rightSpeed = speed;
+}
+
+export function setAffichageVision(boolean) {
+    affichageVision.checked = boolean;
+    afficherVisionAntiCollision = boolean;
 }
