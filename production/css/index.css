@@ -80,6 +80,14 @@ header {
     font-size: 3em;
 }
 
+#titre:hover {
+    cursor: grab !important;
+}
+
+#titre:active {
+    cursor: grabbing !important;
+}
+
 #views-list {
     display: flex;
     gap: 0; /* buttons must be glued together */

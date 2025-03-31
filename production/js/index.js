@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = event.offsetX;
         let y = event.offsetY;
 
-        if(isSimulator) {
+        if (isSimulator) {
             console.log(isInTheWay(getRobot(getRobotsIds()[0]), x, y, false));
         }
 
@@ -98,6 +98,31 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             moveRobotTo(socket, currentRobotId, x, y);
         }
+    });
+
+    // Easter egg
+    const title = document.getElementById('titre');
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    title.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.clientX - title.offsetLeft;
+        offsetY = e.clientY - title.offsetTop;
+        title.style.position = 'absolute';
+        title.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            title.style.left = `${e.clientX - offsetX}px`;
+            title.style.top = `${e.clientY - offsetY}px`;
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        title.style.cursor = 'grab';
     });
 
     // Loader
