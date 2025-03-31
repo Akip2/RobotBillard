@@ -1,6 +1,6 @@
 import {Body, Composite, Engine, Mouse, MouseConstraint, Render, World,} from "./global.js";
 import {ballRadius, height, simulatorFPS, width} from "./params.js";
-import {afficherDessins, noise, simulatorSpeed} from "../js/events/parameters.js";
+import {afficherDessins, afficherVisionAntiCollision, noise, simulatorSpeed} from "../js/events/parameters.js";
 import {FOV, MAX_DIST} from "../js/brain/brain-parameters.js";
 
 class VueSimulateur {
@@ -163,22 +163,24 @@ class VueSimulateur {
                 this.overlayContext.fillStyle = "red";
                 this.overlayContext.fillRect(position.x - 5, position.y - 5, 10, 10);
 
-                this.overlayContext.fillStyle = "rgba(255, 0, 0, 0.3)";
-                this.overlayContext.beginPath();
-                this.overlayContext.moveTo(position.x, position.y);
+                if (afficherVisionAntiCollision) {
+                    this.overlayContext.fillStyle = "rgba(255, 0, 0, 0.3)";
+                    this.overlayContext.beginPath();
+                    this.overlayContext.moveTo(position.x, position.y);
 
-                const leftAngle = robotAruco.orientation - FOV / 2;
-                const rightAngle = robotAruco.orientation + FOV / 2;
+                    const leftAngle = robotAruco.orientation - FOV / 2;
+                    const rightAngle = robotAruco.orientation + FOV / 2;
 
-                const leftX = position.x + Math.cos(leftAngle) * MAX_DIST;
-                const leftY = position.y + Math.sin(leftAngle) * MAX_DIST;
-                const rightX = position.x + Math.cos(rightAngle) * MAX_DIST;
-                const rightY = position.y + Math.sin(rightAngle) * MAX_DIST;
+                    const leftX = position.x + Math.cos(leftAngle) * MAX_DIST;
+                    const leftY = position.y + Math.sin(leftAngle) * MAX_DIST;
+                    const rightX = position.x + Math.cos(rightAngle) * MAX_DIST;
+                    const rightY = position.y + Math.sin(rightAngle) * MAX_DIST;
 
-                this.overlayContext.lineTo(leftX, leftY);
-                this.overlayContext.arc(position.x, position.y, MAX_DIST, leftAngle, rightAngle);
-                this.overlayContext.lineTo(position.x, position.y);
-                this.overlayContext.fill();
+                    this.overlayContext.lineTo(leftX, leftY);
+                    this.overlayContext.arc(position.x, position.y, MAX_DIST, leftAngle, rightAngle);
+                    this.overlayContext.lineTo(position.x, position.y);
+                    this.overlayContext.fill();
+                }
             });
         }
     }
