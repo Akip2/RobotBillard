@@ -1,0 +1,7 @@
+Fonctionnalités et cas d'utilisations développés :
+   - Les robots reçoivent maintenant des ordres en fonction de leur propre position et sont capables de se déplacer indépendamment : Antoine 100%
+   - le code des robots a été modifié, ils envoient maintenant leur id d'ArUco (hard codé) : Corentin 100%
+   - le code du serveur et de tout le projet a été mis à jour pour associer correctement l'id d'un robot avec son adresse ip : Antoine 100%
+   - les robots sont maintenant capables de s'arrêter avant de tomber dans les trous : Corentin 50%, Nathan 50%
+   - création d'un nouveau scénario, un scénario collaboratif avec plusieurs robots : Antoine 50%, Nathan 50%
+   - asservissement global, changement du code de l'arduino : Corentin 100%
