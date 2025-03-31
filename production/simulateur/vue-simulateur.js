@@ -159,6 +159,7 @@ class VueSimulateur {
 
         if (afficherDessins) {
             robotArucos.forEach((robotAruco) => {
+                console.log(robotAruco);
                 const orientationRad = -(robotAruco.orientation * Math.PI) / 180;
 
                 const position = robotAruco.position;
