@@ -15,6 +15,8 @@ import {
 import {convertCVPointToMathPoint, distanceBetweenPoints, middleOfPoints} from "../brain/brain.js";
 import {isSimulator, vue} from "../events/view-manager.js";
 import {lastMv} from "./video.js";
+import {afficherDessins, afficherVisionAntiCollision} from "../events/parameters.js";
+import {FOV, MAX_DIST} from "../brain/brain-parameters.js";
 
 let ballsPositions = [];
 let holesPositions = [];
@@ -306,6 +308,52 @@ export function drawDetectedCircles(frame, circles, mv, robots, tableCorners, is
         }
         cv.circle(frame, circleCenter, circle[2], perimeterColor, 3);
         cv.circle(frame, circleCenter, 3, [255, 255, 0, 255], -1);
+    }
+}
+
+export function drawDetectedArucosOnCamera(robotArucos, cameraContext, canvasWidth, canvasHeight) {
+    // cameraContext.clearRect(0, 0, canvasWidth, canvasHeight);
+
+    if (afficherDessins) {
+        robotArucos.forEach((robotAruco) => {
+            const orientationRad = -(robotAruco.orientation * Math.PI) / 180;
+
+            const position = robotAruco.position;
+            cameraContext.fillStyle = "red";
+            cameraContext.fillRect(position.x - 5, position.y - 5, 10, 10);
+
+            if (afficherVisionAntiCollision) {
+                cameraContext.fillStyle = "rgba(255, 0, 0, 0.3)";
+                cameraContext.beginPath();
+                cameraContext.moveTo(position.x, position.y);
+
+                const leftAngle = orientationRad - FOV / 2;
+                const rightAngle = orientationRad + FOV / 2;
+
+                const leftX = position.x + Math.cos(leftAngle) * MAX_DIST;
+                const leftY = position.y + Math.sin(leftAngle) * MAX_DIST;
+
+                cameraContext.lineTo(leftX, leftY);
+                cameraContext.arc(position.x, position.y, MAX_DIST, leftAngle, rightAngle);
+                cameraContext.lineTo(position.x, position.y);
+                cameraContext.fill();
+
+                cameraContext.fillStyle = "rgba(0, 0, 255, 0.3)";
+                cameraContext.beginPath();
+                cameraContext.moveTo(position.x, position.y);
+
+                const leftAngleBack = orientationRad + Math.PI - FOV / 2;
+                const rightAngleBack = orientationRad + Math.PI + FOV / 2;
+
+                const leftXBack = position.x + Math.cos(leftAngleBack) * MAX_DIST;
+                const leftYBack = position.y + Math.sin(leftAngleBack) * MAX_DIST;
+
+                cameraContext.lineTo(leftXBack, leftYBack);
+                cameraContext.arc(position.x, position.y, MAX_DIST, leftAngleBack, rightAngleBack);
+                cameraContext.lineTo(position.x, position.y);
+                cameraContext.fill();
+            }
+        });
     }
 }
 

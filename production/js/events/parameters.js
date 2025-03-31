@@ -12,6 +12,7 @@ const selectRobots = document.querySelector("#select-robot");
 const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 const configurationChoice = document.querySelector("#select-configuration");
 const affichage = document.querySelector("#checkbox-affichage");
+const affichageVision = document.querySelector("#checkbox-vision-anti-collision");
 const noiseSlider = document.querySelector("#noise");
 
 export let currentRobotId = BROADCAST;
@@ -22,6 +23,7 @@ export let currentScenario = "default";
 
 export let afficherDessins = true;
 export let simulatorSpeed = 1;
+export let afficherVisionAntiCollision = false;
 
 export let leftSpeed = 130;
 export let rightSpeed = 130;
@@ -68,16 +70,20 @@ export function initParams() {
 
     // Choose a configuration for the simulator
     configurationChoice.addEventListener("change", (event) => {
-        loadSimulator(event.target.value, currentRobotId);
+        loadSimulator(event.target.value);
         updateRobotList();
     });
 
     affichage.addEventListener("change", function () {
-        setAfficherDessins(affichage.checked);
+        afficherDessins = affichage.checked;
         if (currentView !== "simulator") {
             afficherDetection(afficherDessins);
         }
         // pour le simulateur, la gestion des dessins est gérée par la classe VueSimulateur (drawDetectedCircles) grace à la variable afficherDessins
+    });
+
+    affichageVision.addEventListener("change", function () {
+        afficherVisionAntiCollision = affichageVision.checked;
     });
 
     noiseSlider.addEventListener("change", (event) => {
@@ -92,14 +98,6 @@ export function setCurrentConfig(config) {
 export function setCurrentRobotId(id) {
     currentRobotId = id;
     currentRobotIp = getRobotIp(id);
-}
-
-export function setAfficherDessins(affiche) {
-    afficherDessins = affiche;
-}
-
-export function setCurrentScenario(sc) {
-    currentScenario = sc;
 }
 
 export function setDuration(time) {

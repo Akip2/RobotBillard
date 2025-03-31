@@ -1,14 +1,11 @@
 import {currentView, isSimulator, table} from "./events/view-manager.js";
 import {getRealRobot} from "./video/video.js";
-import {getDistanceFromBorder, getRealBalls, getRealHoles} from "./video/video-functions.js";
+import {getRealBalls, getRealHoles} from "./video/video-functions.js";
 import {selectRobots, selectRobotsSim} from "./index.js";
-import {height, wallSize, width} from "../simulateur/params.js";
 import {currentRobotId} from "./events/parameters.js";
 import {BROADCAST} from "./brain/brain-parameters.js";
 
 export let relationTable = new Map();
-
-export let robots = [];
 
 export function getRobot(id) {
     if (currentView === "simulator") {
@@ -20,25 +17,6 @@ export function getRobot(id) {
         }
     }
     return getRealRobot(id);
-}
-
-export function getAvailableRobots() {
-    let robotList = [];
-
-    if (currentView === "simulator") {
-        for (let option of selectRobotsSim.options) {
-            if (option.text === "Broadcast") {
-                robotList.push(option.text);
-            } else {
-                robotList.push(option.text[option.text.length - 1]);
-            }
-        }
-    } else {
-        for (let option of selectRobots.options) {
-            robotList.push(option.text);
-        }
-    }
-    return robotList;
 }
 
 export function getBalls() {
@@ -95,23 +73,6 @@ export function addRobotToListOnNavigator(robotName) {
             option.selected = true;
         }
         selectRobots.appendChild(option);
-    }
-}
-
-export function isInsideTable(x, y) {
-    let minX, maxX, minY, maxY;
-    if (isSimulator) {
-        minX = wallSize;
-        maxX = width - wallSize;
-
-        minY = wallSize;
-        maxY = height - wallSize;
-
-        return (x >= minX && x <= maxX) && (y >= minY && y <= maxY);
-    } else {
-        const dist = getDistanceFromBorder(x, y);
-
-        return dist >= 30;
     }
 }
 
