@@ -100,10 +100,6 @@ export function setCurrentRobotId(id) {
     currentRobotIp = getRobotIp(id);
 }
 
-export function setAfficherDessins(affiche) {
-    afficherDessins = affiche;
-}
-
 export function setDuration(time) {
     duration = time;
 }
