@@ -48,33 +48,35 @@ export function turnRobot(socket, robotId, x, y) {
 }
 
 export function isInTheWay(robot, x, y, lookFront = true) {
-    const fov = FOV;
-    const maxDist = MAX_DIST;
+    if (robot !== undefined) {
+        const fov = FOV;
+        const maxDist = MAX_DIST;
 
-    const orientationRad = -(robot.orientation * Math.PI) / 180;
+        const orientationRad = -(robot.orientation * Math.PI) / 180;
 
-    let dirX = Math.cos(orientationRad);
-    let dirY = Math.sin(orientationRad);
+        let dirX = Math.cos(orientationRad);
+        let dirY = Math.sin(orientationRad);
 
-    if (!lookFront) {
-        dirX = -dirX;
-        dirY = -dirY;
-    }
+        if (!lookFront) {
+            dirX = -dirX;
+            dirY = -dirY;
+        }
 
-    const vecX = x - robot.position.x;
-    const vecY = y - robot.position.y;
+        const vecX = x - robot.position.x;
+        const vecY = y - robot.position.y;
 
-    const normVec = Math.sqrt(vecX ** 2 + vecY ** 2);
+        const normVec = Math.sqrt(vecX ** 2 + vecY ** 2);
 
-    if (normVec <= maxDist) { //Obstacle is too far anyway
-        const dot = vecX * dirX + vecY * dirY;
-        const normDir = Math.sqrt(dirX * dirX + dirY * dirY);
+        if (normVec <= maxDist) { //Obstacle is too far anyway
+            const dot = vecX * dirX + vecY * dirY;
+            const normDir = Math.sqrt(dirX * dirX + dirY * dirY);
 
-        const cosAlpha = dot / (normVec * normDir);
-        return cosAlpha > Math.cos(fov);
-    } else {
-        console.log("obstacle is too far");
-        return false;
+            const cosAlpha = dot / (normVec * normDir);
+            return cosAlpha > Math.cos(fov);
+        } else {
+            console.log("obstacle is too far");
+            return false;
+        }
     }
 }
 
@@ -88,6 +90,7 @@ export async function handleCollision(socket, robotId) {
     clearInterval(intervals.get(robotId));
     intervals.set(robotId, HANDLING_COLLISION);
 
+    socket.emit('motor', createOrder(ROBOT_MIN_SPEED, ROBOT_MAX_SPEED, 500, getRobotIp(robotId)));
     await sleep(300);
 
     intervals.set(robotId, null);
