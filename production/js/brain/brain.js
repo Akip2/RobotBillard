@@ -109,12 +109,13 @@ export function areRobotsInTheWay(robotId, lookFront = true) {
 
         if (id !== robotId) {
             const currentRobot = getRobot(id);
-            const topLeft = currentRobot.corners[0];
-            const topRight = currentRobot.corners[1];
-            const bottomRight = currentRobot.corners[2];
-            const bottomLeft = currentRobot.corners[3];
 
             if (currentRobot) {
+                const topLeft = currentRobot.corners[0];
+                const topRight = currentRobot.corners[1];
+                const bottomRight = currentRobot.corners[2];
+                const bottomLeft = currentRobot.corners[3];
+
                 inTheWay = (
                     isInTheWay(robot, currentRobot.position.x, currentRobot.position.y, lookFront)
                     ||
