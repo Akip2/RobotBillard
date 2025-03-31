@@ -54,8 +54,13 @@ export function isInTheWay(robot, x, y, lookFront = true) {
 
     const orientationRad = -(robot.orientation * Math.PI) / 180;
 
-    const dirX = Math.cos(orientationRad);
-    const dirY = Math.sin(orientationRad);
+    let dirX = Math.cos(orientationRad);
+    let dirY = Math.sin(orientationRad);
+
+    if (!lookFront) {
+        dirX = -dirX;
+        dirY = -dirY;
+    }
 
     const vecX = x - robot.position.x;
     const vecY = y - robot.position.y;
@@ -67,7 +72,7 @@ export function isInTheWay(robot, x, y, lookFront = true) {
         const normDir = Math.sqrt(dirX * dirX + dirY * dirY);
 
         const cosAlpha = dot / (normVec * normDir);
-        return cosAlpha > Math.cos(fov) && (lookFront ? dot > 0 : dot < 0);
+        return cosAlpha > Math.cos(fov);
     } else {
         console.log("obstacle is too far");
         return false;

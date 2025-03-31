@@ -179,6 +179,22 @@ class VueSimulateur {
                 this.overlayContext.arc(position.x, position.y, MAX_DIST, leftAngle, rightAngle);
                 this.overlayContext.lineTo(position.x, position.y);
                 this.overlayContext.fill();
+
+
+                this.overlayContext.fillStyle = "rgba(0, 0, 255, 0.3)";
+                this.overlayContext.beginPath();
+                this.overlayContext.moveTo(position.x, position.y);
+
+                const leftAngleBack = orientationRad + Math.PI - FOV / 2;
+                const rightAngleBack = orientationRad + Math.PI + FOV / 2;
+
+                const leftXBack = position.x + Math.cos(leftAngleBack) * MAX_DIST;
+                const leftYBack = position.y + Math.sin(leftAngleBack) * MAX_DIST;
+
+                this.overlayContext.lineTo(leftXBack, leftYBack);
+                this.overlayContext.arc(position.x, position.y, MAX_DIST, leftAngleBack, rightAngleBack);
+                this.overlayContext.lineTo(position.x, position.y);
+                this.overlayContext.fill();
             });
         }
     }
