@@ -17,7 +17,6 @@ export const ANGLE_THRESHOLD = 15;
 export const DISTANCE_THRESHOLD = 30;
 
 
-
 export const FOV = Math.PI / 2;
 export const MAX_DIST = 300;
 
