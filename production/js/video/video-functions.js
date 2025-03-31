@@ -112,8 +112,11 @@ export function drawAndGetDirectionOfAruco(frame, cornersOfAruco) {
  * @param arucoId Id of the robot aruco
  */
 function generateArucoData(frame, cornersOfAruco, arucoId) {
-    const bottomRightCornerOfAruco = convertCVPointToMathPoint(cornersOfAruco.data32F.slice(4, 6));
     const topLeftCornerOfAruco = convertCVPointToMathPoint(cornersOfAruco.data32F.slice(0, 2));
+    const topRightCornerOfAruco = convertCVPointToMathPoint(cornersOfAruco.data32F.slice(2, 4));
+    const bottomRightCornerOfAruco = convertCVPointToMathPoint(cornersOfAruco.data32F.slice(4, 6));
+    const bottomLeftCornerOfAruco = convertCVPointToMathPoint(cornersOfAruco.data32F.slice(6, 8));
+
     const orientation = drawAndGetDirectionOfAruco(frame, cornersOfAruco);
 
     // The center of the aruco
@@ -121,6 +124,7 @@ function generateArucoData(frame, cornersOfAruco, arucoId) {
 
     return {
         position: point,
+        corners: [topLeftCornerOfAruco, topRightCornerOfAruco, bottomRightCornerOfAruco, bottomLeftCornerOfAruco],
         orientation: orientation,
         id: arucoId
     }

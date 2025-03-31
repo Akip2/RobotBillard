@@ -110,9 +110,23 @@ export function areRobotsInTheWay(robotId, lookFront = true) {
         if (id !== robotId) {
             const currentRobot = getRobot(id);
 
-            if (currentRobot !== undefined) {
-                inTheWay = isInTheWay(robot, currentRobot.position.x, currentRobot.position.y, lookFront);
-                console.log("intheway : " + inTheWay);
+            if (currentRobot) {
+                const topLeft = currentRobot.corners[0];
+                const topRight = currentRobot.corners[1];
+                const bottomRight = currentRobot.corners[2];
+                const bottomLeft = currentRobot.corners[3];
+
+                inTheWay = (
+                    isInTheWay(robot, currentRobot.position.x, currentRobot.position.y, lookFront)
+                    ||
+                    isInTheWay(robot, topLeft.x, topLeft.y, lookFront)
+                    ||
+                    isInTheWay(robot, topRight.x, topRight.y, lookFront)
+                    ||
+                    isInTheWay(robot, bottomRight.x, bottomRight.y, lookFront)
+                    ||
+                    isInTheWay(robot, bottomLeft.x, bottomLeft.y, lookFront)
+                );
             }
         }
     }

@@ -24,7 +24,7 @@ export let currentScenario = "default";
 
 export let afficherDessins = true;
 export let simulatorSpeed = 1;
-export let afficherVisionAntiCollision = false;
+export let afficherVisionAntiCollision = true;
 
 export let leftSpeed = 130;
 export let rightSpeed = 130;
