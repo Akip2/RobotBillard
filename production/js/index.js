@@ -84,8 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = event.offsetX;
         let y = event.offsetY;
 
-        if (isSimulator) {
-            console.log(isInTheWay(getRobot(getRobotsIds()[0]), x, y));
+        if(isSimulator) {
+            console.log(isInTheWay(getRobot(getRobotsIds()[0]), x, y, false));
         }
 
         // Get the position of a click on the camera
