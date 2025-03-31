@@ -5,7 +5,6 @@ import {placerBoulesBillardConfiguration} from "./global-config.js";
 
 class BillardConfig extends Table {
     constructor(vue) {
-
         const robots = [new Robot(robotWidth, robotHeight, wheelWidth, wheelHeight, width / 3, height / 2)];
         let balls = placerBoulesBillardConfiguration();
 

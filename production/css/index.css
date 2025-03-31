@@ -458,7 +458,7 @@ footer {
     display: flex;
 }
 
-
+/* Interface mobile */
 @media (max-width: 600px) {
     * {
         background-color: white;

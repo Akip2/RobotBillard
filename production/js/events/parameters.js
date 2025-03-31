@@ -70,7 +70,7 @@ export function initParams() {
 
     // Choose a configuration for the simulator
     configurationChoice.addEventListener("change", (event) => {
-        loadSimulator(event.target.value, currentRobotId);
+        loadSimulator(event.target.value);
         updateRobotList();
     });
 
