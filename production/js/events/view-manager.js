@@ -31,6 +31,7 @@ const videoDessin = document.querySelector("#canvas-output-video");
 const speedContainer = document.querySelector("#speed-container");
 const viewsList = document.querySelector("#views-list");
 const noiseContainer = document.querySelector("#noise-container");
+const preAnalyseImageContainer = document.querySelector("#container-affichage-pretraitee");
 
 export let isSimulator = false;
 
@@ -72,6 +73,7 @@ function showVideo(affiche) {
 
         showCanvas();
         show(selectRobots);
+        show(preAnalyseImageContainer);
 
         afficherDetection(afficherDessins);
         setStillContinue(true);
@@ -82,6 +84,7 @@ function showVideo(affiche) {
         hide(videoBrut);
         hide(videoDessin);
         hide(selectRobots);
+        hide(preAnalyseImageContainer);
 
         show(speedContainer);
         show(selectRobotsSim);
