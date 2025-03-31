@@ -18,7 +18,7 @@ export const DISTANCE_THRESHOLD = 30;
 
 
 
-export const FOV = Math.PI;
-export const MAX_DIST = 100;
+export const FOV = Math.PI / 2;
+export const MAX_DIST = 300;
 
 export const BROADCAST = "Broadcast";
