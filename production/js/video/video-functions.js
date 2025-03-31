@@ -311,9 +311,7 @@ export function drawDetectedCircles(frame, circles, mv, robots, tableCorners, is
     }
 }
 
-export function drawDetectedArucosOnCamera(robotArucos, cameraContext, canvasWidth, canvasHeight) {
-    // cameraContext.clearRect(0, 0, canvasWidth, canvasHeight);
-
+export function drawDetectedArucosOnCamera(robotArucos, cameraContext) {
     if (afficherDessins) {
         robotArucos.forEach((robotAruco) => {
             const orientationRad = -(robotAruco.orientation * Math.PI) / 180;

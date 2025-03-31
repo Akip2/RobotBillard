@@ -12,6 +12,7 @@ const selectRobots = document.querySelector("#select-robot");
 const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 const configurationChoice = document.querySelector("#select-configuration");
 const affichage = document.querySelector("#checkbox-affichage");
+const containerAffichageVision = document.querySelector("#container-vision-anti-collision");
 const affichageVision = document.querySelector("#checkbox-vision-anti-collision");
 const noiseSlider = document.querySelector("#noise");
 
@@ -80,6 +81,16 @@ export function initParams() {
             afficherDetection(afficherDessins);
         }
         // pour le simulateur, la gestion des dessins est gérée par la classe VueSimulateur (drawDetectedCircles) grace à la variable afficherDessins
+
+        if (!afficherDessins) {
+            affichageVision.checked = false;
+            afficherVisionAntiCollision = affichageVision.checked;
+            containerAffichageVision.classList.remove("displayFlex");
+            containerAffichageVision.classList.add("displayNone");
+        } else {
+            containerAffichageVision.classList.remove("displayNone");
+            containerAffichageVision.classList.add("displayFlex");
+        }
     });
 
     affichageVision.addEventListener("change", function () {
