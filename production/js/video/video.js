@@ -147,13 +147,34 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                     drawCircle(finalImage, new cv.Point(ballToPush.x, ballToPush.y), [255, 255, 0, 20]);
                 })
 
+
+                // gestion des boutons dans le menu d'options
+                let checkBoxAffichageDessins = document.querySelector("#checkbox-affichage");
+                let affichageDessins = document.querySelector("#container-affichage-dessins");
+                let affichageVision = document.querySelector("#container-vision-anti-collision");
+
                 if (document.getElementById("checkbox-image-pretraitee").checked) {
+                    affichageDessins.classList.remove("displayFlex");
+
+                    affichageDessins.classList.add("displayNone");
+                    affichageVision.classList.remove("displayFlex");
+                    affichageVision.classList.add("displayNone");
+
                     cv.imshow(canvas, preProcessedFrame);
                 } else {
+                    if (checkBoxAffichageDessins.checked) {
+                        affichageDessins.classList.remove("displayNone");
+                        affichageDessins.classList.add("displayFlex");
+                        affichageVision.classList.remove("displayNone");
+                        affichageVision.classList.add("displayFlex");
+                    } else {
+                        affichageDessins.classList.remove("displayNone");
+                        affichageDessins.classList.add("displayFlex");
+                    }
                     cv.imshow(canvas, finalImage);
                 }
 
-                drawDetectedArucosOnCamera(robots, ctx, canvas.width, canvas.height);
+                drawDetectedArucosOnCamera(robots, ctx);
 
                 // Clean memory
                 frame.delete();

@@ -124,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isDragging = false;
         title.style.cursor = 'grab';
     });
+    // fin easter egg
 
     // Loader
     setTimeout(() => {
