@@ -18,6 +18,6 @@ export const DISTANCE_THRESHOLD = 30;
 
 // Used to handle robot collisions
 export const FOV = Math.PI / 2;
-export const MAX_DIST = 300;
+export const MAX_DIST = 100;
 
 export const BROADCAST = "Broadcast";
