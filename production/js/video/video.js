@@ -1,4 +1,11 @@
-import {detectAndDrawArucos, detectCircles, drawCircle, drawDetectedCircles, preProcess} from "./video-functions.js";
+import {
+    detectAndDrawArucos,
+    detectCircles,
+    drawCircle,
+    drawDetectedArucosOnCamera,
+    drawDetectedCircles,
+    preProcess
+} from "./video-functions.js";
 import {calculateBallSize, distanceBetweenPoints} from "../brain/brain.js";
 import {DEFAULT_BALL_RADIUS, FPS, HEIGHT, WIDTH} from "./video-parameters.js";
 import {ballsPush, robotsDest} from "../scenarios/billardScenarioComplex.js";
@@ -146,6 +153,8 @@ function processVideo(video, canvas, canvasBrut, ctx) {
                     cv.imshow(canvas, finalImage);
                 }
 
+                drawDetectedArucosOnCamera(robots, ctx, canvas.width, canvas.height);
+
                 // Clean memory
                 frame.delete();
                 imageData = null;
@@ -180,5 +189,5 @@ export function setStillContinue(boolean) {
 
 export function getRealRobot(id) {
     // DO NOT change == to ===, because it might be a string and we're lazy to fix it ;)
-    return robots.find((robot) => robot.id == id);
+    return robots.find((robot) => robot.id === id);
 }
