@@ -92,7 +92,7 @@ function showVideo(affiche) {
         show(noiseContainer);
 
         setCurrentRobotId(BROADCAST);
-        loadSimulator(currentConfig, currentRobotId);
+        loadSimulator(currentConfig);
         setStillContinue(false);
     }
 }
@@ -128,6 +128,10 @@ function showCanvas() {
     }
 }
 
+/**
+ * Displays the detection of the raw video or with graphics
+ * @param affiche
+ */
 export function afficherDetection(affiche) {
     if (affiche) {
         hide(videoBrut);
@@ -138,7 +142,11 @@ export function afficherDetection(affiche) {
     }
 }
 
-export function loadSimulator(configurationName, robotId) {
+/**
+ * Loads the simulator
+ * @param configurationName the configuration of the simulator
+ */
+export function loadSimulator(configurationName) {
     if (camera !== null && camera.isRunning) {
         camera.stop();
     }
@@ -177,7 +185,6 @@ export function loadSimulator(configurationName, robotId) {
     }
 
     let colController = new CollisionController(table);
-
     colController.createEvent(vue.engine);
 
     camera = new Camera(canvasContainer, table);
@@ -187,10 +194,11 @@ export function loadSimulator(configurationName, robotId) {
     updateRobotList();
 }
 
+/**
+ * Updates the robot list, so that we know which ones are available
+ */
 export function updateRobotList() {
-
     let found = false;
-
     selectRobotsSim.innerHTML = "";
 
     for (let i = 1; i <= table.getRobots().length; i++) {
@@ -202,6 +210,7 @@ export function updateRobotList() {
     // use and display the current option
     for (let option of selectRobotsSim.options) {
         let lastChar = option.value[option.value.length - 1] === "t" ? "Broadcast" : option.value[option.value.length - 1];
+
         if (lastChar === currentRobotId) {
             option.selected = true;
             found = true;

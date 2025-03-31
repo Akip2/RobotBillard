@@ -7,7 +7,6 @@ import {FPS} from "../video/video-parameters.js";
 
 
 export const robotsDest = new Map();
-
 export let ballsPush = new Map();
 
 const alpha = 60;
@@ -21,16 +20,11 @@ const alpha = 60;
  * @returns {Promise<void>}
  */
 export async function startBillardScenarioComplex(socket, robotId) {
-    while (isActive/*!isEmpty(balls)*/) {
+    while (isActive) {
         await goBehindBall(socket, robotId);
         await turnToTarget(socket, robotId);
         await hitTarget(socket, robotId);
     }
-}
-
-export function cleanBillardComplex() {
-    robotsDest.clear();
-    ballsPush.clear();
 }
 
 async function hitTarget(socket, robotId) {
@@ -103,7 +97,7 @@ async function goBehindBall(socket, robotId) {
                 await goBehindBall(socket, robotId);
             }
         } else {
-            await sleep(1000 / FPS); //Wait for next frame
+            await sleep(1000 / FPS); // Wait for next frame
             await goBehindBall(socket, robotId);
         }
     }

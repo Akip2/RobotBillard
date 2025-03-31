@@ -68,7 +68,7 @@ export function initParams() {
 
     // Choose a configuration for the simulator
     configurationChoice.addEventListener("change", (event) => {
-        loadSimulator(event.target.value, currentRobotId);
+        loadSimulator(event.target.value);
         updateRobotList();
     });
 
@@ -96,10 +96,6 @@ export function setCurrentRobotId(id) {
 
 export function setAfficherDessins(affiche) {
     afficherDessins = affiche;
-}
-
-export function setCurrentScenario(sc) {
-    currentScenario = sc;
 }
 
 export function setDuration(time) {
