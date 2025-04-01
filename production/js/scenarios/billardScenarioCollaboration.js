@@ -11,7 +11,7 @@ import {moveRobotTo} from "../brain/brain.js";
 export async function startBillardScenarioCollaboration(socket) {
     while (isActive) {
         let balls = getBalls();
-        let robotsIds = getRobotsIds();
+        let robotsIds = getRobotsIds().sort();
 
         let assignedBalls = new Set(); // Pour éviter les doublons
 
