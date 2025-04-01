@@ -74,7 +74,6 @@ export function isInTheWay(robot, x, y, lookFront = true) {
             const cosAlpha = dot / (normVec * normDir);
             return cosAlpha > Math.cos(fov);
         } else {
-            console.log("obstacle is too far");
             return false;
         }
     }

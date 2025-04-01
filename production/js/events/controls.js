@@ -72,7 +72,10 @@ export function initControls() {
                 setRightSpeed(-joystick.GetX() / 100 * 255);
             }
 
-            socket.emit('motor', createOrder(leftSpeed, rightSpeed, 100, currentRobotIp));
+            if (leftSpeed !== 0 && rightSpeed !== 0) {
+                socket.emit('motor', createOrder(leftSpeed, rightSpeed, 100, currentRobotIp));
+            }
+
         }, 100);
     }
 
