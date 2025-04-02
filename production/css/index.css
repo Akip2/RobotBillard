@@ -55,6 +55,12 @@ main {
     animation: spin 2s linear infinite;
 }
 
+.inner-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 @keyframes spin {
     from {
         transform: rotate(0);
