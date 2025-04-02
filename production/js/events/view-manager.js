@@ -12,7 +12,7 @@ import {BROADCAST} from "../brain/brain-parameters.js";
 import {canvasContainer, reload, selectRobots, selectRobotsSim, socket} from "../index.js";
 import {setStillContinue} from "../video/video.js";
 import FilledConfig from "../../simulateur/configurations/filled-config.js";
-import BillardDuelConfig from "../../simulateur/configurations/billard-duel.js";
+import BillardDuoConfig from "../../simulateur/configurations/billard-duo.js";
 
 let camera = null;
 export let vue = null;
@@ -179,8 +179,8 @@ export function loadSimulator(configurationName) {
         case "Facile":
             table = new EasyConfig(vue);
             break;
-        case "Duel":
-            table = new BillardDuelConfig(vue);
+        case "Duo":
+            table = new BillardDuoConfig(vue);
             break;
         default:
             setCurrentConfig("Random");
