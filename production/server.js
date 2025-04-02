@@ -89,6 +89,9 @@ io.sockets.on("connection", function (socket) {
                 socket: socket,
                 isSimulator: (data["mode"] === "simulator"),
             });
+
+
+            sendRobotTableToNavigator();
         } else { //Socket is robot
             console.log("new robot with id : " + data["id"]);
             relationTable.set(data["id"], socket.handshake.address);
