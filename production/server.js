@@ -45,7 +45,7 @@ io.sockets.on("connection", function (socket) {
         let isSimulator = false;
 
         interfaces.forEach(interf => {
-            if(interf.socket === socket) {
+            if (interf.socket === socket) {
                 isSimulator = interf.isSimulator;
             }
         })
@@ -100,8 +100,8 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on("change-mode", function (val) { // User is changing the mode of the interface (simulator, manual, camera...)
-        interfaces.forEach(interf=> {
-            if(interf.socket === socket) {
+        interfaces.forEach(interf => {
+            if (interf.socket === socket) {
                 interf.isSimulator = val === "simulator";
             }
         })
