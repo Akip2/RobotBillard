@@ -109,7 +109,7 @@ export function areRobotsInTheWay(robotId, lookFront = true) {
     for (let i = 0; i < robotsIds.length && !inTheWay; i++) {
         const id = robotsIds[i];
 
-        if (id !== robotId) {
+        if (id != robotId) { //DO NOT CHANGE IT TO A TRIPLE EQUAL NATHAN
             const currentRobot = getRobot(id);
 
             if (currentRobot) {
