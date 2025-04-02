@@ -83,16 +83,26 @@ export function isInTheWay(robot, x, y, lookFront = true) {
  * Handles what to do in the event of a collision between 2 robots
  * @param socket
  * @param robotId
+ * @param x
+ * @param y
+ * @param frontalCollision
  * @returns {Promise<void>}
  */
-export async function handleCollision(socket, robotId) {
+export async function handleCollision(socket, robotId, x, y, frontalCollision = true) {
     clearInterval(intervals.get(robotId));
     intervals.set(robotId, HANDLING_COLLISION);
 
-    socket.emit('motor', createOrder(ROBOT_MIN_SPEED, ROBOT_MAX_SPEED, 500, getRobotIp(robotId)));
-    await sleep(300);
-
+    if(frontalCollision) {
+        socket.emit('motor', createOrder(-ROBOT_MIN_SPEED, -ROBOT_MAX_SPEED, 550, getRobotIp(robotId)));
+    } else {
+        socket.emit('motor', createOrder(ROBOT_MIN_SPEED, ROBOT_MAX_SPEED, 550, getRobotIp(robotId)));
+    }
+    await sleep(400);
     intervals.set(robotId, null);
+    await sleep(150);
+    if(intervals.get(robotId) === null) {
+        moveRobotTo(socket, robotId, x, y);
+    }
 }
 
 /**
@@ -193,13 +203,13 @@ export function moveRobotTo(socket, robotId, x, y) {
 
             if (isTargetForward) {
                 if (areRobotsInTheWay(robotId) /*&& areHolesInTheWay(robotId)*/) {
-                    await handleCollision(socket, robotId);
+                    await handleCollision(socket, robotId, x, y);
                 } else {
                     socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
                 }
             } else if (isTargetBackward) {
                 if (areRobotsInTheWay(robotId, false)/* && areHolesInTheWay(robotId, false)*/) {
-                    await handleCollision(socket, robotId);
+                    await handleCollision(socket, robotId,x,y, false);
                 } else {
                     socket.emit('motor', createOrder(-ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
                 }
@@ -217,24 +227,24 @@ export function moveRobotTo(socket, robotId, x, y) {
                     if (direction === "Left") {
                         if (isTargetBehind) {
                             if (areRobotsInTheWay(robotId, false)/* && areHolesInTheWay(robotId, false)*/)
-                                await handleCollision(socket, robotId);
+                                await handleCollision(socket, robotId, x, y, false);
                             else
                                 socket.emit('motor', createOrder(-otherMotorSpeed, -fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
                             if (areRobotsInTheWay(robotId)/* && areHolesInTheWay(robotId)*/)
-                                await handleCollision(socket, robotId);
+                                await handleCollision(socket, robotId, x, y);
                             else
                                 socket.emit('motor', createOrder(otherMotorSpeed, fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
                     } else {
                         if (isTargetBehind) {
                             if (areRobotsInTheWay(robotId, false)/* && areHolesInTheWay(robotId, false)*/)
-                                await handleCollision(socket, robotId);
+                                await handleCollision(socket, robotId, x, y, false);
                             else
                                 socket.emit('motor', createOrder(-fullSpeedMotor, -otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
                             if (areRobotsInTheWay(robotId)/* && areHolesInTheWay(robotId)*/)
-                                await handleCollision(socket, robotId);
+                                await handleCollision(socket, robotId, x, y);
                             else
                                 socket.emit('motor', createOrder(fullSpeedMotor, otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
