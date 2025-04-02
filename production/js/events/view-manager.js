@@ -62,7 +62,10 @@ export function initView() {
 }
 
 function showVideo(affiche) {
-    if (affiche) { // show video to see the camera output
+    if (affiche) { // show video to see the camera output7
+        if (isSimulator) {
+            setCurrentRobotId(BROADCAST);
+        }
         isSimulator = false;
 
         hide(selectRobotsSim);
@@ -77,7 +80,6 @@ function showVideo(affiche) {
 
         afficherDetection(afficherDessins);
         setStillContinue(true);
-        setCurrentRobotId(selectRobots.firstChild.innerText);
     } else { // see the simulator canvas
         isSimulator = true;
 
