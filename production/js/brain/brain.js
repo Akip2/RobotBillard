@@ -3,6 +3,7 @@ import {getHoles, getRobot, getRobotIp, getRobotsIds} from "../elements-manager.
 import {
     ANGLE_THRESHOLD,
     BALL_REAL_SIZE,
+    BROADCAST,
     DISTANCE_THRESHOLD,
     FOV,
     HANDLING_COLLISION,
@@ -14,7 +15,6 @@ import {
 } from "./brain-parameters.js";
 import {isSimulator} from "../events/view-manager.js";
 import {sleep} from "../scenarios/scenario-functions.js";
-import {holeRadius} from "../../simulateur/params.js";
 
 const intervals = new Map();
 
@@ -92,7 +92,7 @@ export async function handleCollision(socket, robotId, x, y, frontalCollision = 
     clearInterval(intervals.get(robotId));
     intervals.set(robotId, HANDLING_COLLISION);
 
-    if(frontalCollision) {
+    if (frontalCollision) {
         socket.emit('motor', createOrder(-ROBOT_MIN_SPEED, -ROBOT_MAX_SPEED, 550, getRobotIp(robotId)));
     } else {
         socket.emit('motor', createOrder(ROBOT_MIN_SPEED, ROBOT_MAX_SPEED, 550, getRobotIp(robotId)));
@@ -100,9 +100,23 @@ export async function handleCollision(socket, robotId, x, y, frontalCollision = 
     await sleep(400);
     intervals.set(robotId, null);
     await sleep(150);
-    if(intervals.get(robotId) === null) {
+
+    if (intervals.get(robotId) === null) {
         moveRobotTo(socket, robotId, x, y);
     }
+}
+
+export async function handleHoleCollision(socket, robotId, x, y, frontalCollision = true) {
+    clearInterval(intervals.get(robotId));
+    intervals.set(robotId, HANDLING_COLLISION);
+
+    if (frontalCollision) {
+        socket.emit('motor', createOrder(-ROBOT_MIN_SPEED, -ROBOT_MAX_SPEED, 150, getRobotIp(robotId)));
+    } else {
+        socket.emit('motor', createOrder(ROBOT_MIN_SPEED, ROBOT_MAX_SPEED, 150, getRobotIp(robotId)));
+    }
+    await sleep(150);
+    intervals.set(robotId, null);
 }
 
 /**
@@ -119,7 +133,7 @@ export function areRobotsInTheWay(robotId, lookFront = true) {
     for (let i = 0; i < robotsIds.length && !inTheWay; i++) {
         const id = robotsIds[i];
 
-        if (id != robotId) { //DO NOT CHANGE IT TO A TRIPLE EQUAL
+        if (id != robotId) { // DO NOT CHANGE IT TO A TRIPLE EQUAL
             const currentRobot = getRobot(id);
 
             if (currentRobot) {
@@ -191,10 +205,9 @@ export function moveRobotTo(socket, robotId, x, y) {
             });
 
             // Check if we arrived at destination or if the robot is near a hole
-            // TODO : check values for the real robot (holeRadius * 5)
-            let robotIsNearTargetHole = isRobotNearHole(robotId, holeRadius * 7) && isRobotNear(robotId, x, y, holeRadius * 7);
+            // let robotIsNearTargetHole = isRobotNearHole(robotId, holeRadius * 7) && isRobotNear(robotId, x, y, holeRadius * 7);
 
-            if ((distanceDifference < DISTANCE_THRESHOLD) || robotIsNearTargetHole) {
+            if ((distanceDifference < DISTANCE_THRESHOLD) /*|| robotIsNearTargetHole*/) {
                 clearInterval(currentInterval);
             }
 
@@ -202,14 +215,18 @@ export function moveRobotTo(socket, robotId, x, y) {
             const isTargetBackward = (angleDifference <= -180 + ANGLE_THRESHOLD) || (angleDifference >= 180 - ANGLE_THRESHOLD);
 
             if (isTargetForward) {
-                if (areRobotsInTheWay(robotId) /*&& areHolesInTheWay(robotId)*/) {
+                if (areRobotsInTheWay(robotId)) {
                     await handleCollision(socket, robotId, x, y);
+                } else if (areHolesInTheWay(robotId)) {
+                    await handleHoleCollision(socket, robotId, x, y);
                 } else {
                     socket.emit('motor', createOrder(ROBOT_MAX_SPEED, ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
                 }
             } else if (isTargetBackward) {
-                if (areRobotsInTheWay(robotId, false)/* && areHolesInTheWay(robotId, false)*/) {
-                    await handleCollision(socket, robotId,x,y, false);
+                if (areRobotsInTheWay(robotId, false)) {
+                    await handleCollision(socket, robotId, x, y, false);
+                } else if (areHolesInTheWay(robotId, false)) {
+                    await handleHoleCollision(socket, robotId, x, y, false);
                 } else {
                     socket.emit('motor', createOrder(-ROBOT_MAX_SPEED, -ROBOT_MAX_SPEED, MIN_ORDER_DURATION, getRobotIp(robotId)));
                 }
@@ -226,25 +243,33 @@ export function moveRobotTo(socket, robotId, x, y) {
                 } else {
                     if (direction === "Left") {
                         if (isTargetBehind) {
-                            if (areRobotsInTheWay(robotId, false)/* && areHolesInTheWay(robotId, false)*/)
+                            if (areRobotsInTheWay(robotId, false))
                                 await handleCollision(socket, robotId, x, y, false);
+                            else if (areHolesInTheWay(robotId, false))
+                                await handleHoleCollision(socket, robotId, x, y, false);
                             else
                                 socket.emit('motor', createOrder(-otherMotorSpeed, -fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
-                            if (areRobotsInTheWay(robotId)/* && areHolesInTheWay(robotId)*/)
+                            if (areRobotsInTheWay(robotId))
                                 await handleCollision(socket, robotId, x, y);
+                            else if (areHolesInTheWay(robotId))
+                                await handleHoleCollision(socket, robotId, x, y);
                             else
                                 socket.emit('motor', createOrder(otherMotorSpeed, fullSpeedMotor, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
                     } else {
                         if (isTargetBehind) {
-                            if (areRobotsInTheWay(robotId, false)/* && areHolesInTheWay(robotId, false)*/)
+                            if (areRobotsInTheWay(robotId, false))
                                 await handleCollision(socket, robotId, x, y, false);
+                            else if (areHolesInTheWay(robotId, false))
+                                await handleHoleCollision(socket, robotId, x, y, false);
                             else
                                 socket.emit('motor', createOrder(-fullSpeedMotor, -otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         } else {
-                            if (areRobotsInTheWay(robotId)/* && areHolesInTheWay(robotId)*/)
+                            if (areRobotsInTheWay(robotId))
                                 await handleCollision(socket, robotId, x, y);
+                            else if (areHolesInTheWay(robotId))
+                                await handleHoleCollision(socket, robotId, x, y);
                             else
                                 socket.emit('motor', createOrder(fullSpeedMotor, otherMotorSpeed, MIN_ORDER_DURATION, getRobotIp(robotId)));
                         }
@@ -267,7 +292,7 @@ export function stopRobots(socket) {
     });
 
     // Need to refresh the last order of the robots
-    socket.emit('motor', createOrder(0, 0, 100, "Broadcast"));
+    socket.emit('motor', createOrder(0, 0, 100, BROADCAST));
 }
 
 /**
