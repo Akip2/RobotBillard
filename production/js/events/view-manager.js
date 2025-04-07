@@ -12,7 +12,7 @@ import {BROADCAST} from "../brain/brain-parameters.js";
 import {canvasContainer, reload, selectRobots, selectRobotsSim, socket} from "../index.js";
 import {setStillContinue} from "../video/video.js";
 import FilledConfig from "../../simulateur/configurations/filled-config.js";
-import BillardDuelConfig from "../../simulateur/configurations/billard-duel.js";
+import BillardDuoConfig from "../../simulateur/configurations/billard-duo.js";
 
 let camera = null;
 export let vue = null;
@@ -31,6 +31,7 @@ const videoDessin = document.querySelector("#canvas-output-video");
 const speedContainer = document.querySelector("#speed-container");
 const viewsList = document.querySelector("#views-list");
 const noiseContainer = document.querySelector("#noise-container");
+const preAnalyseImageContainer = document.querySelector("#container-affichage-pretraitee");
 
 export let isSimulator = false;
 
@@ -61,7 +62,10 @@ export function initView() {
 }
 
 function showVideo(affiche) {
-    if (affiche) { // show video to see the camera output
+    if (affiche) { // show video to see the camera output7
+        if (isSimulator) {
+            setCurrentRobotId(BROADCAST);
+        }
         isSimulator = false;
 
         hide(selectRobotsSim);
@@ -72,16 +76,17 @@ function showVideo(affiche) {
 
         showCanvas();
         show(selectRobots);
+        show(preAnalyseImageContainer);
 
         afficherDetection(afficherDessins);
         setStillContinue(true);
-        setCurrentRobotId(selectRobots.firstChild.innerText);
     } else { // see the simulator canvas
         isSimulator = true;
 
         hide(videoBrut);
         hide(videoDessin);
         hide(selectRobots);
+        hide(preAnalyseImageContainer);
 
         show(speedContainer);
         show(selectRobotsSim);
@@ -92,7 +97,7 @@ function showVideo(affiche) {
         show(noiseContainer);
 
         setCurrentRobotId(BROADCAST);
-        loadSimulator(currentConfig, currentRobotId);
+        loadSimulator(currentConfig);
         setStillContinue(false);
     }
 }
@@ -128,6 +133,10 @@ function showCanvas() {
     }
 }
 
+/**
+ * Displays the detection of the raw video or with graphics
+ * @param affiche
+ */
 export function afficherDetection(affiche) {
     if (affiche) {
         hide(videoBrut);
@@ -138,7 +147,11 @@ export function afficherDetection(affiche) {
     }
 }
 
-export function loadSimulator(configurationName, robotId) {
+/**
+ * Loads the simulator
+ * @param configurationName the configuration of the simulator
+ */
+export function loadSimulator(configurationName) {
     if (camera !== null && camera.isRunning) {
         camera.stop();
     }
@@ -168,8 +181,8 @@ export function loadSimulator(configurationName, robotId) {
         case "Facile":
             table = new EasyConfig(vue);
             break;
-        case "Duel":
-            table = new BillardDuelConfig(vue);
+        case "Duo":
+            table = new BillardDuoConfig(vue);
             break;
         default:
             setCurrentConfig("Random");
@@ -177,7 +190,6 @@ export function loadSimulator(configurationName, robotId) {
     }
 
     let colController = new CollisionController(table);
-
     colController.createEvent(vue.engine);
 
     camera = new Camera(canvasContainer, table);
@@ -187,10 +199,11 @@ export function loadSimulator(configurationName, robotId) {
     updateRobotList();
 }
 
+/**
+ * Updates the robot list, so that we know which ones are available
+ */
 export function updateRobotList() {
-
     let found = false;
-
     selectRobotsSim.innerHTML = "";
 
     for (let i = 1; i <= table.getRobots().length; i++) {
@@ -202,6 +215,7 @@ export function updateRobotList() {
     // use and display the current option
     for (let option of selectRobotsSim.options) {
         let lastChar = option.value[option.value.length - 1] === "t" ? "Broadcast" : option.value[option.value.length - 1];
+
         if (lastChar === currentRobotId) {
             option.selected = true;
             found = true;

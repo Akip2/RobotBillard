@@ -16,4 +16,8 @@ export const ROBOT_MAX_SPEED = 255;
 export const ANGLE_THRESHOLD = 15;
 export const DISTANCE_THRESHOLD = 30;
 
+// Used to handle robot collisions
+export const FOV = Math.PI / 3;
+export const MAX_DIST = 70;
+
 export const BROADCAST = "Broadcast";

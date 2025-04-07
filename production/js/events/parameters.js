@@ -12,6 +12,8 @@ const selectRobots = document.querySelector("#select-robot");
 const selectRobotsSimulator = document.querySelector("#select-robot-sim");
 const configurationChoice = document.querySelector("#select-configuration");
 const affichage = document.querySelector("#checkbox-affichage");
+const containerAffichageVision = document.querySelector("#container-vision-anti-collision");
+const affichageVision = document.querySelector("#checkbox-vision-anti-collision");
 const noiseSlider = document.querySelector("#noise");
 
 export let currentRobotId = BROADCAST;
@@ -22,6 +24,7 @@ export let currentScenario = "default";
 
 export let afficherDessins = true;
 export let simulatorSpeed = 1;
+export let afficherVisionAntiCollision;
 
 export let leftSpeed = 130;
 export let rightSpeed = 130;
@@ -30,6 +33,8 @@ export let duration = 1000;
 export let noise = 1;
 
 export function initParams() {
+
+    afficherVisionAntiCollision = affichageVision.checked;
 
     btnOptions.addEventListener("click", () => {
         fond.classList.remove("displayNone");
@@ -68,16 +73,30 @@ export function initParams() {
 
     // Choose a configuration for the simulator
     configurationChoice.addEventListener("change", (event) => {
-        loadSimulator(event.target.value, currentRobotId);
+        loadSimulator(event.target.value);
         updateRobotList();
     });
 
     affichage.addEventListener("change", function () {
-        setAfficherDessins(affichage.checked);
+        afficherDessins = affichage.checked;
         if (currentView !== "simulator") {
             afficherDetection(afficherDessins);
         }
         // pour le simulateur, la gestion des dessins est gérée par la classe VueSimulateur (drawDetectedCircles) grace à la variable afficherDessins
+
+        if (!afficherDessins) {
+            affichageVision.checked = false;
+            afficherVisionAntiCollision = affichageVision.checked;
+            containerAffichageVision.classList.remove("displayFlex");
+            containerAffichageVision.classList.add("displayNone");
+        } else {
+            containerAffichageVision.classList.remove("displayNone");
+            containerAffichageVision.classList.add("displayFlex");
+        }
+    });
+
+    affichageVision.addEventListener("change", function () {
+        afficherVisionAntiCollision = affichageVision.checked;
     });
 
     noiseSlider.addEventListener("change", (event) => {
@@ -94,14 +113,6 @@ export function setCurrentRobotId(id) {
     currentRobotIp = getRobotIp(id);
 }
 
-export function setAfficherDessins(affiche) {
-    afficherDessins = affiche;
-}
-
-export function setCurrentScenario(sc) {
-    currentScenario = sc;
-}
-
 export function setDuration(time) {
     duration = time;
 }
@@ -112,4 +123,9 @@ export function setLeftSpeed(speed) {
 
 export function setRightSpeed(speed) {
     rightSpeed = speed;
+}
+
+export function setAffichageVision(boolean) {
+    affichageVision.checked = boolean;
+    afficherVisionAntiCollision = boolean;
 }

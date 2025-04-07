@@ -5,8 +5,8 @@ const server = require('http').createServer(app);
 
 let robotsSockets = []; // use to stock robots sockets (all data about a robot)
 let socketIps = []; // use to stock robots ip (example : ::ffff:192.168.137.100)
-let isSimulator = false;
-let socketInterface = null; // socket to communicate with the navigator
+
+const interfaces = [];
 
 const relationTable = new Map();
 
@@ -42,6 +42,14 @@ io.sockets.on("connection", function (socket) {
 
         let ipRobot = val.ipRobot;
 
+        let isSimulator = false;
+
+        interfaces.forEach(interf => {
+            if (interf.socket === socket) {
+                isSimulator = interf.isSimulator;
+            }
+        })
+
         if (isSimulator) {
             socket.emit("motor", val);
         } else {
@@ -76,8 +84,14 @@ io.sockets.on("connection", function (socket) {
             console.log("identification : interface");
 
             removeSocket(socket);
-            isSimulator = (data["mode"] === "simulator");
-            socketInterface = socket;
+
+            interfaces.push({
+                socket: socket,
+                isSimulator: (data["mode"] === "simulator"),
+            });
+
+
+            sendRobotTableToNavigator();
         } else { //Socket is robot
             console.log("new robot with id : " + data["id"]);
             relationTable.set(data["id"], socket.handshake.address);
@@ -86,7 +100,11 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on("change-mode", function (val) { // User is changing the mode of the interface (simulator, manual, camera...)
-        isSimulator = (val === "simulator");
+        interfaces.forEach(interf => {
+            if (interf.socket === socket) {
+                interf.isSimulator = val === "simulator";
+            }
+        })
     });
 
     socket.on("disconnect", function () {
@@ -128,10 +146,10 @@ function removeSocket(socket) {
 }
 
 function sendRobotTableToNavigator() {
-    if (socketInterface !== null) {
-        const stringifiedTable = JSON.stringify(Array.from(relationTable));
-        socketInterface.emit("robots-list", stringifiedTable);
-    }
+    const stringifiedTable = JSON.stringify(Array.from(relationTable));
+    interfaces.forEach(interf => {
+        interf.socket.emit("robots-list", stringifiedTable);
+    })
 }
 
 console.log(`Server is running on http://localhost:${port}`);

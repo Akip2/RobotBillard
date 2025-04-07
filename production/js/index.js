@@ -1,11 +1,11 @@
 // Billard configurations
 import {currentConfig, currentRobotId, currentScenario, initParams, setCurrentRobotId} from "./events/parameters.js";
 import {currentView, initView, loadSimulator, table} from "./events/view-manager.js";
-import {addRobotToListOnNavigator, getRobotsIds, setRelationTable} from "./elements-manager.js";
+import {addRobotToListOnNavigator, getRobot, getRobotsIds, setRelationTable} from "./elements-manager.js";
 import {initControls} from "./events/controls.js";
 import {startBillardScenarioSimple} from "./scenarios/billardScenarioSimple.js";
 import {startTestScenario} from "./scenarios/testScenario.js";
-import {moveRobotTo, stopRobots} from "./brain/brain.js";
+import {isInTheWay, moveRobotTo, stopRobots} from "./brain/brain.js";
 import {startBillardScenarioComplex} from "./scenarios/billardScenarioComplex.js";
 import {startBillardScenarioCollaboration} from "./scenarios/billardScenarioCollaboration.js";
 import {BROADCAST} from "./brain/brain-parameters.js";
@@ -84,6 +84,10 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = event.offsetX;
         let y = event.offsetY;
 
+        if (isSimulator) {
+            console.log(isInTheWay(getRobot(getRobotsIds()[0]), x, y, false));
+        }
+
         // Get the position of a click on the camera
         if (currentRobotId === BROADCAST) {
             const ids = getRobotsIds();
@@ -95,6 +99,32 @@ document.addEventListener("DOMContentLoaded", () => {
             moveRobotTo(socket, currentRobotId, x, y);
         }
     });
+
+    // Easter egg
+    const title = document.getElementById('titre');
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    title.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.clientX - title.offsetLeft;
+        offsetY = e.clientY - title.offsetTop;
+        title.style.position = 'absolute';
+        title.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            title.style.left = `${e.clientX - offsetX}px`;
+            title.style.top = `${e.clientY - offsetY}px`;
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        title.style.cursor = 'grab';
+    });
+    // fin easter egg
 
     // Loader
     setTimeout(() => {

@@ -55,6 +55,12 @@ main {
     animation: spin 2s linear infinite;
 }
 
+.inner-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 @keyframes spin {
     from {
         transform: rotate(0);
@@ -78,6 +84,14 @@ header {
 #titre {
     text-align: center;
     font-size: 3em;
+}
+
+#titre:hover {
+    cursor: grab !important;
+}
+
+#titre:active {
+    cursor: grabbing !important;
 }
 
 #views-list {
@@ -174,6 +188,7 @@ header {
 
     canvas {
         position: absolute;
+        border-radius: 10px;
     }
 }
 
@@ -457,7 +472,7 @@ footer {
     display: flex;
 }
 
-
+/* Interface mobile */
 @media (max-width: 600px) {
     * {
         background-color: white;
