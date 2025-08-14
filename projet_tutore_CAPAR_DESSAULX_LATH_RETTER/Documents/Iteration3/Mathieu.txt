@@ -1,0 +1,24 @@
+Jour 1:
+préparation afin d'implémenter un ControlleurIntelligent:
+-ajout de plusieurs méthodes dans ObjetBillard, mesure d'angle avec un objet ou avec un trou etc.
+-ajout de plusieurs méthodes dans ModeleBillardAmericain, récupérer la boule la plus proche du robot,
+l'angle d'un objet vers un trou, le trou le plus aligné avec le robot et la boule.
+
+Jour 2:
+Mise en place du controlleur intelligent:
+-cibler la boule la plus proche du robot
+-cibler le trou le plus aligné
+-si le robot est assé aligné avec la boule et le trou, faire avancer le robot vers la boule
+-sinon calculer un point cible aligné avec le toru et la boule, faire avancer le robot vers ce point
+
+Jour 3:
+Résolution du bug: le robot fait presque un tour complet quand la boule visée est à sa gauche.
+maintenant si l'angle de rotation (en radians) désiré est supérieur à pi ou inférieur à -pi,
+le robot tourne dans l'autre sens.
+Résolution du bug: le robot se coince parfois contre une bande:
+maintenant si le point cible (pour s'aligner avec la boule et le trou) est innateignable (trop proche d'une bande) le robot avance vers la boule
+
+Jour 4:
+factorisation du code pour que différentes données soient modifiables dans la classe ModeleBillardAmericain
+(via les variables statiques)
+ajout de javadoc sur les ajouts de l'itération

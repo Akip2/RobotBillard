@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracking rectangle OpenCV</title>
+
+    <script type="text/javascript" src="./libs/polyfill.js"></script>
+    <script type="text/javascript" src="./libs/cv.js"></script>
+    <script type="text/javascript" src="./libs/aruco.js"></script>
+    <script type="module" src="./js/aruco_detect.js"></script>
+    <script type="module" src="./js/detectingCircles.js"></script>
+    <script type="text/javascript" src="./libs/opencv.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+
+<body>
+<div class="box">
+    <div>
+        <video id="video" width="740" height="460" muted="true" controls>
+            <source type="video/mp4" src="./../videos/video.mp4"/>
+        </video>
+        <canvas id="canvasOutput"></canvas>
+        <canvas id="canvasVideo" style="width:640px; height:480px;"></canvas>
+    </div>
+    <div>
+        <div>Position des Aruco</div>
+        <div id="position"></div>
+        <div>Position des Cercles</div>
+        <div id="positionCercle"></div>
+    </div>
+</div>
+</body>
+
+<script>
+
+</script>
+<link rel="stylesheet" href="./css/index.css">
+</html>

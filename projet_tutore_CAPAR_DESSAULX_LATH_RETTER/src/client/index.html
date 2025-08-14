@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <title>Augmented Reality Marker Detector</title>
+
+    <script type="text/javascript" src="libs/polyfill.js"></script>
+    <script type="text/javascript" src="libs/cv.js"></script>
+    <script type="text/javascript" src="libs/aruco.js"></script>
+    <script type="module" src="js/aruco_detect.js"></script>
+    <script type="module" src="js/detectingCircles.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="libs/opencv.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+</head>
+
+<body style="font-family: monospace;">
+
+<div class="box" style="text-align: center;">
+    <video id="video" autoplay="true" style="display:none;" width="640" height="480"></video>
+    <canvas id="canvasOutput" style="width:640px; height:480px;"></canvas>
+    <div>
+        <div>Position des Aruco</div>
+        <div id="position"></div>
+        <div>Position des Boules</div>
+    </div>
+    <canvas id="canvasVideo" style="width:640px; height:480px;"></canvas>
+
+</div>
+
+</body>
+
+<link rel="stylesheet" href="css/index.css">
+</html>

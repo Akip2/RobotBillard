@@ -1,0 +1,37 @@
+Afficher les coordonnées des boules :
+L'affichage des coordonnées des boules permet de mieux suivre l'évolution du jeu. Aussi, on peut configurer les paramètres des ordres du robot de 
+façon plus efficace en connaissant les coordonnées des boules à cibler et en comparant avec le résultat du mouvement du robot.
+Membre : Victor a contribué à cette fonctionnalité dans son entièreté.
+
+Ralentir progressivement le robot pendant le mouvement
+La vitesse du robot diminue au cours du mouvement. Il doit diminuer sa vitesse progressivement pour être plus précis
+dans le déplacement et ne pas s'arrêter de façon abrupte. Pour cela l'arduino vérifie le temps actuel et la date final du mouvement 
+et modifie la vitesse en conséquence. 
+Membre : Sila a contribué à cette fonctionnalité dans son entièreté.
+
+Réaliser un scénario simple : 
+Dans le but de définir un objectif clair pour notre jeu, un scénario simple à été conçu. Il définit ce que le robot doit faire : 
+pour une boule et un robot dans l'espace de jeu, le robot doit se positionner en face de la boule si ce n'est pas déjà le cas, puis la taper.
+Membre : Guillaume a contribué à cette fonctionnalité dans son entièreté.
+
+Simulateur : Faire bouger le robot avec les flèches directionnelles :
+Pour pouvoir avancer dans le développement sans avoir besoin d'un robot autonome, il est possible de déplacer manuellement le robot avec les 
+flèches directionnelles.
+Membre : Mathieu a contribué à cette fonctionnalité dans son entièreté.
+
+Calibrage du robot (non validé) : 
+Il permet de calibrer la puissance des deux moteurs du robot. Pour ce faire, le serveur reçoit l'angle de l'aruco posé sur le robot.
+Le robot avance et recule et à la fin de chaque mouvement le serveur vérifie l'inclinaison de l'aruco. Le serveur baisse la puissance du moteur
+qui semble posé problème. Tant que la différence après les mouvements dépasse 1°, il continue de calibrer.
+Membre : Sila a contribué à cette fonctionnalité dans son entièreté.
+
+Calibrer les paramètres de rotation (non terminé) : 
+Lorsque le robot doit tourner sur lui même il faut lui donner les puissances à mettre dans les moteurs droit et gauche ainsi que le temps d'action
+et la date. Pour déterminer la puissance à mettre dans les moteurs il faut initialisé un coefficient par rapport à l'angle à faire pour tourner
+le robot en face de la boule cible. Pour l'instant le temps est fixe.
+Membres : Guillaume et Sila ont contribués à cette fonctionnalité.
+
+Prévisualisation de la trajectoire dans le client (non terminé) : 
+Le but de cette fonctionnalité et de visualiser la trajectoire que doit faire le robot par rapport à une boule cible. Cela permet de mieux 
+visualiser ce que le robot doit faire et de ce qu'il a vraiment fait.
+Membre : Victor a contribué à cette fonctionnalité dans son entièreté.

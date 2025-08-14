@@ -1,0 +1,24 @@
+Jour 1 (Lundi 22 janvier 2024) :
+
+Lancement des scripts JS dans un main global (main.js) quand tout est bien démarré.
+Amélioration du coefficient qui détermine la puissance des moteurs quand le robot dans tourner sur lui-même.
+Une solution à la mauvaise initiallsation d'opencv.js a été trouvée et implémentée.
+Envoie et reception de la position de la boule cible.
+Réparation du robot.
+
+Jour 2 (Mardi 23 janvier 2024) :
+
+Cette journée a été consacrée uniquement à l'élaboration d'un algorithme permettant au robot de se positionner
+derrière une boule en fonction d'un trou optimal. Nous avons déjà intégré l'algorithme qui choisit le meilleur trou et
+nous sommes en pleine recherche sur les calculs des positions du robot par rapport aux angles et aux distances obtenues.
+
+Jour 3 (Mercredi 24 janvier 2024) : 
+
+Aujourd'hui, avec Sila on a développé l'algorithme conçu le jour précédent. J'ai implémenté le fait d'envoyer les coordonnées 
+des trous du billard au serveur. Et enfin, je me suis concentré sur le debuggage de l'algorithme mis en place. Notamment une 
+erreur de socket nous a pris beaucoup de temps.
+
+Jour 4 (Jeudi 25 janvier 2024) : 
+
+Durant les heures dédiées à ce jour, j'ai préparé la soutenance de l'itération. J'ai aussi réfléchi aux différents objectifs
+de l'itération 4.

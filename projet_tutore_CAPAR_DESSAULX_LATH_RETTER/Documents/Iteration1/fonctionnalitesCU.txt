@@ -1,0 +1,29 @@
+Piloter manuellement le robot : 
+Le robot peut être manipuler via les touches haut bas gauche droite. Le but est de prendre en main le robot pour tester ses déplacements 
+ou pour créer des scénarios manuellement. 
+Pour cela, 
+Membre : Sila a contribué à cette fonctionnalité dans son entièreté.
+
+Détection de l’aruco (position et angle) : 
+Pour pouvoir faire bouger le robot de façon autonôme, nous devons le détecter dans la vidéo pour pouvoir récupérer ses coordonnées X et Y
+ainsi que son orientation. Pour ce faire, un tag de la librairie JS-Aruco est placé sur le robot. Grâce à ce tag il est possible de 
+récupérer les coordonnées X et Y et l'angle du robot dans une vidéo.
+Membre : Victor a contribué à cette fonctionnalité dans son entièreté.
+
+Détection des boules : 
+Le robot doit pouvoir toucher une boule or il est "aveugle". Ainsi, lors de notre traitement de l'ordre du serveur au robot pour qu'il puisse 
+bouger correctement, il faut les coordonnées de la/des boule(s). C'est pourquoi la librairie opencv.js nous a aidé dans la détection de cercle 
+dans une vidéo. En ayant les cercles de chaque boule du billard nous avons aussi leurs coordonnées X et Y.
+Membre : Guillaume a contribué à cette fonctionnalité dans son entièreté.
+
+
+Gestion de la latence : Pour pouvoir gérer la latence une horloge interne est initialisée l'arduino. Pour cela, à la connexion, l'arduino reçoit une date
+de la part du serveur. Avec cette date, il initialise son horloge interne. Chaque ordre du serveur au robot est accompagné de la date et du temps accordé au mouvement 
+Par exemple pour une action X envoyé à une date D qui sera effectué pendant T millisecondes. Pour chaque mouvement, l'arduino vérifie que celui n'excède pas une latence 
+que nous avons fixé à 300 mmillisecondes. Si la latence maximale est dépassé alors l'ordre est ignoré. Le temps accordé au mouvement est réduit en fonction de la latence
+du message.
+Membre : Sila a contribué à cette fonctionnalité dans son entièreté.
+
+Développement du simulateur Partie 1 : Mise en place du squelette de l'application : 
+Le but de cette fonctionnalité est d'initiliser le squelette du simulateur grâce au diagramme de classe fait lors de l'analyse du projet.
+Membre : Mathieu a contribué à cette fonctionnalité dans son entièreté.

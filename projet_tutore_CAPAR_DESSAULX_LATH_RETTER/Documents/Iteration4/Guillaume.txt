@@ -1,0 +1,19 @@
+Jour 1 (Lundi 29 janvier 2024) : 
+
+Pendant la journée, j'ai corrigé un nouveau bug au niveau du robot avec Sila. Ce bug nous a coûté une demi journée car il était assez unique et sans support venant d'Internet.
+On a aussi réparé le robot car plusieurs câbles se sont arrachés. Et nous avons commencé de nouveaux calibrages pour configurer le robot à notre algorithme.
+
+Jour 2 (Mardi 30 janvier 2024) : 
+
+La première partie de la journée à été consacrée à la correction du bug de google chrome qui avait du mal à charger openCV. De plus j'ai un peu aidé Sila lors de ses tests 
+avec le robot. Ensuite, la deuxième partie de la journée, j'ai discuté avec Mathieu des algorithmes présents dans le simulateur et de comment on pouvait les intégrer au code
+JS. Le temps que Mathieu retranscris tout en JS j'ai débuté la rédaction du document finale. Avec le groupe on a pour finir discuter de l'avancement du projet et de sa suite.
+
+Jour 3 (Mercredi 31 janvier 2024) : 
+
+Ce jour j'ai principalement aidé à la préparation de la démonstration du robot pour la soutenance. J'ai aussi essayé d'implémenter la fonctionnalité permettant d'afficher le 
+triangle représentant les calculs de l'algorithme cependant je n'ai pas réussi. Enfin j'ai aidé à la rédaction du document final.
+
+Jour 4 (Jeudi 01 frévier 2024) : 
+
+Soutenance.

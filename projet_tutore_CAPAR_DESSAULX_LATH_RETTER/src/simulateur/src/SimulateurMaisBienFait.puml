@@ -1,0 +1,153 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package simulateur{
+    package modeles {
+        interface Sujet{
+            +void ajouterObservateur(Observateur o)
+            +void retirerObservateur(Observateur o)
+            +void notifierObservateurs()
+        }
+
+        class ModeleBillardAmericain {
+                    -List<BouleDeBillard> boules
+                    -Robot robot
+                    -List<Observateur> observateurs
+                    -List<Cible> cibles
+
+                    +ModeleBillardAmericain()
+                    +{static}ModeleBillardAmericain initialiserBillard()
+                    +void orienterRobot(double degre)
+                    +void deplacerBoules()
+                    +void gererCollisions()
+                    +void simulerTemps(double temps)
+                    +void ajouterBoule(BouleDeBillard boule)
+                    +void retirerBoule(BouleDeBillard boule)
+                    +void ajouterCible(Cible cible)
+                    +void retirerCible(Cible cible)
+                    +void terminerPartie()
+                }
+
+        class Cible {
+                    -Point2D position
+                    -double rayon
+        }
+
+        ModeleBillardAmericain "1" --> "*" Cible
+
+
+
+
+        abstract class ObjetBillard{
+            #position: Point2D
+            #vitesse: Point2D
+            #acceleration: Point2D
+            #rayon: double
+            #masse: double
+            #coefficientRebond: double
+            #coefficientFrottement: double
+
+            +{abstract}void collisionAvecBoule(ObjetBillard o)
+        }
+        class BouleDeBillard{
+            -numero: int
+            -couleur: Color
+            +void collisionAvecBoule(BouleDeBillard o)
+            +void collisionAvecBord()
+        }
+
+        class Robot{
+            -degreOrientation: double
+            +void collisionAvecBoule(BouleDeBillard o)
+            +void avancer(double vitesseCible, double temps)
+            +void tourner(double degre)
+        }
+    }
+
+    ObjetBillard <|-- BouleDeBillard
+    ObjetBillard <|-- Robot
+
+    ModeleBillardAmericain "1" --> "1" Robot
+    ModeleBillardAmericain "1" --> "*" BouleDeBillard
+
+    package vues {
+        interface Observateur{
+            +void update()
+        }
+        class VueBillardAmericain{
+            -fond : Rectangle
+            -trous : List<Cercle>
+            -bords : List<Rectangle>
+        }
+        abstract class VueBouleDeBillard{
+            #rayon : double
+            #boule : Cercle
+        }
+        class VueBouleBlanche
+        abstract class VueBouleNumerotee{
+            #fondNumero : Cercle
+            #numero : Text
+            #couleur : Color
+        }
+        class VueBoulePleine
+        class VueBouleRayee{
+            -rayure : Rectangle
+        }
+        class VueRobot{
+            -robot : Cercle
+            -orientation : Line
+        }
+    }
+
+    VueBouleNumerotee <|-- VueBoulePleine
+    VueBouleNumerotee <|-- VueBouleRayee
+    VueBouleDeBillard <|-- VueBouleBlanche
+    VueBouleDeBillard <|-- VueBouleNumerotee
+
+    Observateur "*" <--> "1" ModeleBillardAmericain
+
+
+    Observateur <|.. VueBillardAmericain
+    Observateur <|.. VueBouleDeBillard
+    Observateur <|.. VueRobot
+
+    package controleurs {
+        interface ControllerInterface{
+            +void handle()
+        }
+        class ControllerClavier {
+            -ControllerRobotAutonome controllerRobotAutonome
+
+            +ControllerClavier(ControllerRobotAutonome controllerRobotAutonome)
+            +void handleKeyPress(String key)
+        }
+        class ControllerAutonome {
+                            -ModeleBillardAmericain modele
+                            -List<Cible> cibles
+
+                            +void demarrerPartieAutomatique()
+                            +void effectuerDeplacementInitial()
+                            +void executerStrategieDeplacement()
+                            +void attendreAucunMouvementBoules()
+                            +BouleDeBillard trouverBalleLaPlusProcheDuRobot()
+                            +Cible trouverCibleLaPlusProche(Point2D position)
+                            +double calculerDirectionVersCible(Point2D positionCible)
+        }
+    }
+
+
+    ModeleBillardAmericain "1" <-- "1" ControllerClavier
+    ModeleBillardAmericain "1" <-- "1" ControllerAutonome
+
+    Sujet <|.. ModeleBillardAmericain
+    ControllerInterface <|.. ControllerClavier
+    ControllerInterface <|.. ControllerAutonome
+}
+
+
+class BillardAmericain{
+    +void main(String[] args)
+}
+
+
+@enduml

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contrôle manuel du robot</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+    <h1>Contrôle manuel du robot</h1>
+    
+    <!--
+    <h3>Vitesse</h3>
+    -255<input type="range" id="vitesse" orient="vertical" min="-255" max="255">255 
+    <br><br>
+    <h3>Direction</h3>
+    Gauche <input type="range" id="direction" orient="vertical" min="-100" max="100">Droite
+    -->
+
+    
+    <br><br>
+
+    <button id="bouton_on">Avancer</button>
+    <button id="bouton_off">Arrêter</button>
+
+    <button id="envoi_temps">Time</button>
+
+    <button id="test">TEEEEST</button>
+
+    <script>
+        var socket = io();
+        var vitesse = 0;
+        var direction = 0;
+
+        $('#bouton_on').on('mousedown', function () {
+            console.log("Avancer");
+            let time = 1000;
+
+            let dateDuJour = new Date(); 
+            dateDuJour.setHours(0, 0, 0, 0); 
+            let dateActuelle = new Date(); 
+            let date = dateActuelle - dateDuJour.getTime();
+
+            socket.emit('mouvement', vitesse+" "+vitesse+" "+time+" "+date+" slow");
+        });
+
+        $('#bouton_off').on('mousedown', function () {
+            console.log("Arrêter");
+            let time = 1000;
+            
+            let dateDuJour = new Date(); 
+            dateDuJour.setHours(0, 0, 0, 0); 
+            let dateActuelle = new Date(); 
+            let date = dateActuelle - dateDuJour.getTime();
+
+            socket.emit('mouvement', 0+" "+0+" "+time+" "+date+" slow");
+        });
+
+
+        $('#envoi_temps').on('mousedown', function () {
+            let dateDuJour = new Date(); 
+            dateDuJour.setHours(0, 0, 0, 0); 
+            let dateActuelle = new Date(); 
+            let date = dateActuelle - dateDuJour.getTime();
+
+            socket.emit('temps', parseInt(date));
+            console.log("bah le temps " + date);
+
+        });
+
+
+        $('#test').on('mousedown', function () {
+            socket.emit('test', "moteur");
+            console.log("bah le temps");
+        });
+
+
+        $(document).on('keydown', function (event) {
+            if (event.key === 'ArrowUp') {
+                vitesse = 200;
+                //vitesse = Math.min(vitesse + 10, 255);
+                rouler();
+            } else if (event.key === 'ArrowDown') {
+                //vitesse = Math.max(vitesse - 10, -255);
+                vitesse = -200;
+                rouler();
+            } else if (event.key === 'ArrowLeft') {
+                direction = Math.max(direction - 5, -100);
+                rouler();
+            } else if (event.key === 'ArrowRight') {
+                direction = Math.min(direction + 5, 100);
+                rouler();
+            }
+        });
+
+        $(document).on('keyup', function (event) {
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                direction = 0;
+                rouler();
+            }
+        });
+
+        function rouler() {
+            var v = vitesse;
+            var d = direction;
+            var md;
+            var mg;
+
+            if (d >= 0) {
+                md = (v * (100 - d) / 100).toFixed();
+                mg = v;
+            } else {
+                md = v;
+                mg = (v * (100 + d) / 100).toFixed();
+            }
+
+            //mg = Number(mg) - 10;
+            //md = Number(md) -;
+
+            console.log("vitesse = " + v);
+            let time = 300;
+            let dateDuJour = new Date();
+            dateDuJour.setHours(0, 0, 0, 0);
+            let dateActuelle = new Date();
+            let date = dateActuelle - dateDuJour.getTime();
+            socket.emit('mouvement', -83+" "+(70)+" "+1000+" "+date+" slow");
+        }
+70
+
+        $('#vitesse').on('input', rouler);
+        $('#direction').on('input', rouler);
+    </script>
+</body>
+</html>

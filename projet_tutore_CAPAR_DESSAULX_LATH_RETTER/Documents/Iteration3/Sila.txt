@@ -1,0 +1,23 @@
+JOUR 1 (Lundi 22 janvier 2024):
+
+Le matin j'ai ajuster le code de l'arduino pour la décélération en fonction du temps pour mettre la vitesse min à 40. On a testé avec Guillaume
+les mouvements du robot.
+L'après midi, on a commencé à implémenté la fonctionnalité de Victor (le fait de pouvoir cliquer sur une boule pour la séléctionner). 
+Pendant les tests des câbles se sont arraché, nous sommes partie au CharlyLab les réparer.
+
+
+JOUR 2 (Mardi 23 janvier 2024):
+
+Aujourd'hui, nous avons consacré notre temps avec Guillaume à écrire l'algorithme pour pouvoir choisir le trou, positionner le robot en
+conséquence et viser la boule. On a terminé l'algorithme qui permet de trouver le meilleur trou.
+
+JOUR 3 (Mercredi 24 janvier 2024):
+
+Aujourd'hui nous avons développer l'algorithme pour frapper la boule pour la diriger vers le trou le plus proche. Nous destions notre algorithme avec
+des données que nous avions nous même générer. Après cela nous avons implémenter l'algorithme au projet, en ajoutant la fonctionnalité de Victor
+qui est de pouvoir placer des trous. 
+
+JOUR (Jeudi 25 janvier 2024): 
+
+Hier pendant la soirée j'ai modifié et ajusté certain paramètre de l'algorithme qui permet de frapper une boule vers un trou. J'ai fait une capture d'écran pour pouvoir le présenter pour la soutenance. En effet, durant la soirée, il y a eu des petits problèmes avec de faux-contacts avec la pile donc c'était mieux de 
+filmer. Cet après midi, nous allons au CharlyLab pour voir M. Guenego.

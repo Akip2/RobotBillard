@@ -1,0 +1,24 @@
+.box {
+    display: flex;
+    flex-direction: row;
+
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+    text-align: center;
+
+}
+.box > div {
+    flex: 1;
+    padding: 10px;
+
+}
+
+.box > div > div {
+    margin: 10px;
+
+}
+
+

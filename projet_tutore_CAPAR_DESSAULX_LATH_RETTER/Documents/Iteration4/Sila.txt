@@ -1,0 +1,18 @@
+Jour 1 (Lundi 29 janvier 2024): 
+
+Cette journée nous avons testé avec Guillaume le robot sur la table de billard. Nous étions installé dans une salle près du charlylab. Nous avons corrigé des bugs 
+lié à des overflows et nous avons aussi réparé et consolidé les câbles de l'arduino. On a passé du temps à observer les différents décalages entre les moteurs en 
+fonctions de la vitesse car ceux-ci posent des gros problèmes de précisions. 
+
+Jour 2 (Mardi 30 janvier 2024): 
+
+Ce matin j'ai testé notre algorithme boule/trou mais surtout j'ai essayé de bien calibrer le robot. C'est compliqué car pour une puissance différente, le décalage 
+n'est pas le même. Mais ce qui est le plus déroutant c'est que le décalage n'est pas le même par rapport aux tests d'hier. J'ai la batterie chargé l'arduino entre temps donc le 
+niveau de batterie doit aussi influer sur le décalage. 
+L'après-midi j'ai modifié le code de l'arduino pour effectuer deux types de mouvements : 
+  - mouvement qui ralenti pour le positionnement
+  - mouvement vitesse constante pour frapper la boule à pleine vitesse
+
+Jour 3 (Mercredi 31 janvier 2024):
+
+Le matin j'ai effectué des tests sur le billard pour tester notre algorithme. Pendant l'après midi nous avons écrit le document à rendre pour la fin de semestre.

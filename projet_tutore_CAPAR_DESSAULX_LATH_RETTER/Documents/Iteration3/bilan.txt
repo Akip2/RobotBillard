@@ -1,0 +1,32 @@
+Bugs / Tâches non terminées : 
+- OpenCV s'initialise avec beaucoup de difficultés ce qui cause un rechargement incessant.
+- L'algorithme pour atteindre le point intermédiaire ne fonctionne pas correctement. 
+- Puissance des moteurs non valide en fonction de la puissance à donner.
+- Prévisualisation de la trajectoire dans le client.
+
+Validation: 
+- Simulateur : Collision avec des boules
+- Simulateur : Ajout de la friction de la table de billard
+- Algorithme de calcul de mouvement
+- Algorithme pour choisir le meilleur trou
+- Pouvoir ajouter les trous sur le canvas et les enregistrer dans le programme
+
+
+Choix pour cette itération :  
+
+- Algorithme de calcul de mouvement :  rotate puis avancer vers une boule
+- Algorithme pour choisir le meilleur trou
+- Calibrer les paramètres de puissances des moteurs en fonction de la situation du robot
+- Configuration de l'espace de jeu (zone du billard et trous)
+- Ajout de la gestion de la friction de la table de billard dans le simulateur
+- Algorithme de calcul de mouvement : positionner le robot pour frapper une boule vers un endroit précis
+- Prévisualisation de la trajectoire dans le client
+
+
+Fonctionnalités prévues à l'itération 4 : 
+- Pouvoir différencier les boules (couleur ou tracking)
+- Implémenter l'algorithme choix du meilleur trou avec l'algorithme viser la boule dans le trou.
+- Implémenter les algorithmes dans le simulateur
+- Création interface utilisateur (style & règles du jeu)
+- Robot autonome (choisir la boule la plus proche au robot?)
+

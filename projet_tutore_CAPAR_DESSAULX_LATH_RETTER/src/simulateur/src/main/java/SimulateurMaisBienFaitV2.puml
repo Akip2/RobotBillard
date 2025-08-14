@@ -1,0 +1,202 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package simulateur{
+    package modeles {
+        interface Sujet{
+            +void ajouterObservateur(Observateur o)
+            +void retirerObservateur(Observateur o)
+            +void notifierObservateurs()
+        }
+
+        class ModeleBillardAmericain {
+                    +{static} int RAYON_BOULE
+                    +{static} double MASSE_BOULE
+                    +{static} double COEFFICIENT_FROTTEMENTS_BOULES
+                    public static double COEFF_FROTTEMENTS_BOULES
+
+                    static double MASSE_ROBOT
+                    static double RAYON_ROBOT
+                    static final double VITESSE_MAX_MOTEUR_DROIT
+                    static final double VITESSE_MAX_MOTEUR_GAUCHE
+                    static final int VITESSE_ROTATION
+                    static final double ACCELERATION
+                    static final double FREINAGE
+                    static double TOLERANCE_VITESSE_NULLE
+                    static int EPAISSEUR_BANDE
+                    static final int RAYON_TROU
+                    static final int LARGEUR
+                    static final int HAUTEUR
+                    static double TOLERANCE_ANGLE
+                    static double ACCELERATION_QUAND_ALIGNE
+                    --
+                    ~List<Observateur> observateurs
+                    ~Boule[] boules
+                    ~Robot[] robots
+                    ~Updater updater
+                    ~int nombreBoulesRetirees
+                    ~List<int[]> trous
+                    ==
+                    +ModeleBillardAmericain()
+                    +ModeleBillardAmericain(Boule[] boules, Robot[] robots)
+                    +initializeUpdater()
+                    +retirerBoule(Boule boule)
+                    +getBoulePlusProcheDeRobot()
+                    +getAngleObjetVersTrou(ObjetBillard objet, int numeroTrou)
+                    +getIndiceTrouLePlusAligneAvecBoule(Boule boule)
+                    +pointAccessibleParRobot(double xPoint, double yPoint)
+        }
+
+        abstract class ObjetBillard{
+            #double x
+            #double y
+            #double rayon
+            #double masse
+            #double vx
+            #double vy
+            #boolean elimine
+            ==
+            +update()
+            +{abstract}void collisionAvec(ObjetBillard o)
+            +{abstract}void collisionAvecBandes()
+            +double distance(ObjetBillard o)
+            +double angleVersObjet(ObjetBillard o)
+            +double angleVersPoint(double x, double y)
+        }
+
+        class Boule{
+            -int numero
+            +ralentir(double ralentissement)
+        }
+
+        class Robot{
+            -double direction
+            -double vMD
+            -double vMG
+            ==
+            +Robot(double x, double y, double rayon)
+            +void stopper()
+            +void setDirection(double direction)
+            +Point2D rotationVecteur(Point2D vecteur, double angle)
+            +void accelererMoteurDroit(double acceleration)
+            +void accelererMoteurGauche(double acceleration)
+            +void freinerMoteurDroit(double freinage)
+            +void freinerMoteurGauche(double freinage)
+            +void actualiserVxVy()
+        }
+        class Updater{
+            -ModeleBillardAmericain modele
+            -List<ObjetBillard> objetsBillard
+            ==
+            +Updater(ModeleBillardAmericain modele)
+            +void update()
+            +void ajouterObjetBillard(ObjetBillard objet)
+        }
+    }
+    Updater "1" --> "*" ObjetBillard
+
+    ObjetBillard <|-- Boule
+    ObjetBillard <|-- Robot
+
+    ModeleBillardAmericain "1" --> "1" Robot
+    ModeleBillardAmericain "1" --> "*" Boule
+
+    package vues {
+        interface Observateur{
+            +void update()
+        }
+        class VueBillardAmericain{
+            -ModeleBillardAmericain modeleBillardAmericain
+            -Rectangle fond
+            -Circle[] trous
+            -List<Observateur> vuesAUpdate
+            -void ajouterVue(Observateur vue)
+        }
+        abstract class VueBouleDeBillard{
+            #double rayon
+            #Circle boule
+            #Color couleurBoule
+            #Boule modele
+        }
+        class VueBouleBlanche
+        abstract class VueBouleNumerotee{
+            #int numero
+            #Text numeroText
+            #Circle fondNumero
+        }
+        class VueBoulePleine
+        class VueBouleRayee
+        class VueRobot{
+            -double angle
+            -Circle robot
+            -Color couleurRobot
+            -Robot robotModele
+        }
+        class VueGlobale{
+            -VueBillardAmericain vueBillardAmericain
+            -ModeleBillardAmericain modeleBillardAmericain
+            ==
+            +VueGlobale(ModeleBillardAmericain modele)
+        }
+    }
+
+    VueBouleNumerotee <|-- VueBoulePleine
+    VueBouleNumerotee <|-- VueBouleRayee
+    VueBouleDeBillard <|-- VueBouleBlanche
+    VueBouleDeBillard <|-- VueBouleNumerotee
+
+    Observateur "*" <--> "1" ModeleBillardAmericain
+
+
+    Observateur <|.. VueBillardAmericain
+    Observateur <|.. VueBouleDeBillard
+    Observateur <|.. VueRobot
+    Observateur <|.. VueGlobale
+
+    package controleurs {
+        abstract class ControllerInterface{
+            #ModeleBillardAmericain modele
+            #Robot robot
+            ==
+            +void faireAvancerRobot()
+            +void faireReculerRobot()
+            +void faireTournerRobotDroite()
+            +void faireTournerRobotGauche()
+            +void modifierAngleRobot(int angle)
+            +void freinerRobot(double freinage)
+            +void modifierVitesseRobot(double aDroit, double aGauche)
+        }
+        class ControllerRobotClavier {
+            -Set<String> keysCurrentlyDown
+            ==
+            +void ajouterTouche(KeyEvent key)
+            +void retirerTouche(KeyEvent key)
+            +void handleKeyPressed(KeyEvent key)
+            +void handleKeyReleased(KeyEvent key)
+        }
+        class ControllerIntelligent
+        class ControlleurUpdater{
+            -ControllerInterface controllerInterface
+            -long lastUpdate
+            -Updater updater
+            ==
+            +ControlleurUpdater(ControllerInterface controllerInterface, Updater updater)
+            +void handle()
+        }
+    }
+    ControlleurUpdater "1" --> "1" ControllerInterface
+    ControlleurUpdater "1" --> "1" Updater
+    ControllerInterface "1" --> "1" ModeleBillardAmericain
+
+    Sujet <|.. ModeleBillardAmericain
+    ControllerInterface <|-- ControllerRobotClavier
+    ControllerInterface <|-- ControllerIntelligent
+}
+
+
+class Main{
+    +void main(String[] args)
+}
+
+
+@enduml

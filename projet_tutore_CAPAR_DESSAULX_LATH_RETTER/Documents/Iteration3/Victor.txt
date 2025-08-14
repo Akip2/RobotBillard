@@ -1,0 +1,15 @@
+Jour 1 (Lundi 22 janvier 2024) :
+- Affichage et prévisualisation des trajectoires dans le client
+- Prendre en compte les collisions des boules pour l'affichage les trajectoires (pas terminé)
+- Prendre en compte la collision avec les bords du billard pour l'affichage des trajectoires (pas terminé)
+- Résolution des bugs dans le canvas
+
+Mardi 23 janvier 2024:
+- Calibrage des trous à l'aide de champ de texte et avec le clique de la souris, pour les placer à l'endroit voulu
+et les enregistrer dans le programme
+- Prendre entre compte les collisions des autres boules entre les trajectoires
+
+Mercredi 24 janvier 2024:
+
+- J'ai passé toute la journée à améliorer et régler certains bugs pour la fonctionnalité d'affichage des trajectoires en
+prenant en compte la collision avec les boules ainsi que les bords du billard. Cependant, je n'ai pas encore terminé.

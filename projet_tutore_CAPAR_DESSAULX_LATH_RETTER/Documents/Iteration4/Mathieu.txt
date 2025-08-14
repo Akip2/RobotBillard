@@ -1,0 +1,12 @@
+Jour 1:
+J'ai transcrit l'algorithme de contrôle intelligent du robot en JavaScript ce jour là,
+même si l'algorithme en tant que telle est fait il reste à utiliser les méthodes qui dialoguent
+avec le robot dedans et à le tester.
+
+Jour 2:
+Ce jour là, j'ai fait le diagramme de classes du simulateur afin de comparer facilement 
+celui fait lors de l'analyse avec la manière dont ça a été implémenté.
+
+Jour 3:
+Ce jour là, j'ai rédigé ma partie du rapport final.
+C'est-à-dire les parties qui parlent du simulateur.

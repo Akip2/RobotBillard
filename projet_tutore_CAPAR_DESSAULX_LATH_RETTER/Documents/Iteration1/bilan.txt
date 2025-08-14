@@ -1,0 +1,33 @@
+Bugs : 
+Lors de la détection des boules, des cercles incorrects apparaîssent.
+Le robot s'arrête abrutement à sa destination (décélération à faire).
+L'aruco est détecté par rapport à l'image canvas alors qu'il doit être détecté par rapport à la vidéo directement.
+Simulateur : le robot ne bouge pas.
+
+Validations : 
+Le robot bouge (avant et arrière) et tourne.
+La latence entre le robot et le serveur est géré correctement.
+Les boules sont bien détectées malgrès quelques erreurs.
+L'aruco est bien détecté.
+Simulateur : le squelette de l'application a bien été initialisé.
+
+
+Choix fais dans cette itération : 
+Les choix fais dans cette itération correspondent à l'étude préalable. 
+Détection des boules
+Détection de l'aruco
+Création du serveur / Client JS 
+Commencement du simulateur
+Faire bouger le robot manuellement
+
+fonctionnalité supplémentaire : 
+Gestion de la latence
+
+
+Fonctionnalité prévues à l'itération 2 : 
+Algorithme de calcul de mouvement
+Création de l'interface utilisateur au niveau du client
+Automatisation du démarrage du système
+Calibrage du robot
+Simulateur : faire bouger le robot avec des flèches directionnelles 
+Calibrer les paramètres de rotation (rapport entre puissance du moteur et l'angle à atteindre)

@@ -1,0 +1,28 @@
+Bugs / Tâches non terminées : 
+- Paramètres des mouvements du robot approximatifs
+- Calibrage non implémenté
+
+Validation: 
+- Affichage du coordonnées des boules
+- Réalisation du scénario 
+- Ralentir progressivement le robot
+- Simulateur : déplacer le robot avec des flèches directionnelles
+
+Choix pour cette itération :  
+- Algorithme de calcul de mouvement
+- Calibrage du robot
+- Différencier les boules (solutions envisagées : essayer de faire du tracking ou/et l’utilisation de réseau de neurone via tensorflow.js)
+- Avancer sur le simulateur
+
+
+Fonctionnalité supplémentaire :
+- Début prévisualisation de la trajectoire du robot vers boule 
+
+Fonctionnalité prévues l'itération 3 : 
+- Implémenter le calibrage du robot
+- Améliorer l’algorithme de déplacement du robot
+- Robot autonome
+- Configuration de l’espace de jeu
+- Création de l’interface utilisateur
+- Automatisation du démarrage du système 
+- Simulateur : Collision avec les boules

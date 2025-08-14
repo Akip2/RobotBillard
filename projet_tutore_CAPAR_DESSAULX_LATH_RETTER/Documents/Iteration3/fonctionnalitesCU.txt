@@ -1,0 +1,37 @@
+- Simulateur : Collision avec les boules : 
+Dans le simulateur, les différents objets présents oont des collisions. Ainsi, le robot peut frapper les boules, les boules peuvent se taper entre-elles, et les
+boules rebondissent avec les bords du billard.
+Membre : Mathieu a contribué à cette fonctionnalité dans son entièreté.
+
+- Simulateur : Ajout de la friction de la table de billard
+Le robot et les boules decelèrent au fur et à mesure.
+Membre : Mathieu a contribué à cette fonctionnalité dans son entièreté.
+
+- Algorithme : sélectionner une boule pour la frapper :
+Dans la page web, pour contrecarrer les boules fantômes, les cercles détectés peuvent être cliqués et ainsi sélectionnés. Lorsqu'un cercle est selectionné, il est
+colorié en rouge et la trajectoire entre le robot et la boule ainsi que la trajectoire potentielle de la collision des deux sont affichées. Grâce à cela le robot est
+certain de cibler une boule.
+Membre : Guillaume et Sila ont contribués à cette fonctionnalité dans son entièreté.
+
+- Algorithme : sélectionner une boule pour la faire rentrer (non validé) :
+Dans le programme, il est possible de sélectionner un cercle de l'espace de jeu. Le cercle sélectionné devient la boule cible. Le robot peut alors
+commencer ses manoeuvres. schéma : algo_boule_trou.png
+Membre : Guillaume et Sila ont contribués à cette fonctionnalité dans son entièreté.
+
+- Algorithme : choix du meilleur trou
+Cette fonctionnalité s'est terminé au cours de cette itération. Le problème d'incohérence au niveau des mouvemnts de rotation était causé par un 
+soucis dans les données d'inclinaison du robot. En effet, les données sont supposé être toujours positifs. Néanmois le programme reçoit parfois des degrès négatifs. 
+Ce problème a été reglé et tout va mieux. Le robot se déplace de mani
+Membre : Guillaume et Sila ont contribués à cette fonctionnalité dans son entièreté.
+
+
+- Placer les trous sur le canvas et enregistrer les positions dans le programme
+Nous pouvons cliquer sur le canvas pour sélectionner les coordonnées des trous et choisir sa taille. Dans le Client JS, nous récupérerons ces données
+et nous les envoyons au serveur quand une boule est selectionnée.
+Membre : Victor a contribué à cette fonctionnalité dans son entièreté.
+
+- Prévisualisation de la trajectoire dans le client (non terminé)
+Cette fonctionnalité affiche les différentes trajectoires des objets présents sur la table. La trajectoire de la boule frappée par le robot fonctionne plutôt bien mais il
+y a un problème avec ceux la trajectoire des boules touchés par la boule frappé.
+Membre : Victor a contribué à cette fonctionnalité dans son entièreté.
+

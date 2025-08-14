@@ -1,0 +1,33 @@
+- Modifier le code arduino pour faire deux types de mouvement : constant et ralenti
+Le robot à deux façons d'avancer : la première il avance pour se positionner et la deuxième il avance pour frapper une boule. Ainsi, il faut que le robot puisse faire la distinction.
+Ainsi dans le code arduino, quand le robot reçoit l'ordre de se positionner il fait un mouvement ralenti sinon il fait un mouvement constant.
+Membre : Sila
+
+- Prévisualisation de la trajectoire dans le client : 
+Cette fonctionnalité affiche les différentes trajectoires des objets présents sur la table. La trajectoire de la boule frappée par le robot fonctionne plutôt bien mais il
+y a un problème avec ceux la trajectoire des boules touchés par la boule frappé.
+Membre : Victor
+
+- Algorithme de calcul de mouvement : positionner le robot pour frapper une boule vers un endroit précis : 
+Dans le programme, il est possible de sélectionner un cercle de l'espace de jeu. Le cercle sélectionné devient la boule cible. Le robot peut alors
+commencer ses manoeuvres. L'objectif de l'algorithme est de positionner correctement le robot pour qu'il puisse taper la boule vers un trou. schéma : algo_boule_trou.png
+Membres : Guillaume, Sila
+
+
+- Différencier les boules : obtenir les pixels de couleurs de chacune (non validé).
+Cette fonctionnalité permettrait de pouvoir différencier les boules les unes des autres et d'identifier les cercles fantômes. Ainsi, lorsque la moyenne des pixels ne correspond à
+aucune boule alors on n'affiche pas le cercle capté à cet endroit. Grâce à cette fonctionnalité, il est plus facile de faire jouer le robot avec plusieurs boules sur le terrain.
+Membre : Victor
+
+
+- Dessiner les droites pour l'algorithme : positionner le robot pour frapper une boule vers un endroit précis (non validé) : 
+Pour tester l'algorithme, il est plus facile de visualiser les étapes que doit parcourir le robot. Cela permettrait de mieux comprendre où sont les erreurs (algorithme pur ou calculs).
+Ainsi, lorsque le serveur a fini les calculs de l'algorithme, il les envoie au Client JS pour qu'il les affiche à l'écran grâce à une fonction qui dessine des droites sur le canvas 
+grâce à des points donnés.
+Membres : Victor a créé les principales fonctions permettant de dessiner par rapport à des points donné, Guillaume doit gérer la transmission des informations du serveur au Client JS
+    pour pouvoir les dessiner.
+
+- Algorithme PPB (Plus Proche Boule) (non validé) : 
+L'algorithme consiste à définir la boule la plus proche à taper pour que le robot puisse facilement choisir quelle boule taper lorsqu'il y en a plusieurs sur le terrain. Cela se fait 
+grâce aux coordonnées du robot et de toutes les boules captées et envoyées par le Client JS.
+Membres : Mathieu a transcrit l'algorithme du simulateur au JS, Guillaume doit corriger et implémenter correctement le code pour le robot au niveau du serveur.

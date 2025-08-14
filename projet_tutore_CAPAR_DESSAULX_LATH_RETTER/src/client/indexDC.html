@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracking rectangle OpenCV</title>
+
+
+    <script type="text/javascript" src="./libs/cv.js"></script>
+    <script type="text/javascript" src="./libs/aruco.js"></script>
+    <script type="text/javascript" src="./libs/opencv.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="./js/main.js"></script>
+</head>
+
+<body>
+<div class="box">
+    <div>
+        <video id="video" width="768" height="432" muted="true" controls>
+            <!-- <source type="video/mp4" src="./videos/WIN_20240111_17_46_15_Pro.mp4"/> -->
+            <source type="video/mp4" src="./videos/WIN_20240111_17_48_29_Pro.mp4"/>
+        </video>
+        <canvas id="canvasOutput"></canvas>
+    </div>
+    <div>
+        <div>Configuration des trous du billard:</div>
+        <div>
+            <button id="btnHole1" value="Enabled">Positionner trou 1</button>
+            <label for="hole1x">x: </label>
+            <input type="number" id="hole1x"/>
+            <label for="hole1y">y: </label>
+            <input type="number" id="hole1y"/>
+            <label for="hole1radius">radius: </label>
+            <input type="number" id="hole1radius"/>
+        </div>
+        <div>
+            <button id="btnHole2" value="Enabled">Positionner trou 2</button>
+            <label for="hole1x">x: </label>
+            <input type="number" id="hole2x"/>
+            <label for="hole1y">y: </label>
+            <input type="number" id="hole2y"/>
+            <label for="hole2radius">radius: </label>
+            <input type="number" id="hole2radius"/>
+        </div>
+        <div>
+            <button id="btnHole3" value="Enabled">Positionner trou 3</button>
+            <label for="hole1x">x: </label>
+            <input type="number" id="hole3x"/>
+            <label for="hole1y">y: </label>
+            <input type="number" id="hole3y"/>
+            <label for="hole3radius">radius: </label>
+            <input type="number" id="hole3radius"/></div>
+
+        <div>
+            <button id="btnHole4" value="Enabled">Positionner trou 4</button>
+            <label for="hole1x">x: </label>
+            <input type="number" id="hole4x"/>
+            <label for="hole1y">y: </label>
+            <input type="number" id="hole4y"/>
+            <label for="hole4radius">radius: </label>
+            <input type="number" id="hole4radius"/></div>
+
+        <div>
+            <button id="btnHole5" value="Enabled">Positionner trou 5</button>
+            <label for="hole1x">x: </label>
+            <input type="number" id="hole5x"/>
+            <label for="hole1y">y: </label>
+            <input type="number" id="hole5y"/>
+            <label for="hole5radius">radius: </label>
+            <input type="number" id="hole5radius"/>
+        </div>
+        <div>
+            <button id="btnHole6" value="Enabled">Positionner trou 6</button>
+            <label for="hole1x">x: </label>
+            <input type="number" id="hole6x"/>
+            <label for="hole1y">y: </label>
+            <input type="number" id="hole6y"/>
+            <label for="hole6radius">radius: </label>
+            <input type="number" id="hole6radius"/></div>
+
+        <div>
+            <label>Identification des boules via la moyenne des couleurs : </label>
+            <button id="btnKnn" value="Enabled">Initialiser</button>
+            <div id="knn"></div>
+        </div>
+        <div>
+            <div>
+                <label>Afficher trajectoires des boules non selectionnée : </label>
+                <button id="btnTrajectory" value="Enabled">Desactiver</button>
+            </div>
+            <label>Norme du vecteur vitesse du robot vers la boule selectionnée</label>
+            <div>
+                <input type="range" min="0" max="10" value="5" class="slider" id="slideVelocity">
+            </div>
+        </div>
+
+        <div>Position des Aruco</div>
+        <div id="position"></div>
+        <div>Position des Cercles</div>
+        <div id="positionCercle"></div>
+
+    </div>
+</div>
+</body>
+
+<script>
+
+</script>
+<link rel="stylesheet" href="./css/index.css">
+</html>

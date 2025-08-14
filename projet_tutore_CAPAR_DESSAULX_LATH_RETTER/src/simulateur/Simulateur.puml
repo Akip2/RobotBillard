@@ -1,0 +1,121 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class MainSimu{
++ modele : Modele
++ vue : Vue
++ main() : void
+}
+
+class Robot{
+- x : int
+- y : int
+- direction : int
+- moteurDroit : Moteur
+- moteurGauche : Moteur
+==
++ allerEn(x : int, y : int) : void
+}
+
+class Modele{
++robots : List<Robot>
++xBalle : int
++yBalle : int
+==
++ ajouterRobot(r : Robot) : void
++ supprimerRobot(r : Robot) : void
+}
+
+class Moteur{
++avancer(vitesseCible : double, duree : int) : void
+}
+
+interface Observateur{
++ actualiser(s: Sujet) : void
+}
+
+interface Sujet{
++ ajouterObservateur(o : Observateur) : void
++ supprimerObservateur(o : Observateur) : void
++ notifierObservateurs() : void
+}
+
+class VueBalle {
+- cercle : Rectangle
+- couleur : Color
+==
++ actualiser(s: Sujet) : void
+}
+
+class VueRobot {
+- cercle : Rectangle
+- couleur : Color
+==
++ actualiser(s: Sujet) : void
+}
+
+class VueBillardAmericain {
+- cercle : Rectangle
+==
++ actualiser(s: Sujet) : void
+}
+
+Robot "1" --> "2" Moteur
+
+Modele "1" --> "1..*" Robot
+Modele ..> Sujet
+Modele "1" --> "*" Observateur
+
+VueBalle ..> Observateur
+VueRobot ..> Observateur
+VueBillardAmericain ..> Observateur
+
+MainSimu "1" --> "1" Modele
+MainSimu "1" <-- "*" VueBalle
+MainSimu "1" <-- "1" VueRobot
+MainSimu "1" <-- "1" VueBillardAmericain
+
+
+
+package "backend" {
+    class TableBillardAmericain{
+        -longueur: double
+        -largeur: double
+        -coeffFrottement: double
+        -coeffRebond: double
+        -trous: List<Point>
+        -diametreTrous: double
+    }
+
+    interface ObjetBillard{
+        -masse:double
+        -position:Point
+        -vitesse:double
+        -direction:double
+        -diametre
+        +{abstract}checkCollisionWithObject(objet:ObjetBillard):void
+        +{abstract}checkCollisionWithTable(table:TableBillardAmericain):void
+    }
+
+    class BalleMathematique implements ObjetBillard{
+
+    }
+
+    class RobotMathematique implements ObjetBillard{
+
+    }
+
+    class Collision{
+        +{static}collide(o1:ObjetBillard, o2:ObjetBillard):void
+    }
+
+    ModeleBillardMathematique "1" --> "1" TableBillardAmericain
+    ModeleBillardMathematique "1" --> "*" BalleMathematique : balles
+    ModeleBillardMathematique "1" --> "1" RobotMathematique : robot
+
+
+}
+
+Modele --> ModeleBillardMathematique
+
+@enduml

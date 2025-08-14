@@ -1,0 +1,28 @@
+Bugs / Tâches non terminées : 
+- Calibrer les paramètres de puissances des moteurs en fonction de la situation du robot.
+- Différencier les boules : obtenir les pixels de couleurs de chacunes.
+- Gérer la transmission des informations permettant de dessiner le triangle représentant les calculs de l'algorithme de positionnement du robot.
+
+Validation: 
+- Resolution bug chargement des modules sur chrome.
+- Modifier code arduino pour faire deux type de mouvement : constant et ralenti.
+- Prévisualisation de la trajectoire dans le client.
+- Algorithme de calcul de mouvement : positionner le robot pour frapper une boule vers un endroit précis.
+- Transcription algo ppb.
+- Rédaction du document final.
+
+
+Choix pour cette itération :  
+- Pouvoir différencier les boules (couleur ou tracking)
+- Implémenter l'algorithme choix du meilleur trou avec l'algorithme viser la boule dans le trou.
+- Implémenter les algorithmes dans le simulateur
+- Création interface utilisateur (style & règles du jeu)
+- Robot autonome (choisir la boule la plus proche au robot?)
+
+
+Fonctionnalités prévues à l'itération 5 : 
+- Dessiner les droites pour l'algrtihme : positionner le robot pour frapper une boule vers un endroit précis.
+- Implémentation de l'algorithme de recherche du meilleur trou.
+- Corriger et implémenter l'algorithme ppb.
+- Création de l’interface utilisateur au niveau du client.
+- Création interface utilisateur (style & règles du jeu)

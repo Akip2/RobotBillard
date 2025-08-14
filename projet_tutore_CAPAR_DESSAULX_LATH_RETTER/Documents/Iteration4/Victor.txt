@@ -1,0 +1,14 @@
+Jour 1 (Lundi 29 janvier 2024):
+
+- J'ai commencé la fonctionnalité permettant d'identifier les boules de couleur différentes en utilisant KNN. C'est-à-dire
+qu'on va se limiter à des boules couleurs différentes et différentes par rapport à la couleur du fond. On utilisera la
+méthode de KNN pour identifier les boules de couleurs différentes via la moyenne rgb des pixels de la boule.
+
+Jour 2 (Mardi 30 janvier 2024):
+- Avec guillaume, nous avons debuggé le chargement du client sur les navigateurs utilisant chromium.
+- J'ai continué la fonctionnalité permettant d'identifier les boules de couleur différentes en utilisant KNN.
+
+Jour 3 (Jeudi 1er février 2024):
+- J'ai terminé la fonctionnalité permettant d'afficher les trajectoires mais susceptible d'être modifié suivant
+le besoin de mes coéquipiers.
+- J'ai continué à travailler sur la fonctionnalité permettant d'identifier les boules de couleur différentes en utilisant KNN.
